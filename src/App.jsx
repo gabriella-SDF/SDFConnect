@@ -46,8 +46,8 @@ export default function App() {
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerInner}>
-          <div>
-            <div style={styles.logo}>SDF CONNECT</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src="/logo-white.png" alt="SDF Connect" style={{ height: 28 }} />
             <div style={styles.tagline}>Accelerate</div>
           </div>
           <div

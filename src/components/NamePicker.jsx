@@ -28,7 +28,7 @@ export default function NamePicker({ onSelect }) {
       <div style={styles.inner}>
         {/* Brand */}
         <div style={styles.brandBlock}>
-          <div style={styles.brandLabel}>SDF CONNECT</div>
+          <img src="/logo-white.png" alt="SDF Connect" style={{ height: 40, marginBottom: 16 }} />
           <h1 style={styles.brandTitle}>Accelerate</h1>
           <p style={styles.brandSub}>May 18–22, 2026 · Fairmont San Francisco</p>
         </div>

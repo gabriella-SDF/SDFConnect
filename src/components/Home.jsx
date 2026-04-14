@@ -59,7 +59,7 @@ export default function Home({ user, onNavigate }) {
       {/* Hero — dark */}
       <div style={styles.hero}>
         <div style={styles.heroInner}>
-          <div style={styles.heroLabel}>SDF CONNECT: ACCELERATE</div>
+          <img src="/logo-white.png" alt="SDF Connect" style={{ height: 32, marginBottom: 12 }} />
 
           {state.phase === 'pre' && (
             <>
