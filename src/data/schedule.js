@@ -1,0 +1,128 @@
+// SDF Connect: Accelerate — May 18-22, 2026
+// Fairmont San Francisco
+
+export const RETREAT_START = new Date('2026-05-18T00:00:00-07:00')
+export const RETREAT_END = new Date('2026-05-22T23:59:59-07:00')
+
+export const days = [
+  {
+    id: 'mon',
+    date: '2026-05-18',
+    dayNum: 0,
+    label: 'Monday, May 18',
+    title: 'Travel Day',
+    theme: 'Arrivals & Welcome',
+    sessions: [
+      { time: '9:00 AM', end: '4:00 PM', title: 'Team Offsite', tag: 'activity', location: '', description: 'Optional team offsite for early arrivals.', optional: true },
+      { time: '5:00 PM', end: '9:00 PM', title: 'Welcome Happy Hour', tag: 'social', location: 'Fairmont Rooftop', description: 'Kick off the retreat with drinks and views above the city.' },
+    ],
+  },
+  {
+    id: 'tue',
+    date: '2026-05-19',
+    dayNum: 1,
+    label: 'Tuesday, May 19',
+    title: 'Day 1',
+    theme: 'Setting the Pace',
+    description: 'Centered around our theme of Accelerate — executive presentations, guest speakers, and a deep dive into our objectives.',
+    sessions: [
+      { time: '8:00 AM', end: '9:00 AM', title: 'Check-in & Breakfast', tag: 'meal', location: '' },
+      { time: '9:00 AM', end: '9:30 AM', title: 'Retreat Kickoff + Housekeeping', tag: 'keynote', location: '', description: 'Welcome and swag store announcement.', speakers: ['Denelle Dixon', 'Lisa Macnew'] },
+      { time: '9:30 AM', end: '10:30 AM', title: 'Executive Presentation', tag: 'keynote', location: '', description: 'Hear directly from our leaders on where we stand, what\'s ahead, and how we plan to Accelerate.', speakers: ['Denelle Dixon'] },
+      { time: '10:30 AM', end: '11:00 AM', title: 'Break', tag: 'break', location: '', description: 'Capture employee testimonials, Marketing content, and open Office Hours.' },
+      { time: '11:00 AM', end: '11:45 AM', title: 'Guest Speaker', tag: 'keynote', location: '', description: 'A grounded, real-world perspective on product adoption and go-to-market momentum.' },
+      { time: '11:45 AM', end: '1:00 PM', title: 'Lunch + Swag Store', tag: 'meal', location: '', description: 'Browse archived Stellar swag and use your Freighter Wallet to donate to a Stellar-native organization.' },
+      { time: '1:00 PM', end: '2:00 PM', title: 'Objectives — Opening Session', tag: 'keynote', location: '', description: 'Denelle opens with mission framing. Jose, Nick, and Nico walk through each objective — current metrics, learnings, and what\'s next.', speakers: ['Denelle Dixon', 'Jose', 'Nick', 'Nico'] },
+      { time: '2:00 PM', end: '3:00 PM', title: 'Objectives — Breakout Sessions', tag: 'breakout', location: '', description: 'Three concurrent breakout sessions, one per objective. Pre-assigned cross-functional groups of 4–6.' },
+      { time: '3:00 PM', end: '3:30 PM', title: 'Break + Mingle', tag: 'break', location: '' },
+      { time: '4:00 PM', end: '5:00 PM', title: 'Product Adoption — ZK/x402', tag: 'keynote', location: '', speakers: ['Nicole'] },
+      { time: '5:00 PM', end: '6:00 PM', title: 'Work Time', tag: 'break', location: '' },
+      { time: '6:00 PM', end: '9:00 PM', title: 'AAPI Heritage Celebration', tag: 'social', location: '', description: 'Evening celebration honoring Asian American and Pacific Islander heritage.' },
+    ],
+  },
+  {
+    id: 'wed',
+    date: '2026-05-20',
+    dayNum: 2,
+    label: 'Wednesday, May 20',
+    title: 'Day 2',
+    theme: 'What\'s Next — AI & Innovation',
+    description: 'Dedicated to AI and product adoption — how emerging technology reshapes how we build, grow, and reach users.',
+    sessions: [
+      { time: '7:00 AM', end: '8:00 AM', title: 'Yoga @ Crown', tag: 'activity', location: 'Crown', description: 'Start the day right.', speakers: ['Destinee Agard'], optional: true },
+      { time: '8:00 AM', end: '9:00 AM', title: 'Check-in & Breakfast', tag: 'meal', location: 'Pavilion' },
+      { time: '9:00 AM', end: '9:45 AM', title: 'Guest Speaker / Panel on AI', tag: 'keynote', location: '', description: 'AI show-and-tell with prizes, knowledge sharing, and vision for embedding AI into our tools.', speakers: ['Tomer'] },
+      { time: '9:45 AM', end: '10:00 AM', title: 'Stretch Break', tag: 'break', location: '' },
+      { time: '10:00 AM', end: '11:30 AM', title: 'AI Block pt. 1', tag: 'workshop', location: '' },
+      { time: '11:30 AM', end: '12:00 PM', title: 'Break + Volunteer Logistics', tag: 'break', location: '' },
+      { time: '12:00 PM', end: '1:00 PM', title: 'Lunch + Swag Store', tag: 'meal', location: '' },
+      { time: '1:00 PM', end: '2:00 PM', title: 'AI Block pt. 2', tag: 'workshop', location: '' },
+      { time: '2:00 PM', end: '5:00 PM', title: 'Volunteer at DreamOp', tag: 'activity', location: 'DreamOp (2–4:30 PM)', description: 'Three hours of community service.' },
+      { time: '5:00 PM', end: '6:00 PM', title: 'Work Time + Swag Store', tag: 'break', location: '' },
+      { time: '6:00 PM', end: '7:00 PM', title: 'Free Time', tag: 'break', location: '' },
+      { time: '6:00 PM', end: '8:00 PM', title: 'Team Dinners', tag: 'social', location: '', description: 'Dinner with your team — details TBD.' },
+    ],
+  },
+  {
+    id: 'thu',
+    date: '2026-05-21',
+    dayNum: 3,
+    label: 'Thursday, May 21',
+    title: 'Day 3',
+    theme: 'People & Celebration',
+    description: 'Quality team time, team presentations, and the Stellar Awards — celebrating the work, the wins, and the people.',
+    sessions: [
+      { time: '8:00 AM', end: '9:00 AM', title: 'Breakfast', tag: 'meal', location: '' },
+      { time: '9:00 AM', end: '12:00 PM', title: 'Team Time', tag: 'team', location: '', description: 'Intentionally kept free from presentation prep. Collaborate, align on priorities, and turn ideas into action. Leave with clear next steps.' },
+      { time: '12:00 PM', end: '1:00 PM', title: 'Lunch', tag: 'meal', location: '' },
+      { time: '1:00 PM', end: '3:00 PM', title: 'Team Presentations', tag: 'keynote', location: '', description: 'What will Stellar look like in 10 or 20 years? Each department shares their vision for the future through the lens of their own work.' },
+      { time: '3:00 PM', end: '3:30 PM', title: 'Stellar Awards', tag: 'social', location: '', description: 'Celebrating the individuals who made it all possible.' },
+      { time: '3:30 PM', end: '4:00 PM', title: 'Q&A / Closure', tag: 'keynote', location: '' },
+      { time: '4:00 PM', end: '4:30 PM', title: 'Team Photos', tag: 'social', location: '' },
+      { time: '6:00 PM', end: '10:00 PM', title: 'Tonga Room', tag: 'social', location: 'Tonga Room', description: 'The big celebration to close out the retreat.' },
+    ],
+  },
+  {
+    id: 'fri',
+    date: '2026-05-22',
+    dayNum: 4,
+    label: 'Friday, May 22',
+    title: 'Travel Day',
+    theme: 'Safe Travels',
+    sessions: [
+      { time: '', end: '', title: 'Travel Day for Non-Bay Area Employees', tag: 'activity', location: '', description: 'Safe travels home! See you next time.' },
+    ],
+  },
+]
+
+export const icebreakers = [
+  "What's the most unexpected skill you bring to SDF?",
+  "If Stellar existed in a fantasy world, what would your role be?",
+  "What's one thing you've learned from a coworker that changed how you work?",
+  "What would your TED Talk be about (work-related or not)?",
+  "If you could swap teams for a week, which team would you join?",
+  "What's the bravest thing you've done at work?",
+  "What song would be your walk-on music at a company all-hands?",
+  "What's a project you're secretly proud of that no one knows about?",
+  "If you had unlimited budget for one work experiment, what would you try?",
+  "What's the best meal you've had in San Francisco?",
+  "What were you doing before you joined SDF?",
+  "What's one thing about your team that other teams don't know?",
+  "If you could add one feature to Stellar overnight, what would it be?",
+  "What's the weirdest rabbit hole you've gone down for work?",
+  "What's your hot take on the future of crypto?",
+  "Who at SDF would you want on your pub quiz team and why?",
+  "What's the best piece of advice you've gotten at SDF?",
+  "What does 'Accelerate' mean to you personally?",
+]
+
+export const testimonialPrompts = [
+  "What's your favorite thing about working at SDF?",
+  "Describe a moment at SDF that made you proud.",
+  "What makes SDF different from anywhere else you've worked?",
+  "What's one word that describes the SDF culture?",
+  "Who at SDF has had the biggest impact on your growth?",
+  "What are you most excited about for Stellar's future?",
+  "What would you tell someone considering joining SDF?",
+  "What's a win from this year that deserves more recognition?",
+]
