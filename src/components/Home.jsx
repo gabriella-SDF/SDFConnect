@@ -56,77 +56,75 @@ export default function Home({ user, onNavigate }) {
 
   return (
     <div>
-      {/* Hero — dark */}
+      {/* Hero — dark, seamless with header */}
       <div style={styles.hero}>
         <div style={styles.heroInner}>
-          <img src="/logo-white.png" alt="SDF Connect" style={{ height: 32, marginBottom: 12 }} />
+          {/* Greeting integrated into hero */}
+          <div style={styles.greeting}>
+            Hello, {user.name.split(' ')[0]}
+          </div>
 
           {state.phase === 'pre' && (
             <>
               <div style={styles.countdownNumber}>{state.daysUntil}</div>
-              <div style={styles.countdownLabel}>days to go</div>
+              <div style={styles.countdownUnit}>days to go</div>
+              <div style={styles.yellowRule} />
+              <div style={styles.heroDate}>May 18–22, 2026</div>
+              <div style={styles.heroVenue}>Fairmont San Francisco</div>
             </>
           )}
 
           {state.phase === 'during' && todayData && (
             <>
               <div style={styles.countdownNumber}>{todayData.title}</div>
-              <div style={styles.countdownLabel}>{todayData.theme}</div>
+              <div style={styles.countdownUnit}>{todayData.theme}</div>
               {nowSession && (
                 <div style={styles.nowBadge}>
                   <span style={styles.nowDot} />
                   NOW: {nowSession}
                 </div>
               )}
+              <div style={styles.yellowRule} />
+              <div style={styles.heroDate}>May 18–22, 2026</div>
             </>
           )}
 
           {state.phase === 'post' && (
             <>
               <div style={styles.countdownNumber}>Done!</div>
-              <div style={styles.countdownLabel}>Thanks for an amazing retreat</div>
+              <div style={styles.countdownUnit}>Thanks for an amazing retreat</div>
+              <div style={styles.yellowRule} />
             </>
           )}
 
-          <div style={styles.heroDate}>May 18–22, 2026 · Fairmont San Francisco</div>
+          {/* Quick Links — inside the dark hero */}
+          <div style={styles.quickGrid}>
+            {[
+              { label: 'Schedule', icon: '01', desc: '5 days', color: C.yellow, tab: 'schedule' },
+              { label: 'People', icon: '02', desc: '~160', color: C.teal, tab: 'people' },
+              { label: 'Q&A', icon: '03', desc: 'Anonymous', color: C.lavender, tab: 'engage' },
+              { label: 'Venue', icon: '04', desc: 'Map', color: C.tan, tab: 'venue' },
+            ].map(q => (
+              <button
+                key={q.label}
+                onClick={() => onNavigate(q.tab)}
+                style={styles.quickCard}
+              >
+                <div style={{ ...styles.quickNumber, color: q.color }}>{q.icon}</div>
+                <div style={styles.quickLabel}>{q.label}</div>
+                <div style={styles.quickDesc}>{q.desc}</div>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Content — light */}
       <div style={styles.content}>
-        {/* Greeting */}
+        {/* Today's Schedule Preview */}
         <div style={{ padding: '24px 20px 0' }}>
-          <h2 style={S.h2}>Welcome, {user.name.split(' ')[0]}</h2>
-          <p style={{ ...S.caption, marginTop: 4 }}>
-            {state.phase === 'pre' && "Here's what's coming up at the retreat."}
-            {state.phase === 'during' && "Here's what's happening today."}
-            {state.phase === 'post' && "Hope you had an incredible time!"}
-          </p>
-        </div>
-
-        {/* Quick Links */}
-        <div style={styles.quickGrid}>
-          {[
-            { label: 'Schedule', icon: '▦', color: C.teal, tab: 'schedule' },
-            { label: 'People', icon: '●●', color: C.navy, tab: 'people' },
-            { label: 'Q&A', icon: '?', color: C.lavender, tab: 'engage' },
-            { label: 'Venue Map', icon: '⌖', color: C.tan, tab: 'venue' },
-          ].map(q => (
-            <button
-              key={q.label}
-              onClick={() => onNavigate(q.tab)}
-              style={{ ...styles.quickCard, background: q.color + '18' }}
-            >
-              <span style={{ fontSize: 24 }}>{q.icon}</span>
-              <span style={{ ...S.caption, color: C.text, fontWeight: 600 }}>{q.label}</span>
-            </button>
-          ))}
-        </div>
-
-        {/* Today's Schedule Preview or Next Day Preview */}
-        <div style={{ padding: '0 20px' }}>
           <h3 style={{ ...S.h3, marginBottom: 12 }}>
-            {state.phase === 'during' ? "Today's Schedule" : "Up Next"}
+            {state.phase === 'during' ? "Today's Schedule" : "Up Next — Tuesday"}
           </h3>
           {(todayData || days[1]).sessions.slice(0, 5).map((s, i) => {
             const tag = tagColors[s.tag] || tagColors.break
@@ -156,35 +154,32 @@ export default function Home({ user, onNavigate }) {
             onClick={() => onNavigate('schedule')}
             style={{ ...S.btnSecondary, width: '100%', marginTop: 12 }}
           >
-            View Full Schedule →
+            View Full Schedule
           </button>
         </div>
 
         {/* Engagement Cards */}
         <div style={{ padding: '28px 20px 0' }}>
           <h3 style={{ ...S.h3, marginBottom: 12 }}>Get Involved</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <button onClick={() => onNavigate('engage')} style={styles.engageCard}>
-              <span style={{ fontSize: 28 }}>💬</span>
-              <div>
-                <div style={{ ...S.body, fontWeight: 600 }}>Anonymous Q&A</div>
-                <div style={S.caption}>Ask anything during sessions — completely anonymous</div>
-              </div>
-            </button>
-            <button onClick={() => onNavigate('engage')} style={styles.engageCard}>
-              <span style={{ fontSize: 28 }}>✨</span>
-              <div>
-                <div style={{ ...S.body, fontWeight: 600 }}>Share a Testimonial</div>
-                <div style={S.caption}>Tell us what makes SDF special to you</div>
-              </div>
-            </button>
-            <button onClick={() => onNavigate('engage')} style={styles.engageCard}>
-              <span style={{ fontSize: 28 }}>🎲</span>
-              <div>
-                <div style={{ ...S.body, fontWeight: 600 }}>Icebreaker Cards</div>
-                <div style={S.caption}>Conversation starters for breaks and meals</div>
-              </div>
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {[
+              { label: 'Anonymous Q&A', desc: 'Ask anything during sessions', color: C.teal, tab: 'engage' },
+              { label: 'Share a Testimonial', desc: 'Tell us what makes SDF special', color: C.lavender, tab: 'engage' },
+              { label: 'Icebreaker Cards', desc: 'Conversation starters for breaks', color: C.navy, tab: 'engage' },
+            ].map((card, i) => (
+              <button
+                key={i}
+                onClick={() => onNavigate(card.tab)}
+                style={styles.engageCard}
+              >
+                <div style={{ ...styles.engageDot, background: card.color }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ ...S.body, fontWeight: 600, fontSize: 14 }}>{card.label}</div>
+                  <div style={{ ...S.caption, marginTop: 2 }}>{card.desc}</div>
+                </div>
+                <span style={{ color: C.textMuted, fontSize: 18 }}>&rsaquo;</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -195,41 +190,57 @@ export default function Home({ user, onNavigate }) {
 const styles = {
   hero: {
     background: C.dark,
-    padding: '40px 20px 48px',
+    padding: '8px 20px 0',
     textAlign: 'center',
   },
   heroInner: {
     maxWidth: 480,
     margin: '0 auto',
   },
-  heroLabel: {
-    fontFamily: F.sans,
-    fontSize: 10,
-    fontWeight: 700,
-    letterSpacing: '0.16em',
-    color: C.yellow,
-    marginBottom: 20,
+  greeting: {
+    fontFamily: F.serif,
+    fontSize: 16,
+    fontWeight: 400,
+    color: '#999',
+    fontStyle: 'italic',
+    marginBottom: 24,
   },
   countdownNumber: {
     fontFamily: F.serif,
-    fontSize: 72,
+    fontSize: 88,
     fontWeight: 600,
     color: '#fff',
     lineHeight: 1,
-    marginBottom: 4,
+    letterSpacing: '-0.02em',
   },
-  countdownLabel: {
-    fontFamily: F.serif,
-    fontSize: 18,
-    fontStyle: 'italic',
-    color: '#aaa',
-    marginBottom: 16,
+  countdownUnit: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    fontWeight: 500,
+    color: '#666',
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    marginTop: 4,
+  },
+  yellowRule: {
+    width: 48,
+    height: 3,
+    borderRadius: 2,
+    background: C.yellow,
+    margin: '20px auto',
   },
   heroDate: {
     fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    color: '#aaa',
+    letterSpacing: '0.02em',
+  },
+  heroVenue: {
+    fontFamily: F.sans,
     fontSize: 12,
     color: '#666',
-    letterSpacing: '0.02em',
+    marginTop: 2,
   },
   nowBadge: {
     display: 'inline-flex',
@@ -250,7 +261,6 @@ const styles = {
     height: 8,
     borderRadius: 4,
     background: C.yellow,
-    animation: 'pulse 2s infinite',
   },
   nowDotSmall: {
     width: 8,
@@ -259,27 +269,45 @@ const styles = {
     background: C.yellow,
     flexShrink: 0,
   },
-  content: {
-    background: C.bg,
-    borderRadius: '24px 24px 0 0',
-    marginTop: -20,
-    paddingBottom: 40,
-  },
   quickGrid: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 12,
-    padding: '20px 20px 24px',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gap: 8,
+    padding: '28px 0 24px',
   },
   quickCard: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 8,
-    padding: 20,
-    borderRadius: 16,
-    border: 'none',
+    gap: 4,
+    padding: '14px 4px',
+    background: C.darkCard,
+    borderRadius: 14,
+    border: `1px solid ${C.darkBorder}`,
     cursor: 'pointer',
+  },
+  quickNumber: {
+    fontFamily: F.sans,
+    fontSize: 20,
+    fontWeight: 700,
+    lineHeight: 1,
+  },
+  quickLabel: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    fontWeight: 600,
+    color: '#fff',
+    letterSpacing: '0.02em',
+  },
+  quickDesc: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    color: '#666',
+  },
+  content: {
+    background: C.bg,
+    borderRadius: '24px 24px 0 0',
+    paddingBottom: 40,
   },
   sessionRow: {
     display: 'flex',
@@ -317,13 +345,19 @@ const styles = {
   engageCard: {
     display: 'flex',
     alignItems: 'center',
-    gap: 16,
-    padding: 18,
+    gap: 14,
+    padding: '16px 18px',
     background: C.card,
-    borderRadius: 16,
+    borderRadius: 14,
     border: `1px solid ${C.border}`,
     cursor: 'pointer',
     textAlign: 'left',
     width: '100%',
+  },
+  engageDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    flexShrink: 0,
   },
 }
