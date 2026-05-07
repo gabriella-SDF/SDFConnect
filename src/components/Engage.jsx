@@ -1,31 +1,55 @@
 import { useState } from 'react'
 import { C, F, S } from '../theme'
 import { icebreakers, testimonialPrompts } from '../data/schedule'
+import { supabase } from '../lib/supabase'
 
 export default function Engage({ user }) {
   const [subTab, setSubTab] = useState('qa')
   const [question, setQuestion] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const [testimonialIdx, setTestimonialIdx] = useState(0)
   const [testimonialText, setTestimonialText] = useState('')
   const [testimonialSent, setTestimonialSent] = useState(false)
+  const [testimonialSubmitting, setTestimonialSubmitting] = useState(false)
   const [icebreakerIdx, setIcebreakerIdx] = useState(
     Math.floor(Math.random() * icebreakers.length)
   )
 
-  const handleSubmitQuestion = () => {
-    if (!question.trim()) return
-    // TODO: Save to Supabase — no user info attached (anonymous)
-    console.log('Anonymous question:', question)
+  const handleSubmitQuestion = async () => {
+    if (!question.trim() || submitting) return
+    setSubmitting(true)
+    setError('')
+    const { error: dbError } = await supabase
+      .from('questions')
+      .insert({ body: question.trim() })
+    setSubmitting(false)
+    if (dbError) {
+      setError('Could not submit. Please try again.')
+      return
+    }
     setSubmitted(true)
     setQuestion('')
     setTimeout(() => setSubmitted(false), 3000)
   }
 
-  const handleSubmitTestimonial = () => {
-    if (!testimonialText.trim()) return
-    // TODO: Save to Supabase with user info
-    console.log('Testimonial from', user.name, ':', testimonialText)
+  const handleSubmitTestimonial = async () => {
+    if (!testimonialText.trim() || testimonialSubmitting) return
+    setTestimonialSubmitting(true)
+    setError('')
+    const { error: dbError } = await supabase
+      .from('testimonials')
+      .insert({
+        body: testimonialText.trim(),
+        prompt: testimonialPrompts[testimonialIdx],
+        author_name: user.name,
+      })
+    setTestimonialSubmitting(false)
+    if (dbError) {
+      setError('Could not submit. Please try again.')
+      return
+    }
     setTestimonialSent(true)
     setTestimonialText('')
     setTimeout(() => {
@@ -84,16 +108,19 @@ export default function Engage({ user }) {
               />
               <button
                 onClick={handleSubmitQuestion}
-                disabled={!question.trim()}
+                disabled={!question.trim() || submitting}
                 style={{
                   ...S.btnPrimary,
                   width: '100%',
                   marginTop: 12,
-                  opacity: question.trim() ? 1 : 0.4,
+                  opacity: question.trim() && !submitting ? 1 : 0.4,
                 }}
               >
-                {submitted ? '✓ Submitted!' : 'Submit Anonymously'}
+                {submitted ? '✓ Submitted!' : submitting ? 'Submitting…' : 'Submit Anonymously'}
               </button>
+              {error && subTab === 'qa' && (
+                <p style={{ ...S.caption, color: '#ff6b6b', marginTop: 8, textAlign: 'center' }}>{error}</p>
+              )}
             </div>
 
             <div style={styles.privacyNote}>
@@ -137,16 +164,19 @@ export default function Engage({ user }) {
                 </button>
                 <button
                   onClick={handleSubmitTestimonial}
-                  disabled={!testimonialText.trim()}
+                  disabled={!testimonialText.trim() || testimonialSubmitting}
                   style={{
                     ...S.btnPrimary,
                     flex: 2,
-                    opacity: testimonialText.trim() ? 1 : 0.4,
+                    opacity: testimonialText.trim() && !testimonialSubmitting ? 1 : 0.4,
                   }}
                 >
-                  {testimonialSent ? '✓ Thank you!' : 'Submit'}
+                  {testimonialSent ? '✓ Thank you!' : testimonialSubmitting ? 'Submitting…' : 'Submit'}
                 </button>
               </div>
+              {error && subTab === 'testimonial' && (
+                <p style={{ ...S.caption, color: '#ff6b6b', marginTop: 8, textAlign: 'center' }}>{error}</p>
+              )}
             </div>
 
             <p style={{ ...S.caption, marginTop: 12, textAlign: 'center' }}>
