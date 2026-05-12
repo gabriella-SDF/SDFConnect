@@ -1,40 +1,67 @@
-import { useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { C, F, S } from '../theme'
-
-// Placeholder — will come from Supabase
-// `role: 'lead'` marks the team lead, shown at top with hierarchy indent for others
-const teams = [
-  { name: 'Leadership', members: [
-    { id: 3, name: 'Denelle Dixon', title: 'CEO & Executive Director', role: 'lead' },
-  ]},
-  { name: 'Engineering', members: [
-    { id: 5, name: 'Tomer Weller', title: 'VP Engineering', role: 'lead' },
-    { id: 7, name: 'Jose Luu', title: 'Engineering' },
-    { id: 8, name: 'Nick Garcia', title: 'Engineering' },
-    { id: 9, name: 'Nico Barry', title: 'CTO', role: 'lead' },
-  ]},
-  { name: 'Product', members: [
-    { id: 6, name: 'Nicole Martinez', title: 'Product Lead', role: 'lead' },
-  ]},
-  { name: 'Marketing', members: [
-    { id: 1, name: 'Gabriella Pellagatti', title: 'Content & Marketing' },
-    { id: 2, name: 'Vivian Bui', title: 'Content & Marketing' },
-  ]},
-  { name: 'Operations', members: [
-    { id: 4, name: 'Lisa Macnew', title: 'Head of Operations', role: 'lead' },
-  ]},
-  { name: 'People', members: [
-    { id: 10, name: 'Destinee Agard', title: 'People Team' },
-  ]},
-]
+import { supabase } from '../lib/supabase'
 
 const avatarColors = [C.navy, C.teal, C.lavender, '#E8A87C', '#85CDCA', '#C38D9E', C.yellow]
-function getAvatarColor(id) { return avatarColors[id % avatarColors.length] }
+function hashStr(s) {
+  let h = 0
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0
+  return Math.abs(h)
+}
+function getAvatarColor(id) { return avatarColors[hashStr(String(id)) % avatarColors.length] }
+function initials(name) {
+  return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+}
 
-export default function People({ currentUser }) {
+export default function People({ currentUser, onSignOut }) {
   const [search, setSearch] = useState('')
   const [openTeams, setOpenTeams] = useState(new Set())
   const [selectedPerson, setSelectedPerson] = useState(null)
+  const [employees, setEmployees] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const { data, error: dbError } = await supabase
+        .from('employees')
+        .select('id, first_name, last_name, department, email, title, location')
+        .order('first_name', { ascending: true })
+      if (cancelled) return
+      if (dbError) {
+        setError('Could not load directory.')
+        setLoading(false)
+        return
+      }
+      setEmployees(
+        data.map(e => ({
+          id: e.id,
+          name: `${e.first_name} ${e.last_name}`,
+          first_name: e.first_name,
+          last_name: e.last_name,
+          team: e.department || 'Other',
+          title: e.title || '',
+          email: e.email,
+          location: e.location || '',
+        }))
+      )
+      setLoading(false)
+    })()
+    return () => { cancelled = true }
+  }, [])
+
+  const teams = useMemo(() => {
+    const grouped = new Map()
+    for (const m of employees) {
+      const t = m.team
+      if (!grouped.has(t)) grouped.set(t, [])
+      grouped.get(t).push(m)
+    }
+    return Array.from(grouped.entries())
+      .map(([name, members]) => ({ name, members }))
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [employees])
 
   const toggleTeam = (name) => {
     setOpenTeams(prev => {
@@ -45,10 +72,8 @@ export default function People({ currentUser }) {
     })
   }
 
-  // If searching, show flat results. Otherwise show accordion.
-  const allMembers = teams.flatMap(t => t.members.map(m => ({ ...m, team: t.name })))
   const searchResults = search
-    ? allMembers.filter(m =>
+    ? employees.filter(m =>
         m.name.toLowerCase().includes(search.toLowerCase()) ||
         m.team.toLowerCase().includes(search.toLowerCase()) ||
         m.title.toLowerCase().includes(search.toLowerCase())
@@ -57,8 +82,19 @@ export default function People({ currentUser }) {
 
   return (
     <div style={{ padding: '16px 20px 40px' }}>
-      <h2 style={{ ...S.h2, marginBottom: 4 }}>People</h2>
-      <p style={{ ...S.caption, marginBottom: 16 }}>~160 team members across all departments</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+        <div>
+          <h2 style={{ ...S.h2, marginBottom: 4 }}>People</h2>
+          <p style={{ ...S.caption, marginBottom: 16 }}>
+            {loading ? 'Loading…' : `${employees.length} team members`}
+          </p>
+        </div>
+        {onSignOut && (
+          <button onClick={onSignOut} style={styles.signOut}>Sign out</button>
+        )}
+      </div>
+
+      {error && <p style={{ ...S.caption, color: '#E74C3C', marginBottom: 12 }}>{error}</p>}
 
       <input
         type="text"
@@ -68,10 +104,11 @@ export default function People({ currentUser }) {
         style={styles.search}
       />
 
-      {/* Search results — flat list */}
       {searchResults && (
         <div>
-          <p style={{ ...S.caption, marginBottom: 12 }}>{searchResults.length} result{searchResults.length !== 1 ? 's' : ''}</p>
+          <p style={{ ...S.caption, marginBottom: 12 }}>
+            {searchResults.length} result{searchResults.length !== 1 ? 's' : ''}
+          </p>
           {searchResults.map(member => (
             <PersonRow
               key={member.id}
@@ -87,12 +124,8 @@ export default function People({ currentUser }) {
         </div>
       )}
 
-      {/* Team accordions */}
-      {!searchResults && teams.map(team => {
+      {!searchResults && !loading && teams.map(team => {
         const isOpen = openTeams.has(team.name)
-        const leads = team.members.filter(m => m.role === 'lead')
-        const others = team.members.filter(m => m.role !== 'lead')
-
         return (
           <div key={team.name} style={styles.teamSection}>
             <button onClick={() => toggleTeam(team.name)} style={styles.teamHeader}>
@@ -110,22 +143,10 @@ export default function People({ currentUser }) {
 
             {isOpen && (
               <div style={styles.teamMembers}>
-                {/* Leads first */}
-                {leads.map(member => (
+                {team.members.map(member => (
                   <PersonRow
                     key={member.id}
                     member={member}
-                    isLead
-                    currentUser={currentUser}
-                    onSelect={setSelectedPerson}
-                  />
-                ))}
-                {/* Reports indented */}
-                {others.map(member => (
-                  <PersonRow
-                    key={member.id}
-                    member={member}
-                    indented={leads.length > 0}
                     currentUser={currentUser}
                     onSelect={setSelectedPerson}
                   />
@@ -136,38 +157,33 @@ export default function People({ currentUser }) {
         )
       })}
 
-      {/* Profile Sheet */}
       {selectedPerson && (
         <div style={S.overlay} onClick={() => setSelectedPerson(null)}>
           <div style={S.sheet} onClick={e => e.stopPropagation()}>
             <div style={S.sheetHandle} />
             <div style={{ textAlign: 'center', paddingTop: 8 }}>
               <div style={{ ...styles.profileAvatar, background: getAvatarColor(selectedPerson.id) }}>
-                {selectedPerson.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                {initials(selectedPerson.name)}
               </div>
               <h3 style={{ ...S.h2, marginTop: 12 }}>{selectedPerson.name}</h3>
               <p style={{ ...S.caption, marginTop: 4 }}>{selectedPerson.title}</p>
-              {selectedPerson.role === 'lead' && (
-                <span style={styles.leadBadgeLarge}>Team Lead</span>
-              )}
+              <p style={{ ...S.caption, marginTop: 2, color: C.textMuted }}>
+                {selectedPerson.team}{selectedPerson.location ? ` · ${selectedPerson.location}` : ''}
+              </p>
             </div>
 
-            <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', gap: 16 }}>
-              {[
-                { q: 'What are you working on?', a: 'Profile answers will be loaded from the database.' },
-                { q: 'What are you reading?', a: '—' },
-                { q: 'Fun fact', a: '—' },
-              ].map((item, i) => (
-                <div key={i}>
-                  <div style={{ ...S.label, marginBottom: 6, color: C.teal }}>{item.q}</div>
-                  <div style={S.body}>{item.a}</div>
-                </div>
-              ))}
+            <div style={{ marginTop: 24 }}>
+              <a
+                href={`mailto:${selectedPerson.email}`}
+                style={{ ...S.btnPrimary, width: '100%', display: 'block', textAlign: 'center', textDecoration: 'none' }}
+              >
+                Email {selectedPerson.first_name}
+              </a>
             </div>
 
             <button
               onClick={() => setSelectedPerson(null)}
-              style={{ ...S.btnSecondary, width: '100%', marginTop: 24 }}
+              style={{ ...S.btnSecondary, width: '100%', marginTop: 12 }}
             >
               Close
             </button>
@@ -178,32 +194,36 @@ export default function People({ currentUser }) {
   )
 }
 
-function PersonRow({ member, isLead, indented, subtitle, currentUser, onSelect }) {
+function PersonRow({ member, subtitle, currentUser, onSelect }) {
+  const isYou = currentUser?.email === member.email
   return (
-    <button
-      onClick={() => onSelect(member)}
-      style={{
-        ...styles.personRow,
-        paddingLeft: indented ? 36 : 12,
-      }}
-    >
+    <button onClick={() => onSelect(member)} style={styles.personRow}>
       <div style={{ ...styles.personAvatar, background: getAvatarColor(member.id) }}>
-        {member.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+        {initials(member.name)}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={styles.personName}>
           {member.name}
-          {member.id === currentUser?.id && <span style={styles.youBadge}>You</span>}
+          {isYou && <span style={styles.youBadge}>You</span>}
         </div>
         <div style={styles.personTitle}>{subtitle || member.title}</div>
       </div>
-      {isLead && <span style={styles.leadBadge}>Lead</span>}
       <span style={{ color: C.textMuted, fontSize: 18 }}>&rsaquo;</span>
     </button>
   )
 }
 
 const styles = {
+  signOut: {
+    background: 'none',
+    border: `1px solid ${C.border}`,
+    color: C.textFade,
+    fontFamily: F.sans,
+    fontSize: 12,
+    padding: '6px 12px',
+    borderRadius: 8,
+    cursor: 'pointer',
+  },
   search: {
     width: '100%',
     padding: '14px 16px',
@@ -317,27 +337,6 @@ const styles = {
     background: C.dark,
     padding: '2px 6px',
     borderRadius: 4,
-  },
-  leadBadge: {
-    fontFamily: F.sans,
-    fontSize: 10,
-    fontWeight: 600,
-    color: C.teal,
-    background: C.teal + '18',
-    padding: '3px 8px',
-    borderRadius: 6,
-    flexShrink: 0,
-  },
-  leadBadgeLarge: {
-    display: 'inline-block',
-    fontFamily: F.sans,
-    fontSize: 11,
-    fontWeight: 600,
-    color: C.teal,
-    background: C.teal + '18',
-    padding: '4px 12px',
-    borderRadius: 8,
-    marginTop: 8,
   },
   profileAvatar: {
     width: 72,

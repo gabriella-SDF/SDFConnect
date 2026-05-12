@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { C, F, S } from './theme'
+import { supabase } from './lib/supabase'
 import Home from './components/Home'
 import Schedule from './components/Schedule'
 import People from './components/People'
 import Engage from './components/Engage'
 import Venue from './components/Venue'
-import NamePicker from './components/NamePicker'
+import SignIn from './components/SignIn'
 
 const tabs = [
   { id: 'home', label: 'Home', icon: '◆' },
@@ -17,26 +18,87 @@ const tabs = [
 
 export default function App() {
   const [tab, setTab] = useState('home')
+  const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
+  const [authError, setAuthError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const saved = localStorage.getItem('sdf-connect-user')
-    if (saved) setUser(JSON.parse(saved))
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session)
+      setLoading(false)
+    })
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
+      setSession(sess)
+    })
+    return () => sub.subscription.unsubscribe()
   }, [])
 
-  const handleSelectUser = (person) => {
-    setUser(person)
-    localStorage.setItem('sdf-connect-user', JSON.stringify(person))
+  useEffect(() => {
+    if (!session?.user?.email) {
+      setUser(null)
+      return
+    }
+    let cancelled = false
+    ;(async () => {
+      const { data, error } = await supabase
+        .from('employees')
+        .select('id, first_name, last_name, department, email, title, location')
+        .eq('email', session.user.email.toLowerCase())
+        .maybeSingle()
+      if (cancelled) return
+      if (error || !data) {
+        setAuthError(
+          `${session.user.email} isn't in the retreat directory yet. Please contact an organizer.`
+        )
+        await supabase.auth.signOut()
+        return
+      }
+      setAuthError('')
+      setUser({
+        id: data.id,
+        name: `${data.first_name} ${data.last_name}`,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        title: data.title,
+        team: data.department,
+        email: data.email,
+        location: data.location,
+      })
+    })()
+    return () => { cancelled = true }
+  }, [session])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    setTab('home')
   }
 
-  if (!user) {
-    return <NamePicker onSelect={handleSelectUser} />
+  if (loading) {
+    return <div style={{ ...S.container, background: C.dark }} />
+  }
+
+  if (!session || !user) {
+    return (
+      <>
+        {authError && (
+          <div style={{
+            position: 'fixed', top: 0, left: 0, right: 0,
+            padding: '12px 20px', background: '#ff6b6b', color: '#fff',
+            fontFamily: F.sans, fontSize: 13, textAlign: 'center', zIndex: 200,
+          }}>
+            {authError}
+          </div>
+        )}
+        <SignIn />
+      </>
+    )
   }
 
   const screen = {
     home: <Home user={user} onNavigate={setTab} />,
     schedule: <Schedule />,
-    people: <People currentUser={user} />,
+    people: <People currentUser={user} onSignOut={handleSignOut} />,
     engage: <Engage user={user} />,
     venue: <Venue />,
   }
