@@ -153,7 +153,7 @@ export default function Home({ user, profile, onNavigate }) {
         {matches.length > 0 && (
           <div style={{ padding: '20px 20px 0' }}>
             <div style={styles.sectionHeader}>
-              <h3 style={S.h3}>People you'd vibe with</h3>
+              <h3 style={S.h3}>People to connect with</h3>
               <button onClick={() => onNavigate('people')} style={styles.linkBtn}>
                 All people ›
               </button>

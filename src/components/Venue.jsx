@@ -51,7 +51,7 @@ const sfPicks = {
       {
         title: 'French',
         items: [
-          { name: 'Galinette', detail: 'Cozy French. Date-night vibes.', tag: 'French · $$' },
+          { name: 'Galinette', detail: 'Cozy French. Good for a date-night feel.', tag: 'French · $$' },
           { name: 'Chez Maman East', detail: 'Beloved French bistro (Potrero Hill).', tag: 'French · $$' },
           { name: 'Chez Maman West', detail: 'Sister spot — classic French bistro (Hayes Valley).', tag: 'French · $$' },
           { name: 'Zazie', detail: 'Beloved Cole Valley spot. Known for brunch.', tag: 'Brunch · French' },
@@ -122,7 +122,7 @@ const sfPicks = {
     items: [
       { name: 'Laurel Court Café', detail: 'Inside the Fairmont — grab-and-go.', tag: 'In hotel' },
       { name: 'Réveille Coffee Co.', detail: 'Reliable espresso on Polk St.', tag: 'Espresso' },
-      { name: 'Sextant Coffee', detail: 'Single-origin, calm vibe, good pour-overs.', tag: 'Pour-over' },
+      { name: 'Sextant Coffee', detail: 'Single-origin, calm atmosphere, good pour-overs.', tag: 'Pour-over' },
       { name: 'Caffe Trieste', detail: 'North Beach classic. Beat-era history.', tag: 'Historic' },
     ],
   },

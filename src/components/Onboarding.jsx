@@ -132,7 +132,7 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
         {/* Welcome line on first step */}
         {step === 0 && !isEditing && (
           <p style={styles.welcomeLine}>
-            Welcome, {user.first_name}. Quick setup so we can match you with people you'd vibe with.
+            Welcome, {user.first_name}. Quick setup so we can match you with people to connect with.
           </p>
         )}
         {step === 0 && isEditing && (
