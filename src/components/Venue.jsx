@@ -152,11 +152,6 @@ export default function Venue() {
 
   return (
     <div style={S.page}>
-      <div style={styles.banner}>
-        <h2 style={styles.bannerTitle}>Get Around</h2>
-        <p style={styles.bannerSub}>The Fairmont · San Francisco</p>
-      </div>
-
       <div style={styles.tabs}>
         <TabButton active={mainTab === 'venue'} onClick={() => setMainTab('venue')} label="Venue Guide" />
         <TabButton active={mainTab === 'explore'} onClick={() => setMainTab('explore')} label="Explore SF" />
