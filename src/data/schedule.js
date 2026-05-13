@@ -50,7 +50,7 @@ export function roomHint(room) {
   const r = room.toLowerCase()
   if (/penthouse/.test(r)) return '↑ Penthouse'
   if (/crown/.test(r)) return '↑ Top floor'
-  if (/pavilion|gold foyer|mezzanine|registration/.test(r)) return '↑ 1 floor up'
+  if (/gold foyer|mezzanine|registration/.test(r)) return '↑ 1 floor up'
   if (/intersect|diplomat/.test(r)) return '↓ 1 floor down'
   if (/tonga|vanderbilt|terrace|spa/.test(r)) return '↓ 2 floors down'
   if (/powell st|barcade|off[- ]site/.test(r)) return 'Off-site'
@@ -84,12 +84,12 @@ export const days = [
       { time: '9:15 AM', end: '9:30 AM', title: 'SDF Connect Kickoff', tag: 'keynote', location: 'Gold Room', description: 'Denelle opens the retreat, centering the week around our theme of Accelerate.', speakers: ['Denelle Dixon'] },
       { time: '9:30 AM', end: '10:30 AM', title: 'Executive Roundtable', tag: 'keynote', location: 'Gold Room', description: "Denelle facilitates a conversation with the leadership team that feels unscripted and honest, which builds exactly the trust and cohesion we're going for. The three-group structure will map to: where we're accelerating now, where we're placing bets, and what we're building toward.", speakers: ['Denelle Dixon'] },
       { time: '10:30 AM', end: '11:00 AM', title: 'Break Time', tag: 'break', location: '', description: 'Opportunity for employees to check emails and mingle cross-functionally.' },
-      { time: '11:00 AM', end: '11:45 AM', title: 'Guest Speaker — Nadine Chakar', tag: 'keynote', location: 'Gold Room', description: "Nadine Chakar is Managing Director and Global Head of DTCC Digital Assets, where she leads the firm's work at the intersection of traditional financial market infrastructure and the digital asset ecosystem.", speakers: ['Nadine Chakar'] },
+      { time: '11:00 AM', end: '11:45 AM', title: 'Fireside Chat with Denelle', tag: 'keynote', location: 'Gold Room', description: 'A fireside chat hosted by Denelle.', speakers: ['Denelle Dixon'] },
       { time: '11:45 AM', end: '1:00 PM', title: 'Lunch', tag: 'meal', location: 'Pavilion' },
       { time: '1:00 PM', end: '2:00 PM', title: 'Objectives — Opening Session', tag: 'keynote', location: 'Gold Room', description: "The three objective owners walk through each objective covering current metrics, what's been learned, and what's next." },
-      { time: '2:00 PM', end: '3:00 PM', title: 'Objectives — Breakout Session', tag: 'breakout', location: 'O1a: Gold · O1b: Green · O1c: Empire · O2: Garden · O3a/b: Crystal', description: 'Three concurrent one-hour breakout sessions, one per objective. People opt in ahead of time so we can pre-assign cross-functional small groups of 4–6.' },
+      { time: '2:00 PM', end: '3:00 PM', title: 'Objectives — Breakout Session', tag: 'breakout', location: 'Breakout rooms', description: 'Three concurrent one-hour breakout sessions, one per objective. Your assigned room is on your name tag and in your profile.' },
       { time: '3:00 PM', end: '3:30 PM', title: 'Break + Mingle', tag: 'break', location: '' },
-      { time: '3:30 PM', end: '4:30 PM', title: 'The Stellar Oracle Hunt', tag: 'activity', location: 'Gold Room', description: 'A fun, company-wide game that teaches everyone how one of our newest technologies works, by actually using it. The technology being showcased is called x402 — a protocol that lets AI agents pay each other for services using Stellar. The Oracles are those AI agents. Experience the concept firsthand before getting an explanation of the technical term.' },
+      { time: '3:30 PM', end: '4:30 PM', title: 'Afternoon Activity', tag: 'activity', location: 'Gold Room', description: 'Group activity — details to be announced.' },
       { time: '4:30 PM', end: '6:00 PM', title: 'Work Time', tag: 'break', location: '' },
       { time: '6:00 PM', end: '9:00 PM', title: 'Barcade at Golden Gate Taproom', tag: 'social', location: '449 Powell St, San Francisco', description: 'Evening out at Barcade — games, drinks, and team time.' },
     ],
@@ -109,11 +109,11 @@ export const days = [
       { time: '9:15 AM', end: '10:00 AM', title: 'Guest Speaker on AI', tag: 'keynote', location: 'Gold Room', description: "WIP — we're kicking off Day 2 focusing on AI with a guest speaker." },
       { time: '10:00 AM', end: '10:15 AM', title: 'Stretch Break', tag: 'break', location: '' },
       { time: '10:15 AM', end: '10:30 AM', title: 'Amy Kicks Off Hackathon', tag: 'workshop', location: 'Gold Room', description: "We're dedicating 2.5 hours to AI. The AI Champions will lead a workshop for the entire org that is energizing, practical, and cross-functional.", speakers: ['Amy'] },
-      { time: '10:30 AM', end: '11:45 AM', title: 'AI Hackathon', tag: 'workshop', location: 'Crystal + Fountain Room' },
+      { time: '10:30 AM', end: '11:45 AM', title: 'AI Hackathon', tag: 'workshop', location: 'Conference rooms', description: 'Your assigned group/room is shown in your profile.' },
       { time: '11:45 AM', end: '12:45 PM', title: 'Lunch', tag: 'meal', location: 'Pavilion' },
-      { time: '12:45 PM', end: '1:45 PM', title: 'AI Hackathon (cont.)', tag: 'workshop', location: 'Crystal + Fountain Room' },
+      { time: '12:45 PM', end: '1:45 PM', title: 'AI Hackathon (cont.)', tag: 'workshop', location: 'Conference rooms' },
       { time: '1:45 PM', end: '2:15 PM', title: 'Transition Time', tag: 'break', location: '', description: 'Move from Fountain/Crystal Room to the main general assembly to meet the students and kick off the volunteering session.' },
-      { time: '2:15 PM', end: '5:00 PM', title: 'Volunteer (3 hours)', tag: 'activity', location: 'Gold Room · Breakout: Green Room · Breakout: Garden Room', description: "We're partnering with GIVE and DreamOp to bring in future leaders to hear from SDF employees through panels and 1:1 discussions. Breakout groups will be facilitated by DreamOp." },
+      { time: '2:15 PM', end: '5:00 PM', title: 'Volunteer (3 hours)', tag: 'activity', location: 'Conference rooms', description: "We're partnering with GIVE and DreamOp to bring in future leaders to hear from SDF employees through panels and 1:1 discussions. Breakout groups will be facilitated by DreamOp." },
       { time: '5:00 PM', end: '6:00 PM', title: 'Work Time', tag: 'break', location: '' },
       { time: '6:00 PM', end: '8:00 PM', title: 'Team Dinners', tag: 'social', location: '', description: 'Dinner with your team — details by team.' },
     ],
@@ -128,7 +128,7 @@ export const days = [
     description: 'Day 3 is all about the people. We wrap up SDF Connect: Accelerate with quality team time, team presentations, and the Stellar Awards — celebrating the work, the wins, and the individuals who made it all possible.',
     sessions: [
       { time: '8:00 AM', end: '9:00 AM', title: 'Breakfast', tag: 'meal', location: 'Pavilion' },
-      { time: '9:00 AM', end: '12:00 PM', title: 'Team Time', tag: 'team', location: 'Business Development: Crystal · Engineering: Gold · Finance & Operations: Intersect I/II · Growth: Fountain · Legal & Policy: Vanderbilt · Marketing: Diplomat · Office of the CEO: Empire · People: Garden · Product: Green', description: 'A rare opportunity to be together in person — use it to collaborate, align on priorities, and turn ideas into action. Come ready to plan ahead, set intentions, and leave with clear next steps for what your team wants to accomplish together.' },
+      { time: '9:00 AM', end: '12:00 PM', title: 'Team Time', tag: 'team', location: 'Your team room', description: 'A rare opportunity to be together in person — use it to collaborate, align on priorities, and turn ideas into action. Each team has a dedicated room; check with your team lead or your profile.' },
       { time: '12:00 PM', end: '1:00 PM', title: 'Lunch', tag: 'meal', location: 'Pavilion' },
       { time: '1:00 PM', end: '1:30 PM', title: 'SimonSez', tag: 'social', location: 'Gold Room', description: "Time to shake off the post-lunch slump! We're bringing in a secret guest — Simon Sez — to get the group energized and on their feet." },
       { time: '1:30 PM', end: '2:15 PM', title: 'AI Presentations', tag: 'keynote', location: 'Gold Room', description: 'Winners from the AI Hackathon will be selected using Claude and invited to present their AI problem and solution to the group.' },

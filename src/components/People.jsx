@@ -233,9 +233,11 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
             {initials(person.name)}
           </div>
           <h3 style={{ ...S.h2, marginTop: 12 }}>{person.name}</h3>
-          <p style={{ ...S.caption, marginTop: 4, color: C.textFade }}>
-            {person.team}{person.location ? ` · ${person.location}` : ''}
-          </p>
+          {person.location && (
+            <p style={{ ...S.caption, marginTop: 4, color: C.textFade }}>
+              {person.location}
+            </p>
+          )}
         </div>
 
         {profile?.ask_me_about && (
@@ -327,6 +329,7 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
 
 function PersonRow({ member, subtitle, currentUser, onSelect }) {
   const isYou = currentUser?.email === member.email
+  const sub = subtitle || member.location
   return (
     <button onClick={() => onSelect(member)} style={styles.personRow}>
       <div style={{ ...styles.personAvatar, background: getAvatarColor(member.id) }}>
@@ -337,7 +340,7 @@ function PersonRow({ member, subtitle, currentUser, onSelect }) {
           {member.name}
           {isYou && <span style={styles.youBadge}>You</span>}
         </div>
-        <div style={styles.personTitle}>{subtitle || member.team}</div>
+        {sub && <div style={styles.personTitle}>{sub}</div>}
       </div>
       <span style={{ color: C.textMuted, fontSize: 18 }}>&rsaquo;</span>
     </button>
