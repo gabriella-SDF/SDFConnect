@@ -6,7 +6,7 @@ import Schedule from './components/Schedule'
 import People from './components/People'
 import Engage from './components/Engage'
 import Venue from './components/Venue'
-import SignIn from './components/SignIn'
+import NamePicker from './components/NamePicker'
 import Onboarding from './components/Onboarding'
 
 const tabs = [
@@ -19,83 +19,62 @@ const tabs = [
 
 export default function App() {
   const [tab, setTab] = useState('home')
-  const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [profileChecked, setProfileChecked] = useState(false)
-  const [authError, setAuthError] = useState('')
   const [loading, setLoading] = useState(true)
   const [showEditProfile, setShowEditProfile] = useState(false)
 
+  // Restore the user from localStorage on first load.
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setLoading(false)
-    })
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
-      setSession(sess)
-    })
-    return () => sub.subscription.unsubscribe()
+    try {
+      const saved = localStorage.getItem('sdf-connect-user')
+      if (saved) setUser(JSON.parse(saved))
+    } catch {}
+    setLoading(false)
   }, [])
 
+  // Whenever user changes, look up their profile.
   useEffect(() => {
-    if (!session?.user?.email) {
-      setUser(null)
+    if (!user?.id) {
       setProfile(null)
       setProfileChecked(false)
       return
     }
     let cancelled = false
     ;(async () => {
-      const { data, error } = await supabase
-        .from('employees')
-        .select('id, first_name, last_name, department, email, title, location')
-        .eq('email', session.user.email.toLowerCase())
-        .maybeSingle()
-      if (cancelled) return
-      if (error || !data) {
-        setAuthError(
-          `${session.user.email} isn't in the retreat directory yet. Please contact an organizer.`
-        )
-        await supabase.auth.signOut()
-        return
-      }
-      setAuthError('')
-      setUser({
-        id: data.id,
-        name: `${data.first_name} ${data.last_name}`,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        title: data.title,
-        team: data.department,
-        email: data.email,
-        location: data.location,
-      })
-      // Look up profile (quiz answers)
-      const { data: pdata } = await supabase
+      const { data } = await supabase
         .from('profiles')
         .select('*')
-        .eq('user_id', session.user.id)
+        .eq('user_id', user.id)
         .maybeSingle()
       if (cancelled) return
-      setProfile(pdata || null)
+      setProfile(data || null)
       setProfileChecked(true)
     })()
     return () => { cancelled = true }
-  }, [session])
+  }, [user?.id])
 
   const refetchProfile = async () => {
-    if (!session?.user?.id) return
+    if (!user?.id) return
     const { data } = await supabase
       .from('profiles')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .maybeSingle()
     setProfile(data || null)
   }
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
+  const handleSelectUser = (person) => {
+    setUser(person)
+    localStorage.setItem('sdf-connect-user', JSON.stringify(person))
+  }
+
+  const handleSignOut = () => {
+    localStorage.removeItem('sdf-connect-user')
+    setUser(null)
+    setProfile(null)
+    setProfileChecked(false)
     setTab('home')
   }
 
@@ -103,21 +82,8 @@ export default function App() {
     return <div style={{ ...S.container, background: C.dark }} />
   }
 
-  if (!session || !user) {
-    return (
-      <>
-        {authError && (
-          <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0,
-            padding: '12px 20px', background: '#ff6b6b', color: '#fff',
-            fontFamily: F.sans, fontSize: 13, textAlign: 'center', zIndex: 200,
-          }}>
-            {authError}
-          </div>
-        )}
-        <SignIn />
-      </>
-    )
+  if (!user) {
+    return <NamePicker onSelect={handleSelectUser} />
   }
 
   // First-time users see the quiz before main app
@@ -125,7 +91,7 @@ export default function App() {
     return (
       <Onboarding
         user={user}
-        session={session}
+        session={{ user: { id: user.id, email: user.email } }}
         onComplete={() => { refetchProfile() }}
         onSkipAll={() => { refetchProfile() }}
       />
@@ -146,7 +112,7 @@ export default function App() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 300, background: C.dark }}>
           <Onboarding
             user={user}
-            session={session}
+            session={{ user: { id: user.id, email: user.email } }}
             initialProfile={profile}
             isEditing
             onComplete={() => { refetchProfile(); setShowEditProfile(false) }}

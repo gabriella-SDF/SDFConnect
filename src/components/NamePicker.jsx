@@ -1,39 +1,60 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { C, F, S } from '../theme'
-
-// Placeholder directory — will be replaced with Supabase data
-const directory = [
-  { id: 1, name: 'Gabriella Pellagatti', title: 'Content & Marketing', team: 'Marketing' },
-  { id: 2, name: 'Vivian Bui', title: 'Content & Marketing', team: 'Marketing' },
-  { id: 3, name: 'Denelle Dixon', title: 'CEO', team: 'Leadership' },
-  { id: 4, name: 'Lisa Macnew', title: 'Operations', team: 'Operations' },
-  { id: 5, name: 'Tomer Weller', title: 'Engineering', team: 'Engineering' },
-  { id: 6, name: 'Nicole Martinez', title: 'Product', team: 'Product' },
-  { id: 7, name: 'Jose Luu', title: 'Engineering', team: 'Engineering' },
-  { id: 8, name: 'Nick Garcia', title: 'Engineering', team: 'Engineering' },
-  { id: 9, name: 'Nico Barry', title: 'Engineering', team: 'Engineering' },
-  { id: 10, name: 'Destinee Agard', title: 'People', team: 'People' },
-]
+import { supabase } from '../lib/supabase'
 
 export default function NamePicker({ onSelect }) {
   const [search, setSearch] = useState('')
+  const [employees, setEmployees] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const filtered = directory.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.team.toLowerCase().includes(search.toLowerCase())
-  )
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      const { data, error: dbError } = await supabase
+        .from('employees')
+        .select('id, first_name, last_name, department, email, location')
+        .order('first_name', { ascending: true })
+      if (cancelled) return
+      if (dbError) {
+        setError('Could not load directory. Try again in a moment.')
+        setLoading(false)
+        return
+      }
+      setEmployees(
+        (data || []).map(e => ({
+          id: e.id,
+          name: `${e.first_name} ${e.last_name}`,
+          first_name: e.first_name,
+          last_name: e.last_name,
+          team: e.department || 'Other',
+          email: e.email,
+          location: e.location || '',
+        }))
+      )
+      setLoading(false)
+    })()
+    return () => { cancelled = true }
+  }, [])
+
+  const filtered = useMemo(() => {
+    if (!search) return employees
+    const q = search.toLowerCase()
+    return employees.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      (p.team && p.team.toLowerCase().includes(q))
+    )
+  }, [search, employees])
 
   return (
     <div style={styles.wrapper}>
       <div style={styles.inner}>
-        {/* Brand */}
         <div style={styles.brandBlock}>
           <img src="/logo-white.png" alt="SDF Connect" style={{ height: 40, marginBottom: 16 }} />
           <h1 style={styles.brandTitle}>Accelerate</h1>
           <p style={styles.brandSub}>May 18–22, 2026 · Fairmont San Francisco</p>
         </div>
 
-        {/* Picker */}
         <div style={styles.pickerCard}>
           <p style={styles.pickerLabel}>Who are you?</p>
           <input
@@ -43,7 +64,13 @@ export default function NamePicker({ onSelect }) {
             onChange={e => setSearch(e.target.value)}
             style={styles.input}
             autoFocus
+            autoCapitalize="off"
+            autoComplete="off"
           />
+
+          {loading && <p style={styles.helper}>Loading directory…</p>}
+          {error && <p style={{ ...styles.helper, color: '#ff6b6b' }}>{error}</p>}
+
           <div style={styles.list}>
             {filtered.map(person => (
               <button
@@ -56,11 +83,11 @@ export default function NamePicker({ onSelect }) {
                 </div>
                 <div>
                   <div style={styles.personName}>{person.name}</div>
-                  <div style={styles.personTitle}>{person.title} · {person.team}</div>
+                  <div style={styles.personTitle}>{person.location || person.team}</div>
                 </div>
               </button>
             ))}
-            {filtered.length === 0 && (
+            {!loading && filtered.length === 0 && (
               <p style={{ ...S.caption, padding: 20, textAlign: 'center' }}>
                 No one found. Check spelling or ask an organizer.
               </p>
@@ -82,20 +109,12 @@ const styles = {
     padding: 24,
   },
   inner: {
-    maxWidth: 400,
+    maxWidth: 420,
     width: '100%',
   },
   brandBlock: {
     textAlign: 'center',
     marginBottom: 40,
-  },
-  brandLabel: {
-    fontFamily: F.sans,
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: '0.16em',
-    color: C.yellow,
-    marginBottom: 8,
   },
   brandTitle: {
     fontFamily: F.serif,
@@ -135,8 +154,15 @@ const styles = {
     outline: 'none',
     marginBottom: 12,
   },
+  helper: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    color: '#999',
+    padding: 16,
+    textAlign: 'center',
+  },
   list: {
-    maxHeight: 320,
+    maxHeight: 360,
     overflowY: 'auto',
     WebkitOverflowScrolling: 'touch',
   },
