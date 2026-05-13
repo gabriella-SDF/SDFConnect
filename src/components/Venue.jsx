@@ -15,12 +15,12 @@ const levels = [
 ]
 
 const hubRooms = [
-  { id: 'gold', name: 'Gold Room', purpose: 'General Sessions · Oracle Hunt · Awards' },
-  { id: 'green', name: 'Green Room', purpose: 'Breakouts · Product team time' },
-  { id: 'garden', name: 'Garden Room', purpose: 'Breakouts · People team time' },
-  { id: 'empire', name: 'Empire Room', purpose: 'Breakouts · Office of CEO' },
-  { id: 'crystal', name: 'Crystal Room', purpose: 'AI Hackathon · BD team time' },
-  { id: 'fountain', name: 'Fountain Room', purpose: 'AI Hackathon · Growth team' },
+  { id: 'gold', name: 'Gold Room', purpose: 'General Sessions · Awards' },
+  { id: 'green', name: 'Green Room', purpose: 'Breakouts' },
+  { id: 'garden', name: 'Garden Room', purpose: 'Breakouts' },
+  { id: 'empire', name: 'Empire Room', purpose: 'Breakouts' },
+  { id: 'crystal', name: 'Crystal Room', purpose: 'AI Hackathon' },
+  { id: 'fountain', name: 'Fountain Room', purpose: 'AI Hackathon' },
 ]
 
 const upRooms = [
