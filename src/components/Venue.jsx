@@ -223,29 +223,22 @@ function VenueGuide() {
 
   return (
     <div>
-      {/* UP — thin row */}
-      <FloorMarker label="UP" sub="Above Lobby" rooms={upRooms} />
-      <Connector direction="down" />
-
-      {/* HUB — floor plan image as the visual anchor */}
-      <div style={styles.floorCard}>
+      {/* Full venue map — all 5 levels in one visual */}
+      <div style={styles.venueMapCard}>
         <div style={styles.floorBadge}>
           <span style={styles.youHereDot} />
           You are here · Lobby Level
         </div>
         <img
-          src="/lobby-floorplan.jpg"
-          alt="Fairmont Lobby Level floor plan showing key rooms"
-          style={styles.floorImage}
+          src="/venue-full.jpg"
+          alt="Fairmont San Francisco — all five levels"
+          style={styles.venueMapImage}
           loading="lazy"
         />
-        <p style={styles.floorCaption}>Most sessions happen on this level.</p>
+        <p style={styles.floorCaption}>
+          Crown · Mezzanine · Lobby · Arcade · Terrace
+        </p>
       </div>
-
-      <Connector direction="down" />
-
-      {/* DOWN */}
-      <FloorMarker label="DOWN" sub="Below Lobby" rooms={downRooms} />
 
       {/* Hub room reference */}
       <h3 style={styles.sectionTitle}>Where things happen</h3>
@@ -274,10 +267,6 @@ function VenueGuide() {
           )
         })}
       </div>
-
-      <p style={styles.footerNote}>
-        All hub rooms are on the same level. Pavilion is one floor up; Tonga Room is on the Terrace Level, two floors down.
-      </p>
     </div>
   )
 }
@@ -525,7 +514,22 @@ const styles = {
     fontSize: 12,
     color: C.textFade,
   },
-  // Floor plan image (HUB / lobby)
+  // Full venue map (all 5 levels)
+  venueMapCard: {
+    background: '#FFFCF4',
+    border: `1px solid ${C.border}`,
+    borderRadius: 18,
+    padding: 14,
+  },
+  venueMapImage: {
+    width: '100%',
+    height: 'auto',
+    display: 'block',
+    borderRadius: 10,
+    maxHeight: 720,
+    objectFit: 'contain',
+  },
+  // Floor plan image (HUB / lobby) — legacy, may remove
   floorCard: {
     background: '#FFFCF4',
     border: `2px solid ${C.lavender}`,
