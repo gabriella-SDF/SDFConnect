@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { C, F, S, tagColors } from '../theme'
-import { days, RETREAT_START, RETREAT_END } from '../data/schedule'
+import { days, icebreakers, RETREAT_START, RETREAT_END, briefRoom, roomHint } from '../data/schedule'
 
 function getRetreatState() {
   const now = new Date()
@@ -17,23 +17,6 @@ function getRetreatState() {
   return { phase: 'during', daysUntil: 0, currentDay: dayIndex }
 }
 
-function getNowSession(sessions) {
-  const now = new Date()
-  const h = now.getHours()
-  const m = now.getMinutes()
-  const nowMin = h * 60 + m
-
-  for (const s of sessions) {
-    if (!s.time) continue
-    const [startH, startM] = parseTime(s.time)
-    const [endH, endM] = parseTime(s.end)
-    const start = startH * 60 + startM
-    const end = endH * 60 + endM
-    if (nowMin >= start && nowMin < end) return s.title
-  }
-  return null
-}
-
 function parseTime(str) {
   if (!str) return [0, 0]
   const [time, period] = str.split(' ')
@@ -43,8 +26,41 @@ function parseTime(str) {
   return [h, m]
 }
 
+function toMin(str) {
+  const [h, m] = parseTime(str)
+  return h * 60 + m
+}
+
+function getNowSession(sessions) {
+  const now = new Date()
+  const nowMin = now.getHours() * 60 + now.getMinutes()
+  for (const s of sessions) {
+    if (!s.time) continue
+    if (nowMin >= toMin(s.time) && nowMin < toMin(s.end)) return s
+  }
+  return null
+}
+
+function getNextSession(sessions) {
+  const now = new Date()
+  const nowMin = now.getHours() * 60 + now.getMinutes()
+  for (const s of sessions) {
+    if (!s.time) continue
+    if (toMin(s.time) > nowMin) return s
+  }
+  return null
+}
+
+function briefTime(t) {
+  if (!t) return ''
+  return t.replace(':00 ', '').replace(' AM', 'am').replace(' PM', 'pm').toLowerCase()
+}
+
 export default function Home({ user, onNavigate }) {
   const [state, setState] = useState(getRetreatState)
+  const [icebreakerIdx, setIcebreakerIdx] = useState(() =>
+    Math.floor(Math.random() * icebreakers.length)
+  )
 
   useEffect(() => {
     const interval = setInterval(() => setState(getRetreatState()), 60000)
@@ -52,14 +68,22 @@ export default function Home({ user, onNavigate }) {
   }, [])
 
   const todayData = state.currentDay !== null ? days[state.currentDay] : null
+  const previewDay = todayData || days.find(d => d.id === 'tue') || days[1]
   const nowSession = todayData ? getNowSession(todayData.sessions) : null
+  const nextSession = todayData ? getNextSession(todayData.sessions) : null
+
+  const shuffleIcebreaker = () => {
+    let next
+    do { next = Math.floor(Math.random() * icebreakers.length) } while (next === icebreakerIdx)
+    setIcebreakerIdx(next)
+  }
 
   return (
     <div>
-      {/* Hero — dark, seamless with header */}
+      {/* Hero — SF skyline photo with dark overlay */}
       <div style={styles.hero}>
+        <div style={styles.heroOverlay} />
         <div style={styles.heroInner}>
-          {/* Greeting integrated into hero */}
           <div style={styles.greeting}>
             Hello, {user.name.split(' ')[0]}
           </div>
@@ -76,16 +100,21 @@ export default function Home({ user, onNavigate }) {
 
           {state.phase === 'during' && todayData && (
             <>
-              <div style={styles.countdownNumber}>{todayData.title}</div>
-              <div style={styles.countdownUnit}>{todayData.theme}</div>
+              <div style={styles.dayLabel}>{todayData.title}</div>
+              <div style={styles.dayTheme}>{todayData.theme}</div>
               {nowSession && (
                 <div style={styles.nowBadge}>
                   <span style={styles.nowDot} />
-                  NOW: {nowSession}
+                  NOW: {nowSession.title}
+                </div>
+              )}
+              {!nowSession && nextSession && (
+                <div style={styles.nextBadge}>
+                  Up next at {briefTime(nextSession.time)} — {nextSession.title}
                 </div>
               )}
               <div style={styles.yellowRule} />
-              <div style={styles.heroDate}>May 18–22, 2026</div>
+              <div style={styles.heroDate}>{todayData.label}</div>
             </>
           )}
 
@@ -96,90 +125,75 @@ export default function Home({ user, onNavigate }) {
               <div style={styles.yellowRule} />
             </>
           )}
-
-          {/* Quick Links — inside the dark hero */}
-          <div style={styles.quickGrid}>
-            {[
-              { label: 'Schedule', icon: '01', desc: '5 days', color: C.yellow, tab: 'schedule' },
-              { label: 'People', icon: '02', desc: '~160', color: C.teal, tab: 'people' },
-              { label: 'Q&A', icon: '03', desc: 'Anonymous', color: C.lavender, tab: 'engage' },
-              { label: 'Venue', icon: '04', desc: 'Map', color: C.tan, tab: 'venue' },
-            ].map(q => (
-              <button
-                key={q.label}
-                onClick={() => onNavigate(q.tab)}
-                style={styles.quickCard}
-              >
-                <div style={{ ...styles.quickNumber, color: q.color }}>{q.icon}</div>
-                <div style={styles.quickLabel}>{q.label}</div>
-                <div style={styles.quickDesc}>{q.desc}</div>
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
       {/* Content — light */}
       <div style={styles.content}>
-        {/* Today's Schedule Preview */}
-        <div style={{ padding: '24px 20px 0' }}>
-          <h3 style={{ ...S.h3, marginBottom: 12 }}>
-            {state.phase === 'during' ? "Today's Schedule" : "Up Next — Tuesday"}
-          </h3>
-          {(todayData || days[1]).sessions.slice(0, 5).map((s, i) => {
-            const tag = tagColors[s.tag] || tagColors.break
-            const isNow = s.title === nowSession
-            return (
-              <div
-                key={i}
-                style={{
-                  ...styles.sessionRow,
-                  borderLeft: isNow ? `3px solid ${C.yellow}` : '3px solid transparent',
-                  background: isNow ? C.yellow + '10' : 'transparent',
-                }}
-              >
-                <div style={styles.sessionTime}>{s.time || '—'}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ ...styles.tag, background: tag.bg, color: tag.text }}>{s.tag}</span>
-                    <span style={styles.sessionTitle}>{s.title}</span>
-                  </div>
-                  {s.location && <div style={S.caption}>{s.location}</div>}
-                </div>
-                {isNow && <span style={styles.nowDotSmall} />}
-              </div>
-            )
-          })}
-          <button
-            onClick={() => onNavigate('schedule')}
-            style={{ ...S.btnSecondary, width: '100%', marginTop: 12 }}
-          >
-            View Full Schedule
+        {/* Floor plan banner */}
+        <div style={{ padding: '20px 20px 0' }}>
+          <button onClick={() => onNavigate('venue')} style={styles.mapBanner}>
+            <img src="/lobby-floorplan.jpg" alt="Lobby floor plan" style={styles.mapBannerImg} />
+            <div style={styles.mapBannerOverlay} />
+            <div style={styles.mapBannerText}>
+              <div style={styles.mapBannerKicker}>The Fairmont · Lobby Level</div>
+              <div style={styles.mapBannerTitle}>Find your way around →</div>
+            </div>
           </button>
         </div>
 
-        {/* Engagement Cards */}
-        <div style={{ padding: '28px 20px 0' }}>
-          <h3 style={{ ...S.h3, marginBottom: 12 }}>Get Involved</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {[
-              { label: 'Anonymous Q&A', desc: 'Ask anything during sessions', color: C.teal, tab: 'engage' },
-              { label: 'Share a Testimonial', desc: 'Tell us what makes SDF special', color: C.lavender, tab: 'engage' },
-              { label: 'Icebreaker Cards', desc: 'Conversation starters for breaks', color: C.navy, tab: 'engage' },
-            ].map((card, i) => (
-              <button
-                key={i}
-                onClick={() => onNavigate(card.tab)}
-                style={styles.engageCard}
-              >
-                <div style={{ ...styles.engageDot, background: card.color }} />
-                <div style={{ flex: 1 }}>
-                  <div style={{ ...S.body, fontWeight: 600, fontSize: 14 }}>{card.label}</div>
-                  <div style={{ ...S.caption, marginTop: 2 }}>{card.desc}</div>
+        {/* Today's / Next Schedule — condensed */}
+        <div style={{ padding: '20px 20px 0' }}>
+          <div style={styles.sectionHeader}>
+            <h3 style={S.h3}>
+              {state.phase === 'during' ? "Today's Schedule" : `Up Next — ${previewDay.label.split(',')[0]}`}
+            </h3>
+            <button onClick={() => onNavigate('schedule')} style={styles.linkBtn}>
+              Full schedule ›
+            </button>
+          </div>
+
+          <div style={styles.scheduleList}>
+            {previewDay.sessions.map((s, i) => {
+              const isNow = nowSession && s.title === nowSession.title
+              const room = briefRoom(s)
+              const hint = roomHint(room)
+              return (
+                <div
+                  key={i}
+                  style={{
+                    ...styles.briefRow,
+                    background: isNow ? C.yellow + '14' : 'transparent',
+                    borderLeft: isNow ? `3px solid ${C.yellow}` : '3px solid transparent',
+                  }}
+                >
+                  <span style={styles.briefTime}>{briefTime(s.time) || '—'}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <span style={styles.briefTitle}>{s.title}</span>
+                    {room && <span style={styles.briefRoom}>· {room}</span>}
+                    {hint && <span style={styles.briefHint}>· {hint}</span>}
+                  </div>
+                  {isNow && <span style={styles.nowDotSmall} />}
                 </div>
-                <span style={{ color: C.textMuted, fontSize: 18 }}>&rsaquo;</span>
-              </button>
-            ))}
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Icebreaker card */}
+        <div style={{ padding: '24px 20px 0' }}>
+          <div style={styles.sectionHeader}>
+            <h3 style={S.h3}>Icebreaker</h3>
+            <button onClick={() => onNavigate('engage')} style={styles.linkBtn}>
+              More cards ›
+            </button>
+          </div>
+          <div style={styles.icebreakerCard}>
+            <div style={styles.icebreakerKicker}>Conversation starter</div>
+            <p style={styles.icebreakerText}>{icebreakers[icebreakerIdx]}</p>
+            <button onClick={shuffleIcebreaker} style={styles.shuffleBtn}>
+              Shuffle →
+            </button>
           </div>
         </div>
       </div>
@@ -189,11 +203,19 @@ export default function Home({ user, onNavigate }) {
 
 const styles = {
   hero: {
-    background: C.dark,
-    padding: '8px 20px 0',
+    position: 'relative',
+    background: `linear-gradient(180deg, rgba(15,15,15,0.55) 0%, rgba(15,15,15,0.78) 60%, rgba(15,15,15,0.95) 100%), url('/sf-hero.jpg') center 30% / cover no-repeat, ${C.dark}`,
+    padding: '32px 20px 36px',
     textAlign: 'center',
+    overflow: 'hidden',
+  },
+  heroOverlay: {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
   },
   heroInner: {
+    position: 'relative',
     maxWidth: 480,
     margin: '0 auto',
   },
@@ -201,9 +223,10 @@ const styles = {
     fontFamily: F.serif,
     fontSize: 16,
     fontWeight: 400,
-    color: '#999',
+    color: '#cfcfcf',
     fontStyle: 'italic',
-    marginBottom: 24,
+    marginBottom: 28,
+    textShadow: '0 1px 6px rgba(0,0,0,0.5)',
   },
   countdownNumber: {
     fontFamily: F.serif,
@@ -212,15 +235,34 @@ const styles = {
     color: '#fff',
     lineHeight: 1,
     letterSpacing: '-0.02em',
+    textShadow: '0 2px 12px rgba(0,0,0,0.5)',
   },
   countdownUnit: {
     fontFamily: F.sans,
     fontSize: 14,
     fontWeight: 500,
-    color: '#666',
+    color: '#bbb',
     letterSpacing: '0.08em',
     textTransform: 'uppercase',
     marginTop: 4,
+  },
+  dayLabel: {
+    fontFamily: F.serif,
+    fontSize: 56,
+    fontWeight: 600,
+    color: '#fff',
+    lineHeight: 1.05,
+    fontStyle: 'italic',
+    textShadow: '0 2px 12px rgba(0,0,0,0.5)',
+  },
+  dayTheme: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    color: '#cfcfcf',
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    marginTop: 6,
   },
   yellowRule: {
     width: 48,
@@ -233,34 +275,46 @@ const styles = {
     fontFamily: F.sans,
     fontSize: 13,
     fontWeight: 500,
-    color: '#aaa',
+    color: '#ddd',
     letterSpacing: '0.02em',
   },
   heroVenue: {
     fontFamily: F.sans,
     fontSize: 12,
-    color: '#666',
+    color: '#aaa',
     marginTop: 2,
   },
   nowBadge: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 8,
-    background: C.yellow + '20',
-    color: C.yellow,
+    background: C.yellow,
+    color: C.dark,
     fontFamily: F.sans,
     fontSize: 12,
-    fontWeight: 600,
+    fontWeight: 700,
     letterSpacing: '0.04em',
-    padding: '8px 16px',
+    padding: '8px 14px',
     borderRadius: 20,
     margin: '16px auto 0',
+  },
+  nextBadge: {
+    display: 'inline-block',
+    background: 'rgba(255,255,255,0.12)',
+    color: '#fff',
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: 20,
+    margin: '16px auto 0',
+    backdropFilter: 'blur(4px)',
   },
   nowDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    background: C.yellow,
+    background: C.dark,
   },
   nowDotSmall: {
     width: 8,
@@ -269,95 +323,153 @@ const styles = {
     background: C.yellow,
     flexShrink: 0,
   },
-  quickGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 8,
-    padding: '28px 0 24px',
-  },
-  quickCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 4,
-    padding: '14px 4px',
-    background: C.darkCard,
-    borderRadius: 14,
-    border: `1px solid ${C.darkBorder}`,
-    cursor: 'pointer',
-  },
-  quickNumber: {
-    fontFamily: F.sans,
-    fontSize: 20,
-    fontWeight: 700,
-    lineHeight: 1,
-  },
-  quickLabel: {
-    fontFamily: F.sans,
-    fontSize: 11,
-    fontWeight: 600,
-    color: '#fff',
-    letterSpacing: '0.02em',
-  },
-  quickDesc: {
-    fontFamily: F.sans,
-    fontSize: 10,
-    color: '#666',
-  },
   content: {
     background: C.bg,
     borderRadius: '24px 24px 0 0',
     paddingBottom: 40,
+    marginTop: -16,
+    position: 'relative',
   },
-  sessionRow: {
+  sectionHeader: {
     display: 'flex',
-    alignItems: 'flex-start',
-    gap: 12,
-    padding: '10px 8px',
-    borderRadius: 8,
-    marginBottom: 2,
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    marginBottom: 12,
   },
-  sessionTime: {
+  linkBtn: {
+    background: 'none',
+    border: 'none',
+    color: C.textFade,
     fontFamily: F.sans,
     fontSize: 12,
     fontWeight: 500,
-    color: C.textFade,
-    width: 64,
-    flexShrink: 0,
-    paddingTop: 1,
+    cursor: 'pointer',
+    padding: 0,
   },
-  sessionTitle: {
+  scheduleList: {
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderRadius: 14,
+    overflow: 'hidden',
+  },
+  briefRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '12px 14px',
+    borderBottom: `1px solid ${C.border}`,
+  },
+  briefTime: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 600,
+    color: C.textFade,
+    width: 56,
+    flexShrink: 0,
+    letterSpacing: '0.02em',
+  },
+  briefTitle: {
     fontFamily: F.sans,
     fontSize: 14,
     fontWeight: 500,
     color: C.text,
   },
-  tag: {
+  briefRoom: {
     fontFamily: F.sans,
-    fontSize: 9,
+    fontSize: 13,
+    color: C.textFade,
+    marginLeft: 6,
+  },
+  briefHint: {
+    fontFamily: F.sans,
+    fontSize: 12,
     fontWeight: 600,
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
-    padding: '3px 8px',
-    borderRadius: 4,
-    flexShrink: 0,
+    color: C.navy,
+    marginLeft: 4,
+    letterSpacing: '0.02em',
   },
-  engageCard: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 14,
-    padding: '16px 18px',
-    background: C.card,
-    borderRadius: 14,
-    border: `1px solid ${C.border}`,
-    cursor: 'pointer',
-    textAlign: 'left',
+  mapBanner: {
+    position: 'relative',
+    display: 'block',
     width: '100%',
+    height: 130,
+    padding: 0,
+    border: `1px solid ${C.border}`,
+    borderRadius: 16,
+    overflow: 'hidden',
+    cursor: 'pointer',
+    background: C.card,
+    textAlign: 'left',
   },
-  engageDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    flexShrink: 0,
+  mapBannerImg: {
+    position: 'absolute',
+    inset: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    objectPosition: 'center',
+  },
+  mapBannerOverlay: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(90deg, rgba(0,46,93,0.85) 0%, rgba(0,46,93,0.55) 55%, rgba(0,46,93,0) 100%)',
+  },
+  mapBannerText: {
+    position: 'absolute',
+    left: 18,
+    top: '50%',
+    transform: 'translateY(-50%)',
+    color: '#fff',
+  },
+  mapBannerKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    color: 'rgba(255,255,255,0.85)',
+    marginBottom: 6,
+  },
+  mapBannerTitle: {
+    fontFamily: F.serif,
+    fontSize: 19,
+    fontWeight: 600,
+    fontStyle: 'italic',
+    color: '#fff',
+    letterSpacing: '-0.01em',
+  },
+  icebreakerCard: {
+    background: `linear-gradient(135deg, ${C.navy}, ${C.teal})`,
+    borderRadius: 18,
+    padding: 24,
+    color: '#fff',
+  },
+  icebreakerKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    color: 'rgba(255,255,255,0.7)',
+    marginBottom: 10,
+  },
+  icebreakerText: {
+    fontFamily: F.serif,
+    fontSize: 19,
+    fontWeight: 500,
+    lineHeight: 1.4,
+    fontStyle: 'italic',
+  },
+  shuffleBtn: {
+    marginTop: 16,
+    background: 'rgba(255,255,255,0.15)',
+    border: '1px solid rgba(255,255,255,0.25)',
+    color: '#fff',
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    padding: '8px 14px',
+    borderRadius: 20,
+    cursor: 'pointer',
   },
 }

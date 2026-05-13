@@ -11,9 +11,9 @@ import SignIn from './components/SignIn'
 const tabs = [
   { id: 'home', label: 'Home', icon: '◆' },
   { id: 'schedule', label: 'Schedule', icon: '▦' },
-  { id: 'people', label: 'People', icon: '●●' },
   { id: 'engage', label: 'Engage', icon: '✦' },
-  { id: 'venue', label: 'Venue', icon: '⌖' },
+  { id: 'venue', label: 'Get Around', icon: '⌖' },
+  { id: 'people', label: 'People', icon: '●●' },
 ]
 
 export default function App() {
@@ -97,7 +97,7 @@ export default function App() {
 
   const screen = {
     home: <Home user={user} onNavigate={setTab} />,
-    schedule: <Schedule />,
+    schedule: <Schedule onNavigate={setTab} />,
     people: <People currentUser={user} onSignOut={handleSignOut} />,
     engage: <Engage user={user} />,
     venue: <Venue />,
@@ -108,14 +108,22 @@ export default function App() {
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerInner}>
-          <img src="/logo-white.png" alt="SDF Connect" style={{ height: 28 }} />
-          <div
+          <button
+            onClick={() => setTab('home')}
+            style={styles.logoBtn}
+            aria-label="Go to Home"
+          >
+            <img src="/logo-white.png" alt="SDF Connect" style={{ height: 28, display: 'block' }} />
+          </button>
+          <button
+            type="button"
             style={styles.avatar}
             onClick={() => setTab('people')}
             title={user.name}
+            aria-label="Open People"
           >
             {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-          </div>
+          </button>
         </div>
       </header>
 
@@ -183,6 +191,7 @@ const styles = {
     borderRadius: 17,
     background: C.navy,
     color: '#fff',
+    border: 'none',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -191,6 +200,12 @@ const styles = {
     fontWeight: 600,
     cursor: 'pointer',
     letterSpacing: '0.02em',
+  },
+  logoBtn: {
+    background: 'none',
+    border: 'none',
+    padding: 0,
+    cursor: 'pointer',
   },
   nav: {
     position: 'fixed',

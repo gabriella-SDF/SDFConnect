@@ -90,7 +90,14 @@ export default function People({ currentUser, onSignOut }) {
           </p>
         </div>
         {onSignOut && (
-          <button onClick={onSignOut} style={styles.signOut}>Sign out</button>
+          <button
+            onClick={() => {
+              if (window.confirm('Sign out of SDF Connect?')) onSignOut()
+            }}
+            style={styles.signOut}
+          >
+            Sign out
+          </button>
         )}
       </div>
 

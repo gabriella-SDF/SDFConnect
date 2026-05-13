@@ -4,6 +4,59 @@
 export const RETREAT_START = new Date('2026-05-18T00:00:00-07:00')
 export const RETREAT_END = new Date('2026-05-22T23:59:59-07:00')
 
+// Short, glanceable room label for use on Home/Schedule rows.
+// Falls back gracefully when location is empty, multi-room, or off-site.
+export function briefRoom(session) {
+  if (!session) return ''
+  if (session.tag === 'breakout') return 'Breakout rooms'
+  if (session.tag === 'team') return 'By team'
+  if (!session.location) return ''
+  let r = session.location
+    .replace(/^Fairmont\s*[—–-]\s*/i, '')
+    .replace(/^The Fairmont\s*[—–-]?\s*/i, '')
+  if (r.includes('·')) r = r.split('·')[0].trim()
+  if (r.length > 32) r = r.slice(0, 30) + '…'
+  return r
+}
+
+// Match a session location to a primary hub room name (Gold, Green, etc.)
+export function hubRoomForSession(session) {
+  if (!session?.location) return null
+  const text = session.location.toLowerCase()
+  const rooms = ['gold', 'green', 'garden', 'empire', 'crystal', 'fountain']
+  return rooms.find(r => new RegExp(`\\b${r}\\b`).test(text)) || null
+}
+
+// Returns a real-world address if the session is at a navigable place,
+// or null for in-hotel rooms where directions don't apply.
+const FAIRMONT_ADDRESS = 'Fairmont San Francisco, 950 Mason St, San Francisco, CA 94108'
+export function externalAddress(location) {
+  if (!location) return null
+  const m = location.match(/(\d+\s+[\w\s.]+(?:St|Street|Ave|Avenue|Blvd|Boulevard|Rd|Road)[\w\s,]*)/i)
+  if (m) return m[1].trim()
+  if (/fairmont|penthouse|tonga|crown room/i.test(location)) return FAIRMONT_ADDRESS
+  return null
+}
+
+// Open in Google Maps (works on iOS & Android — opens native app if installed).
+export function mapsUrl(query) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+}
+
+// Short, glanceable level/direction hint for a room.
+// Empty string for hub/lobby-level rooms — no hint needed.
+export function roomHint(room) {
+  if (!room) return ''
+  const r = room.toLowerCase()
+  if (/penthouse/.test(r)) return '↑ Penthouse'
+  if (/crown/.test(r)) return '↑ Top floor'
+  if (/pavilion|gold foyer|mezzanine|registration/.test(r)) return '↑ 1 floor up'
+  if (/intersect|diplomat/.test(r)) return '↓ 1 floor down'
+  if (/tonga|vanderbilt|terrace|spa/.test(r)) return '↓ 2 floors down'
+  if (/powell st|barcade|off[- ]site/.test(r)) return 'Off-site'
+  return ''
+}
+
 export const days = [
   {
     id: 'mon',

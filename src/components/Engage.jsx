@@ -4,7 +4,7 @@ import { icebreakers, testimonialPrompts } from '../data/schedule'
 import { supabase } from '../lib/supabase'
 
 export default function Engage({ user }) {
-  const [subTab, setSubTab] = useState('qa')
+  const [subTab, setSubTab] = useState('icebreaker')
   const [question, setQuestion] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -65,9 +65,9 @@ export default function Engage({ user }) {
   }
 
   const subTabs = [
-    { id: 'qa', label: 'Q&A' },
-    { id: 'testimonial', label: 'Testimonials' },
     { id: 'icebreaker', label: 'Icebreakers' },
+    { id: 'testimonial', label: 'Testimonials' },
+    { id: 'qa', label: 'Q&A' },
   ]
 
   return (
