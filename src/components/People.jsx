@@ -43,7 +43,7 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
       const [{ data, error: dbError }, { data: pdata }] = await Promise.all([
         supabase
           .from('employees')
-          .select('id, first_name, last_name, department, email, title, location')
+          .select('id, first_name, last_name, department, email, title, location, objective, ai_group')
           .order('first_name', { ascending: true }),
         supabase.from('profiles').select('*'),
       ])
@@ -60,9 +60,10 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
           first_name: e.first_name,
           last_name: e.last_name,
           team: e.department || 'Other',
-          title: e.title || '',
           email: e.email,
           location: e.location || '',
+          objective: e.objective || '',
+          ai_group: e.ai_group || '',
         }))
       )
       const profileMap = {}
@@ -202,6 +203,15 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
   )
 }
 
+function formatObjective(o) {
+  if (!o) return ''
+  // "Objective 1 - Topic 2: RWA & DeFi" → "Obj 1 · RWA & DeFi"
+  // "Objective 2 - Topic: What does success look like?" → "Obj 2 · What does success look like?"
+  const m = o.match(/Objective\s+(\d+)\s*-\s*Topic[^:]*:\s*(.+)/i)
+  if (m) return `Obj ${m[1]} · ${m[2].trim()}`
+  return o
+}
+
 function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, onClose }) {
   const teamRoom = teamRoomMap[person.team]
   const shared = currentProfile && profile ? sharedTags(currentProfile, profile) : []
@@ -223,8 +233,7 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
             {initials(person.name)}
           </div>
           <h3 style={{ ...S.h2, marginTop: 12 }}>{person.name}</h3>
-          <p style={{ ...S.caption, marginTop: 4 }}>{person.title}</p>
-          <p style={{ ...S.caption, marginTop: 2, color: C.textMuted }}>
+          <p style={{ ...S.caption, marginTop: 4, color: C.textFade }}>
             {person.team}{person.location ? ` · ${person.location}` : ''}
           </p>
         </div>
@@ -240,6 +249,26 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
           <div style={styles.miniField}>
             <div style={styles.miniFieldLabel}>Recent rec</div>
             <div style={styles.miniFieldText}>{profile.best_rec}</div>
+          </div>
+        )}
+
+        {/* Retreat assignments */}
+        {(person.objective || person.ai_group) && (
+          <div style={styles.assignmentsGrid}>
+            {person.objective && (
+              <div style={styles.assignmentCard}>
+                <div style={styles.assignmentKicker}>Objective</div>
+                <div style={styles.assignmentValue}>{formatObjective(person.objective)}</div>
+                <div style={styles.assignmentWhen}>Tue 2–3 PM</div>
+              </div>
+            )}
+            {person.ai_group && (
+              <div style={styles.assignmentCard}>
+                <div style={styles.assignmentKicker}>AI Hackathon</div>
+                <div style={styles.assignmentValue}>{person.ai_group}</div>
+                <div style={styles.assignmentWhen}>Wed 10:30 AM</div>
+              </div>
+            )}
           </div>
         )}
 
@@ -308,7 +337,7 @@ function PersonRow({ member, subtitle, currentUser, onSelect }) {
           {member.name}
           {isYou && <span style={styles.youBadge}>You</span>}
         </div>
-        <div style={styles.personTitle}>{subtitle || member.title}</div>
+        <div style={styles.personTitle}>{subtitle || member.team}</div>
       </div>
       <span style={{ color: C.textMuted, fontSize: 18 }}>&rsaquo;</span>
     </button>
@@ -478,6 +507,40 @@ const styles = {
   },
   miniField: {
     marginTop: 16,
+  },
+  assignmentsGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 8,
+    marginTop: 16,
+  },
+  assignmentCard: {
+    background: C.bg,
+    border: `1px solid ${C.border}`,
+    borderRadius: 12,
+    padding: '12px 14px',
+  },
+  assignmentKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    color: C.lavender,
+    textTransform: 'uppercase',
+    marginBottom: 4,
+  },
+  assignmentValue: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 600,
+    color: C.text,
+    lineHeight: 1.3,
+  },
+  assignmentWhen: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    color: C.textMuted,
+    marginTop: 4,
   },
   miniFieldLabel: {
     fontFamily: F.sans,
