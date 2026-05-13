@@ -87,7 +87,11 @@ export default function App() {
   }
 
   // First-time users see the quiz before main app
-  if (profileChecked && (!profile || !profile.completed_at)) {
+  // (escape hatch: localStorage flag set by the "Continue anyway" button on save errors)
+  const skipQuizLocally = (() => {
+    try { return localStorage.getItem('sdf-skip-quiz') === '1' } catch { return false }
+  })()
+  if (profileChecked && (!profile || !profile.completed_at) && !skipQuizLocally) {
     return (
       <Onboarding
         user={user}

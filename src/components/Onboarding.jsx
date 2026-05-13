@@ -206,7 +206,21 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
           )}
         </div>
 
-        {error && <p style={styles.error}>{error}</p>}
+        {error && (
+          <div style={styles.errorBox}>
+            <div style={styles.errorTitle}>Something went wrong</div>
+            <div style={styles.errorMsg}>{error}</div>
+            <button
+              onClick={() => {
+                try { localStorage.setItem('sdf-skip-quiz', '1') } catch {}
+                onSkipAll?.()
+              }}
+              style={styles.errorBypass}
+            >
+              Continue anyway →
+            </button>
+          </div>
+        )}
 
         {/* Footer */}
         <div style={styles.footer}>
@@ -350,6 +364,39 @@ const styles = {
     fontSize: 13,
     color: '#ff6b6b',
     marginTop: 12,
+  },
+  errorBox: {
+    marginTop: 18,
+    padding: 16,
+    background: 'rgba(255,107,107,0.10)',
+    border: '1px solid rgba(255,107,107,0.35)',
+    borderRadius: 12,
+  },
+  errorTitle: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 700,
+    color: '#ff6b6b',
+    marginBottom: 6,
+    letterSpacing: '0.02em',
+  },
+  errorMsg: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    color: '#ffb3b3',
+    lineHeight: 1.5,
+    marginBottom: 12,
+  },
+  errorBypass: {
+    background: '#fff',
+    color: C.dark,
+    border: 'none',
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 600,
+    padding: '10px 16px',
+    borderRadius: 999,
+    cursor: 'pointer',
   },
   footer: {
     display: 'flex',

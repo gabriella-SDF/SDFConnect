@@ -1,5 +1,5 @@
 // Bump this version when shipping breaking changes to force cache refresh.
-const CACHE = 'sdf-connect-v1'
+const CACHE = 'sdf-connect-v2'
 
 const PRECACHE = [
   '/',
