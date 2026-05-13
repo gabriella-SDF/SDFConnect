@@ -205,10 +205,10 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
 
 function formatObjective(o) {
   if (!o) return ''
-  // "Objective 1 - Topic 2: RWA & DeFi" → "Obj 1 · RWA & DeFi"
-  // "Objective 2 - Topic: What does success look like?" → "Obj 2 · What does success look like?"
-  const m = o.match(/Objective\s+(\d+)\s*-\s*Topic[^:]*:\s*(.+)/i)
-  if (m) return `Obj ${m[1]} · ${m[2].trim()}`
+  // "Objective 1 - Topic 2: RWA & DeFi" → "RWA & DeFi"
+  // "Objective 2 - Topic: What does success look like?" → "What does success look like?"
+  const m = o.match(/Objective\s+\d+\s*-\s*Topics?[^:]*:\s*(.+)/i)
+  if (m) return m[1].trim()
   return o
 }
 
