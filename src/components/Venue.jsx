@@ -258,17 +258,19 @@ function VenueGuide() {
         style={styles.venueMapCard}
         aria-label="Tap to enlarge"
       >
-        <div style={{ ...styles.levelBadge, background: level.accent }}>
-          {level.code} · {level.label}
-          {level.id === 'lobby' && <span style={styles.levelBadgeYou}> · You are here</span>}
-        </div>
+        {level.id === 'lobby' && (
+          <div style={styles.youHerePill}>
+            <span style={styles.youHereDot} />
+            You are here
+          </div>
+        )}
         <img
           src={level.image}
           alt={`${level.label} level floor plan`}
           style={styles.venueMapImage}
           loading="lazy"
         />
-        <p style={styles.floorCaption}>{level.sub} · Tap to enlarge</p>
+        <p style={styles.floorCaption}>Tap to enlarge · Pinch to zoom</p>
       </button>
 
       {zoomOpen && <MapZoomViewer image={level.image} title={`${level.code} · ${level.label}`} onClose={() => setZoomOpen(false)} />}
@@ -635,16 +637,37 @@ const styles = {
     color: 'rgba(255,255,255,0.85)',
     zIndex: 510,
   },
-  // Full venue map (all 5 levels)
+  // Floor plan card (level-specific)
   venueMapCard: {
     display: 'block',
     width: '100%',
-    background: '#FFFCF4',
+    background: C.card,
     border: `1px solid ${C.border}`,
     borderRadius: 18,
     padding: 14,
     cursor: 'pointer',
     textAlign: 'center',
+    position: 'relative',
+  },
+  youHerePill: {
+    position: 'absolute',
+    top: 24,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 6,
+    background: C.navy,
+    color: '#fff',
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    padding: '5px 12px',
+    borderRadius: 999,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+    zIndex: 2,
   },
   venueMapImage: {
     width: '100%',
