@@ -87,14 +87,21 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
 
   const handleSkipAll = async () => {
     setSubmitting(true)
+    setError('')
     const payload = {
       user_id: session.user.id,
       email: session.user.email,
       completed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
-    await supabase.from('profiles').upsert(payload, { onConflict: 'user_id' })
+    const { error: dbError } = await supabase
+      .from('profiles')
+      .upsert(payload, { onConflict: 'user_id' })
     setSubmitting(false)
+    if (dbError) {
+      setError(dbError.message || 'Could not skip. Please try again.')
+      return
+    }
     onSkipAll?.()
   }
 
@@ -209,11 +216,6 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
             </button>
           )}
           <div style={{ flex: 1 }} />
-          {!canAdvance() && q.type !== 'text' && (
-            <button onClick={handleSkipQuestion} style={styles.skipBtn} disabled={submitting}>
-              Skip
-            </button>
-          )}
           <button
             onClick={handleNext}
             disabled={submitting}

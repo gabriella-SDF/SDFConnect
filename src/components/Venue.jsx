@@ -6,6 +6,14 @@ import { days, hubRoomForSession, mapsUrl } from '../data/schedule'
 // Data — easy to edit
 // =============================================================================
 
+const levels = [
+  { id: 'crown',    code: '24', label: 'Crown',     sub: '24th floor · Top',     image: '/level-crown.jpg',     accent: '#F4C842' },
+  { id: 'mezz',     code: '2',  label: 'Mezzanine', sub: '2nd floor · Pavilion', image: '/level-mezzanine.jpg', accent: '#7EAF6E' },
+  { id: 'lobby',    code: '1',  label: 'Lobby',     sub: 'Main level · You are here', image: '/level-lobby.jpg', accent: '#2C4F7C' },
+  { id: 'arcade',   code: 'A',  label: 'Arcade',    sub: 'One below lobby',      image: '/level-arcade.jpg',    accent: '#B7ACE8' },
+  { id: 'terrace',  code: 'T',  label: 'Terrace',   sub: 'Lower level · Tonga',  image: '/level-terrace.jpg',   accent: '#00A7B5' },
+]
+
 const hubRooms = [
   { id: 'gold', name: 'Gold Room', purpose: 'General Sessions · Oracle Hunt · Awards' },
   { id: 'green', name: 'Green Room', purpose: 'Breakouts · Product team time' },
@@ -215,30 +223,60 @@ function findLiveHubRooms() {
 
 function VenueGuide() {
   const [liveRooms, setLiveRooms] = useState(findLiveHubRooms)
+  const [activeLevel, setActiveLevel] = useState('lobby')
+  const [zoomOpen, setZoomOpen] = useState(false)
 
   useEffect(() => {
     const id = setInterval(() => setLiveRooms(findLiveHubRooms()), 60000)
     return () => clearInterval(id)
   }, [])
 
+  const level = levels.find(l => l.id === activeLevel) || levels[2]
+
   return (
     <div>
-      {/* Full venue map — all 5 levels in one visual */}
-      <div style={styles.venueMapCard}>
-        <div style={styles.floorBadge}>
-          <span style={styles.youHereDot} />
-          You are here · Lobby Level
+      {/* Level selector */}
+      <div style={styles.levelTabs}>
+        {levels.map(l => {
+          const isActive = l.id === activeLevel
+          return (
+            <button
+              key={l.id}
+              onClick={() => setActiveLevel(l.id)}
+              style={{
+                ...styles.levelTab,
+                background: isActive ? l.accent : C.card,
+                color: isActive ? '#fff' : C.text,
+                borderColor: isActive ? l.accent : C.border,
+              }}
+            >
+              <span style={styles.levelTabCode}>{l.code}</span>
+              <span style={styles.levelTabLabel}>{l.label}</span>
+            </button>
+          )
+        })}
+      </div>
+
+      {/* Selected level image */}
+      <button
+        onClick={() => setZoomOpen(true)}
+        style={styles.venueMapCard}
+        aria-label="Tap to enlarge"
+      >
+        <div style={{ ...styles.levelBadge, background: level.accent }}>
+          {level.code} · {level.label}
+          {level.id === 'lobby' && <span style={styles.levelBadgeYou}> · You are here</span>}
         </div>
         <img
-          src="/venue-full.jpg"
-          alt="Fairmont San Francisco — all five levels"
+          src={level.image}
+          alt={`${level.label} level floor plan`}
           style={styles.venueMapImage}
           loading="lazy"
         />
-        <p style={styles.floorCaption}>
-          Crown · Mezzanine · Lobby · Arcade · Terrace
-        </p>
-      </div>
+        <p style={styles.floorCaption}>{level.sub} · Tap to enlarge</p>
+      </button>
+
+      {zoomOpen && <MapZoomViewer image={level.image} title={`${level.code} · ${level.label}`} onClose={() => setZoomOpen(false)} />}
 
       {/* Hub room reference */}
       <h3 style={styles.sectionTitle}>Where things happen</h3>
@@ -301,6 +339,29 @@ function Connector({ direction }) {
 // =============================================================================
 // Explore SF
 // =============================================================================
+
+function MapZoomViewer({ image, title, onClose }) {
+  return (
+    <div style={styles.zoomOverlay} onClick={onClose}>
+      <button
+        onClick={onClose}
+        style={styles.zoomClose}
+        aria-label="Close map"
+      >
+        ×
+      </button>
+      {title && <div style={styles.zoomTitle}>{title}</div>}
+      <div style={styles.zoomScroll} onClick={(e) => e.stopPropagation()}>
+        <img
+          src={image || '/level-lobby.jpg'}
+          alt="Floor plan (zoomable)"
+          style={styles.zoomImage}
+        />
+      </div>
+      <div style={styles.zoomHint}>Pinch to zoom · Tap outside to close</div>
+    </div>
+  )
+}
 
 function GroupSheet({ group, onClose }) {
   return (
@@ -514,12 +575,81 @@ const styles = {
     fontSize: 12,
     color: C.textFade,
   },
+  // Level tabs
+  levelTabs: {
+    display: 'flex',
+    gap: 6,
+    paddingBottom: 12,
+    overflowX: 'auto',
+    WebkitOverflowScrolling: 'touch',
+  },
+  levelTab: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 2,
+    minWidth: 64,
+    padding: '8px 10px',
+    border: '1px solid',
+    borderRadius: 12,
+    cursor: 'pointer',
+    fontFamily: F.sans,
+    flexShrink: 0,
+    transition: 'all 0.15s',
+  },
+  levelTabCode: {
+    fontSize: 18,
+    fontWeight: 700,
+    lineHeight: 1,
+    letterSpacing: '-0.01em',
+  },
+  levelTabLabel: {
+    fontSize: 10,
+    fontWeight: 600,
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    marginTop: 4,
+  },
+  levelBadge: {
+    display: 'inline-block',
+    fontFamily: F.sans,
+    fontSize: 11,
+    fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
+    color: '#fff',
+    padding: '5px 12px',
+    borderRadius: 999,
+    marginBottom: 12,
+  },
+  levelBadgeYou: {
+    fontWeight: 500,
+    opacity: 0.85,
+    textTransform: 'none',
+    letterSpacing: '0.02em',
+  },
+  zoomTitle: {
+    position: 'absolute',
+    top: 'calc(env(safe-area-inset-top) + 24px)',
+    left: 20,
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    color: 'rgba(255,255,255,0.85)',
+    zIndex: 510,
+  },
   // Full venue map (all 5 levels)
   venueMapCard: {
+    display: 'block',
+    width: '100%',
     background: '#FFFCF4',
     border: `1px solid ${C.border}`,
     borderRadius: 18,
     padding: 14,
+    cursor: 'pointer',
+    textAlign: 'center',
   },
   venueMapImage: {
     width: '100%',
@@ -528,6 +658,65 @@ const styles = {
     borderRadius: 10,
     maxHeight: 720,
     objectFit: 'contain',
+  },
+  // Zoomable map viewer
+  zoomOverlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(0,0,0,0.92)',
+    zIndex: 500,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
+  zoomScroll: {
+    flex: 1,
+    width: '100%',
+    overflow: 'auto',
+    WebkitOverflowScrolling: 'touch',
+    touchAction: 'pinch-zoom',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  zoomImage: {
+    width: '180%',
+    maxWidth: 'none',
+    height: 'auto',
+    display: 'block',
+    touchAction: 'pinch-zoom',
+  },
+  zoomClose: {
+    position: 'absolute',
+    top: 'calc(env(safe-area-inset-top) + 16px)',
+    right: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    background: 'rgba(255,255,255,0.18)',
+    border: '1px solid rgba(255,255,255,0.24)',
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 300,
+    cursor: 'pointer',
+    zIndex: 510,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    lineHeight: 1,
+  },
+  zoomHint: {
+    position: 'absolute',
+    bottom: 'calc(env(safe-area-inset-bottom) + 16px)',
+    left: 16,
+    right: 16,
+    fontFamily: F.sans,
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.6)',
+    textAlign: 'center',
+    letterSpacing: '0.02em',
   },
   // Floor plan image (HUB / lobby) — legacy, may remove
   floorCard: {
