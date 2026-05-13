@@ -7,6 +7,7 @@ import People from './components/People'
 import Engage from './components/Engage'
 import Venue from './components/Venue'
 import SignIn from './components/SignIn'
+import Onboarding from './components/Onboarding'
 
 const tabs = [
   { id: 'home', label: 'Home', icon: '◆' },
@@ -20,8 +21,11 @@ export default function App() {
   const [tab, setTab] = useState('home')
   const [session, setSession] = useState(null)
   const [user, setUser] = useState(null)
+  const [profile, setProfile] = useState(null)
+  const [profileChecked, setProfileChecked] = useState(false)
   const [authError, setAuthError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [showEditProfile, setShowEditProfile] = useState(false)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -37,6 +41,8 @@ export default function App() {
   useEffect(() => {
     if (!session?.user?.email) {
       setUser(null)
+      setProfile(null)
+      setProfileChecked(false)
       return
     }
     let cancelled = false
@@ -65,9 +71,28 @@ export default function App() {
         email: data.email,
         location: data.location,
       })
+      // Look up profile (quiz answers)
+      const { data: pdata } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .maybeSingle()
+      if (cancelled) return
+      setProfile(pdata || null)
+      setProfileChecked(true)
     })()
     return () => { cancelled = true }
   }, [session])
+
+  const refetchProfile = async () => {
+    if (!session?.user?.id) return
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .maybeSingle()
+    setProfile(data || null)
+  }
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
@@ -95,16 +120,40 @@ export default function App() {
     )
   }
 
+  // First-time users see the quiz before main app
+  if (profileChecked && (!profile || !profile.completed_at)) {
+    return (
+      <Onboarding
+        user={user}
+        session={session}
+        onComplete={() => { refetchProfile() }}
+        onSkipAll={() => { refetchProfile() }}
+      />
+    )
+  }
+
   const screen = {
-    home: <Home user={user} onNavigate={setTab} />,
+    home: <Home user={user} profile={profile} onNavigate={setTab} />,
     schedule: <Schedule onNavigate={setTab} />,
-    people: <People currentUser={user} onSignOut={handleSignOut} />,
+    people: <People currentUser={user} currentProfile={profile} onSignOut={handleSignOut} onEditProfile={() => setShowEditProfile(true)} />,
     engage: <Engage user={user} />,
     venue: <Venue />,
   }
 
   return (
     <div style={S.container}>
+      {showEditProfile && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 300, background: C.dark }}>
+          <Onboarding
+            user={user}
+            session={session}
+            initialProfile={profile}
+            isEditing
+            onComplete={() => { refetchProfile(); setShowEditProfile(false) }}
+            onSkipAll={() => { setShowEditProfile(false) }}
+          />
+        </div>
+      )}
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerInner}>

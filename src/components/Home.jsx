@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { C, F, S, tagColors } from '../theme'
 import { days, icebreakers, RETREAT_START, RETREAT_END, briefRoom, roomHint } from '../data/schedule'
+import { supabase } from '../lib/supabase'
+import { topMatches } from '../lib/matching'
 
 function getRetreatState() {
   const now = new Date()
@@ -56,8 +58,9 @@ function briefTime(t) {
   return t.replace(':00 ', '').replace(' AM', 'am').replace(' PM', 'pm').toLowerCase()
 }
 
-export default function Home({ user, onNavigate }) {
+export default function Home({ user, profile, onNavigate }) {
   const [state, setState] = useState(getRetreatState)
+  const [matches, setMatches] = useState([])
   const [icebreakerIdx, setIcebreakerIdx] = useState(() =>
     Math.floor(Math.random() * icebreakers.length)
   )
@@ -66,6 +69,22 @@ export default function Home({ user, onNavigate }) {
     const interval = setInterval(() => setState(getRetreatState()), 60000)
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    if (!profile) return
+    let cancelled = false
+    ;(async () => {
+      const [{ data: profiles }, { data: employees }] = await Promise.all([
+        supabase.from('profiles').select('*'),
+        supabase.from('employees').select('id, first_name, last_name, department, email, title'),
+      ])
+      if (cancelled || !profiles || !employees) return
+      const byEmail = new Map(employees.map(e => [e.email, e]))
+      const top = topMatches(profile, profiles, null, byEmail, 3)
+      setMatches(top)
+    })()
+    return () => { cancelled = true }
+  }, [profile])
 
   const todayData = state.currentDay !== null ? days[state.currentDay] : null
   const previewDay = todayData || days.find(d => d.id === 'tue') || days[1]
@@ -130,6 +149,41 @@ export default function Home({ user, onNavigate }) {
 
       {/* Content — light */}
       <div style={styles.content}>
+        {/* Matches card */}
+        {matches.length > 0 && (
+          <div style={{ padding: '20px 20px 0' }}>
+            <div style={styles.sectionHeader}>
+              <h3 style={S.h3}>People you'd vibe with</h3>
+              <button onClick={() => onNavigate('people')} style={styles.linkBtn}>
+                All people ›
+              </button>
+            </div>
+            <div style={styles.matchesList}>
+              {matches.map(m => (
+                <button
+                  key={m.profile.user_id}
+                  onClick={() => onNavigate('people')}
+                  style={styles.matchCard}
+                >
+                  <div style={styles.matchAvatar}>
+                    {m.employee.first_name[0]}{m.employee.last_name[0]}
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={styles.matchName}>
+                      {m.employee.first_name} {m.employee.last_name}
+                    </div>
+                    <div style={styles.matchSub}>
+                      {m.employee.department} · {m.shared.slice(0, 2).join(', ')}
+                      {m.shared.length > 2 && ` +${m.shared.length - 2}`}
+                    </div>
+                  </div>
+                  <span style={styles.matchChevron}>›</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Floor plan banner */}
         <div style={{ padding: '20px 20px 0' }}>
           <button onClick={() => onNavigate('venue')} style={styles.mapBanner}>
@@ -437,6 +491,60 @@ const styles = {
     fontStyle: 'italic',
     color: '#fff',
     letterSpacing: '-0.01em',
+  },
+  matchesList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+  },
+  matchCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    width: '100%',
+    padding: '12px 14px',
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderRadius: 14,
+    cursor: 'pointer',
+    textAlign: 'left',
+  },
+  matchAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    background: C.lavender,
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    flexShrink: 0,
+    letterSpacing: '0.02em',
+  },
+  matchName: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    fontWeight: 600,
+    color: C.text,
+  },
+  matchSub: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    color: C.textFade,
+    marginTop: 2,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  matchChevron: {
+    fontFamily: F.sans,
+    fontSize: 20,
+    fontWeight: 300,
+    color: C.textMuted,
+    flexShrink: 0,
   },
   icebreakerCard: {
     background: `linear-gradient(135deg, ${C.navy}, ${C.teal})`,

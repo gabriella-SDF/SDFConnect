@@ -1,6 +1,21 @@
 import { useEffect, useState, useMemo } from 'react'
 import { C, F, S } from '../theme'
 import { supabase } from '../lib/supabase'
+import { sharedTags } from '../lib/matching'
+
+const teamRoomMap = {
+  'Business Development': 'Crystal Room',
+  'Engineering': 'Gold Room',
+  'Finance and Operations': 'Intersect I/II',
+  'Finance & Operations': 'Intersect I/II',
+  'Growth': 'Fountain Room',
+  'Legal and Policy': 'Vanderbilt Room',
+  'Legal & Policy': 'Vanderbilt Room',
+  'Marketing': 'Diplomat Club',
+  'Office of the CEO': 'Empire Room',
+  'People': 'Garden Room',
+  'Product': 'Green Room',
+}
 
 const avatarColors = [C.navy, C.teal, C.lavender, '#E8A87C', '#85CDCA', '#C38D9E', C.yellow]
 function hashStr(s) {
@@ -13,21 +28,25 @@ function initials(name) {
   return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
 }
 
-export default function People({ currentUser, onSignOut }) {
+export default function People({ currentUser, currentProfile, onSignOut, onEditProfile }) {
   const [search, setSearch] = useState('')
   const [openTeams, setOpenTeams] = useState(new Set())
   const [selectedPerson, setSelectedPerson] = useState(null)
   const [employees, setEmployees] = useState([])
+  const [profiles, setProfiles] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
   useEffect(() => {
     let cancelled = false
     ;(async () => {
-      const { data, error: dbError } = await supabase
-        .from('employees')
-        .select('id, first_name, last_name, department, email, title, location')
-        .order('first_name', { ascending: true })
+      const [{ data, error: dbError }, { data: pdata }] = await Promise.all([
+        supabase
+          .from('employees')
+          .select('id, first_name, last_name, department, email, title, location')
+          .order('first_name', { ascending: true }),
+        supabase.from('profiles').select('*'),
+      ])
       if (cancelled) return
       if (dbError) {
         setError('Could not load directory.')
@@ -46,6 +65,11 @@ export default function People({ currentUser, onSignOut }) {
           location: e.location || '',
         }))
       )
+      const profileMap = {}
+      if (pdata) {
+        for (const p of pdata) profileMap[p.email] = p
+      }
+      setProfiles(profileMap)
       setLoading(false)
     })()
     return () => { cancelled = true }
@@ -165,38 +189,109 @@ export default function People({ currentUser, onSignOut }) {
       })}
 
       {selectedPerson && (
-        <div style={S.overlay} onClick={() => setSelectedPerson(null)}>
-          <div style={S.sheet} onClick={e => e.stopPropagation()}>
-            <div style={S.sheetHandle} />
-            <div style={{ textAlign: 'center', paddingTop: 8 }}>
-              <div style={{ ...styles.profileAvatar, background: getAvatarColor(selectedPerson.id) }}>
-                {initials(selectedPerson.name)}
-              </div>
-              <h3 style={{ ...S.h2, marginTop: 12 }}>{selectedPerson.name}</h3>
-              <p style={{ ...S.caption, marginTop: 4 }}>{selectedPerson.title}</p>
-              <p style={{ ...S.caption, marginTop: 2, color: C.textMuted }}>
-                {selectedPerson.team}{selectedPerson.location ? ` · ${selectedPerson.location}` : ''}
-              </p>
-            </div>
-
-            <div style={{ marginTop: 24 }}>
-              <a
-                href={`mailto:${selectedPerson.email}`}
-                style={{ ...S.btnPrimary, width: '100%', display: 'block', textAlign: 'center', textDecoration: 'none' }}
-              >
-                Email {selectedPerson.first_name}
-              </a>
-            </div>
-
-            <button
-              onClick={() => setSelectedPerson(null)}
-              style={{ ...S.btnSecondary, width: '100%', marginTop: 12 }}
-            >
-              Close
-            </button>
-          </div>
-        </div>
+        <ProfileSheet
+          person={selectedPerson}
+          profile={profiles[selectedPerson.email]}
+          currentProfile={currentProfile}
+          isYou={currentUser?.email === selectedPerson.email}
+          onEditProfile={onEditProfile}
+          onClose={() => setSelectedPerson(null)}
+        />
       )}
+    </div>
+  )
+}
+
+function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, onClose }) {
+  const teamRoom = teamRoomMap[person.team]
+  const shared = currentProfile && profile ? sharedTags(currentProfile, profile) : []
+  const allChips = profile
+    ? [
+        ...(profile.stellar_interests || []),
+        ...(profile.most_yourself || []),
+        ...(profile.thinking || []),
+        profile.vacation,
+      ].filter(Boolean)
+    : []
+
+  return (
+    <div style={S.overlay} onClick={onClose}>
+      <div style={S.sheet} onClick={e => e.stopPropagation()}>
+        <div style={S.sheetHandle} />
+        <div style={{ textAlign: 'center', paddingTop: 8 }}>
+          <div style={{ ...styles.profileAvatar, background: getAvatarColor(person.id) }}>
+            {initials(person.name)}
+          </div>
+          <h3 style={{ ...S.h2, marginTop: 12 }}>{person.name}</h3>
+          <p style={{ ...S.caption, marginTop: 4 }}>{person.title}</p>
+          <p style={{ ...S.caption, marginTop: 2, color: C.textMuted }}>
+            {person.team}{person.location ? ` · ${person.location}` : ''}
+          </p>
+        </div>
+
+        {profile?.ask_me_about && (
+          <div style={styles.askMeWrap}>
+            <div style={styles.askMeKicker}>Ask me about</div>
+            <div style={styles.askMeText}>{profile.ask_me_about}</div>
+          </div>
+        )}
+
+        {profile?.best_rec && (
+          <div style={styles.miniField}>
+            <div style={styles.miniFieldLabel}>Recent rec</div>
+            <div style={styles.miniFieldText}>{profile.best_rec}</div>
+          </div>
+        )}
+
+        {teamRoom && (
+          <div style={styles.miniField}>
+            <div style={styles.miniFieldLabel}>Team time room</div>
+            <div style={styles.miniFieldText}>{teamRoom} (Thursday 9am–12pm)</div>
+          </div>
+        )}
+
+        {allChips.length > 0 && (
+          <div style={styles.miniField}>
+            <div style={styles.miniFieldLabel}>Interests</div>
+            <div style={styles.chipRow}>
+              {allChips.map((tag, i) => {
+                const isShared = shared.includes(tag)
+                return (
+                  <span
+                    key={i}
+                    style={{
+                      ...styles.chip,
+                      background: isShared ? C.yellow + '40' : C.bg,
+                      borderColor: isShared ? C.yellow : C.border,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {!profile && !isYou && (
+          <p style={{ ...S.caption, marginTop: 20, textAlign: 'center', fontStyle: 'italic' }}>
+            {person.first_name} hasn't filled in their profile yet.
+          </p>
+        )}
+
+        {isYou && onEditProfile && (
+          <button
+            onClick={() => { onEditProfile(); onClose() }}
+            style={{ ...S.btnPrimary, width: '100%', marginTop: 24 }}
+          >
+            {profile?.completed_at ? 'Edit my profile' : 'Add my profile'}
+          </button>
+        )}
+
+        <button onClick={onClose} style={{ ...S.btnSecondary, width: '100%', marginTop: 12 }}>
+          Close
+        </button>
+      </div>
     </div>
   )
 }
@@ -357,5 +452,60 @@ const styles = {
     fontSize: 24,
     fontWeight: 600,
     margin: '0 auto',
+  },
+  askMeWrap: {
+    background: `linear-gradient(135deg, ${C.navy}, ${C.teal})`,
+    color: '#fff',
+    borderRadius: 14,
+    padding: 16,
+    marginTop: 20,
+  },
+  askMeKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    opacity: 0.7,
+    marginBottom: 6,
+  },
+  askMeText: {
+    fontFamily: F.serif,
+    fontSize: 17,
+    fontWeight: 500,
+    fontStyle: 'italic',
+    lineHeight: 1.4,
+  },
+  miniField: {
+    marginTop: 16,
+  },
+  miniFieldLabel: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    color: C.lavender,
+    textTransform: 'uppercase',
+    marginBottom: 6,
+  },
+  miniFieldText: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    color: C.text,
+    lineHeight: 1.5,
+  },
+  chipRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  chip: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 500,
+    color: C.text,
+    padding: '5px 10px',
+    borderRadius: 999,
+    border: '1px solid',
   },
 }
