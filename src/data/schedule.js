@@ -104,7 +104,6 @@ export const days = [
     theme: "What's Next — AI & Innovation",
     description: "Day 2 shifts the focus to what's next. With a dedicated block on AI and product adoption, the day is designed to explore how emerging technology is reshaping the way we build, grow, and reach users — and what that means for how we Accelerate.",
     sessions: [
-      { time: '7:00 AM', end: '8:00 AM', title: 'Morning Yoga', tag: 'activity', location: 'Crown', description: 'Start the day right.', optional: true },
       { time: '8:00 AM', end: '9:00 AM', title: 'Breakfast', tag: 'meal', location: 'Pavilion' },
       { time: '8:00 AM', end: '9:00 AM', title: 'Check-in + Swag Pick Up', tag: 'meal', location: 'Gold Room Foyer' },
       { time: '9:00 AM', end: '9:15 AM', title: 'Housekeeping + Volunteer Explanation', tag: 'keynote', location: 'Gold Room' },
