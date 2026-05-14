@@ -17,7 +17,7 @@ export default function Schedule({ onNavigate }) {
       >
         <img src="/lobby-floorplan.jpg" alt="Lobby floor plan" style={styles.mapBannerImg} />
         <div style={styles.mapBannerText}>
-          <div style={styles.mapBannerTitle}>Lobby Level Map</div>
+          <div style={styles.mapBannerTitle}>Lobby level map</div>
           <div style={styles.mapBannerSub}>Tap to find your way →</div>
         </div>
       </button>
