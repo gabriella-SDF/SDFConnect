@@ -31,10 +31,10 @@
       @supports(padding: env(safe-area-inset-bottom)) {
         body { padding-bottom: env(safe-area-inset-bottom); }
       }
-      /* Desktop: wider centered column on a dark backdrop (web-feel, not phone-frame) */
+      /* Desktop: clearly-framed centered column on a lighter backdrop */
       @media (min-width: 720px) {
         body {
-          background: #1A1A1A;
+          background: #F6F7F8;
           display: flex;
           align-items: stretch;
           justify-content: center;
@@ -43,6 +43,9 @@
           width: 640px;
           max-width: 100%;
           background: #0F0F0F;
+          border-left: 1px solid #2A2A2A;
+          border-right: 1px solid #2A2A2A;
+          box-shadow: 0 0 40px rgba(0,0,0,0.15);
           position: relative;
         }
       }

@@ -130,11 +130,15 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
         </div>
 
         {/* Welcome line on first step */}
-        {step === 0 && !isEditing && (
-          <p style={styles.welcomeLine}>
-            Welcome, {user.first_name}. Quick setup so we can match you with people to connect with.
-          </p>
-        )}
+        {step === 0 && !isEditing && (() => {
+          const firstName = user.first_name || user.name?.split(' ')[0] || ''
+          return (
+            <p style={styles.welcomeLine}>
+              {firstName ? `Welcome, ${firstName}. ` : 'Welcome! '}
+              Quick setup so we can match you with people to connect with.
+            </p>
+          )
+        })()}
         {step === 0 && isEditing && (
           <p style={styles.welcomeLine}>
             Update your profile answers.
