@@ -80,7 +80,7 @@ export const days = [
     description: "Day 1 is all about setting the pace. Centered around our theme of Accelerate, the day brings together executive presentations, guest speakers, and a deep dive into our objectives. The full team gets the vision, context, and energy to hit the ground running for the retreat and the year ahead.",
     sessions: [
       { time: '8:00 AM', end: '9:00 AM', title: 'Breakfast', tag: 'meal', location: 'Pavilion' },
-      { time: '8:00 AM', end: '9:00 AM', title: 'Check-in + Swag Pick Up', tag: 'meal', location: 'Gold Room Foyer' },
+      { time: '8:00 AM', end: '9:00 AM', title: 'Check-in + Swag Pick Up', tag: 'social', location: 'Gold Room Foyer' },
       { time: '9:00 AM', end: '9:15 AM', title: 'Housekeeping', tag: 'session', location: 'Gold Room', description: "We'll kick things off with a quick overview of the week: what to expect, how the days are structured, and a few surprises we'll let speak for themselves.", speakers: ['Lisa Macnew'] },
       { time: '9:15 AM', end: '9:30 AM', title: 'SDF Connect Kickoff', tag: 'session', location: 'Gold Room', description: 'Denelle opens the retreat, centering the week around our theme of Accelerate.', speakers: ['Denelle Dixon'] },
       { time: '9:30 AM', end: '10:30 AM', title: 'Executive Roundtable', tag: 'discussion', location: 'Gold Room', description: "A candid conversation with leadership covering where we are, where we're placing our bets, and what we're building toward.", speakers: ['Denelle Dixon'] },
@@ -105,7 +105,7 @@ export const days = [
     description: "Day 2 shifts the focus to what's next. With a dedicated block on AI and product adoption, the day is designed to explore how emerging technology is reshaping the way we build, grow, and reach users, and what that means for how we Accelerate.",
     sessions: [
       { time: '8:00 AM', end: '9:00 AM', title: 'Breakfast', tag: 'meal', location: 'Pavilion' },
-      { time: '8:00 AM', end: '9:00 AM', title: 'Check-in + Swag Pick Up', tag: 'meal', location: 'Gold Room Foyer' },
+      { time: '8:00 AM', end: '9:00 AM', title: 'Check-in + Swag Pick Up', tag: 'social', location: 'Gold Room Foyer' },
       { time: '9:00 AM', end: '9:15 AM', title: 'Housekeeping + Volunteer Explanation', tag: 'session', location: 'Gold Room' },
       { time: '9:15 AM', end: '10:00 AM', title: 'Guest Speaker', tag: 'session', location: 'Gold Room' },
       { time: '10:00 AM', end: '10:15 AM', title: 'Stretch Break', tag: 'break', location: 'Gold Room' },
