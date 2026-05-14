@@ -110,11 +110,14 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
   }
 
   const searchResults = search
-    ? employees.filter(m =>
-        m.name.toLowerCase().includes(search.toLowerCase()) ||
-        m.team.toLowerCase().includes(search.toLowerCase()) ||
-        m.title.toLowerCase().includes(search.toLowerCase())
-      )
+    ? employees.filter(m => {
+        const q = search.toLowerCase()
+        return (
+          m.name?.toLowerCase().includes(q) ||
+          m.team?.toLowerCase().includes(q) ||
+          m.location?.toLowerCase().includes(q)
+        )
+      })
     : null
 
   return (

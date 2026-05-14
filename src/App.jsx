@@ -134,26 +134,35 @@ export default function App() {
     }
     let cancelled = false
     ;(async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle()
-      if (cancelled) return
-      setProfile(data || null)
-      setProfileChecked(true)
+      try {
+        const { data } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        if (cancelled) return
+        setProfile(data || null)
+      } catch (e) {
+        console.warn('Profile fetch failed:', e?.message)
+      } finally {
+        if (!cancelled) setProfileChecked(true)
+      }
     })()
     return () => { cancelled = true }
   }, [user?.id])
 
   const refetchProfile = async () => {
     if (!user?.id) return
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user.id)
-      .maybeSingle()
-    setProfile(data || null)
+    try {
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      setProfile(data || null)
+    } catch (e) {
+      console.warn('Profile refetch failed:', e?.message)
+    }
   }
 
   const handleSelectUser = (person) => {
