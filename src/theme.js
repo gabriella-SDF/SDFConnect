@@ -127,7 +127,7 @@ export const S = {
 
   // Layout
   container: {
-    maxWidth: 480,
+    maxWidth: 640,
     margin: '0 auto',
     width: '100%',
     minHeight: '100vh',
@@ -155,7 +155,7 @@ export const S = {
     borderRadius: '20px 20px 0 0',
     padding: '12px 24px 32px',
     paddingBottom: 'calc(32px + env(safe-area-inset-bottom))',
-    maxWidth: 480,
+    maxWidth: 640,
     width: '100%',
     maxHeight: '85vh',
     overflowY: 'auto',

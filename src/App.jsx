@@ -438,7 +438,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 56,
-    maxWidth: 480,
+    maxWidth: 640,
     margin: '0 auto',
   },
   logo: {
@@ -482,7 +482,7 @@ const styles = {
     bottom: 0,
     left: '50%',
     transform: 'translateX(-50%)',
-    maxWidth: 480,
+    maxWidth: 640,
     width: '100%',
     display: 'flex',
     justifyContent: 'space-around',

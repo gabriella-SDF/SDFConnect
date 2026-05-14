@@ -31,8 +31,8 @@
       @supports(padding: env(safe-area-inset-bottom)) {
         body { padding-bottom: env(safe-area-inset-bottom); }
       }
-      /* Desktop: frame the app like a phone — backdrop, centered column, subtle shadow */
-      @media (min-width: 600px) {
+      /* Desktop: wider centered column on a dark backdrop (web-feel, not phone-frame) */
+      @media (min-width: 720px) {
         body {
           background: #1A1A1A;
           display: flex;
@@ -40,10 +40,9 @@
           justify-content: center;
         }
         #root {
-          width: 480px;
+          width: 640px;
           max-width: 100%;
           background: #0F0F0F;
-          box-shadow: 0 0 60px rgba(0,0,0,0.45);
           position: relative;
         }
       }
