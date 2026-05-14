@@ -23,16 +23,6 @@ const hubRooms = [
   { id: 'fountain', name: 'Fountain Room', where: 'Lobby Level · Back, near Roof Garden', purpose: 'AI Hackathon' },
 ]
 
-const upRooms = [
-  { name: 'Crown', detail: 'Yoga · Penthouse Happy Hour' },
-  { name: 'Pavilion + Registration', detail: 'Breakfast · Check-in · Swag' },
-]
-
-const downRooms = [
-  { name: 'Arcade', detail: 'Intersect I/II · Diplomat Club' },
-  { name: 'Terrace', detail: 'Tonga Room · Vanderbilt · Spa' },
-]
-
 const sfPicks = {
   eat: {
     label: 'Eat',
@@ -348,33 +338,6 @@ function VenueGuide() {
           )
         })}
       </div>
-    </div>
-  )
-}
-
-function FloorMarker({ label, sub, rooms }) {
-  return (
-    <div style={styles.floorRow}>
-      <div style={styles.floorRowHeader}>
-        <span style={styles.floorRowLabel}>{label}</span>
-        <span style={styles.floorRowSub}>{sub}</span>
-      </div>
-      <div style={styles.floorRowRooms}>
-        {rooms.map((r, i) => (
-          <div key={i} style={styles.floorRowRoom}>
-            <span style={styles.floorRowRoomName}>{r.name}</span>
-            <span style={styles.floorRowRoomDetail}>{r.detail}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-function Connector({ direction }) {
-  return (
-    <div style={styles.connector}>
-      <span style={styles.connectorArrow}>{direction === 'down' ? '↓' : '↑'}</span>
     </div>
   )
 }

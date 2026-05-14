@@ -74,11 +74,15 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
     if (!profile) return
     let cancelled = false
     ;(async () => {
-      const [{ data: profiles }, { data: employees }] = await Promise.all([
+      const [{ data: profiles, error: e1 }, { data: employees, error: e2 }] = await Promise.all([
         supabase.from('profiles').select('*'),
         supabase.from('employees').select('id, first_name, last_name, department, email, title'),
       ])
-      if (cancelled || !profiles || !employees) return
+      if (cancelled) return
+      if (e1 || e2 || !profiles || !employees) {
+        if (e1 || e2) console.warn('Matches fetch failed:', e1?.message || e2?.message)
+        return
+      }
       const byEmail = new Map(employees.map(e => [e.email, e]))
       const top = topMatches(profile, profiles, null, byEmail, 5)
       setMatches(top)
