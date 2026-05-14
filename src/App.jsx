@@ -83,11 +83,26 @@ export default function App() {
   const [venueInitialTab, setVenueInitialTab] = useState(null)
 
   // Restore the user from localStorage on first load.
+  // Clear stale data from older NamePicker versions (numeric ids, no first_name, etc.).
   useEffect(() => {
     try {
       const saved = localStorage.getItem('sdf-connect-user')
-      if (saved) setUser(JSON.parse(saved))
-    } catch {}
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        const looksLikeUuid =
+          typeof parsed?.id === 'string' &&
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(parsed.id)
+        if (looksLikeUuid) {
+          setUser(parsed)
+        } else {
+          localStorage.removeItem('sdf-connect-user')
+          localStorage.removeItem('sdf-skip-quiz')
+        }
+      }
+    } catch {
+      localStorage.removeItem('sdf-connect-user')
+      localStorage.removeItem('sdf-skip-quiz')
+    }
     setLoading(false)
   }, [])
 
