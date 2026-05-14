@@ -296,12 +296,6 @@ function VenueGuide() {
         style={styles.venueMapCard}
         aria-label="Tap to enlarge"
       >
-        {level.id === 'lobby' && (
-          <div style={styles.youHerePill}>
-            <span style={styles.youHereDot} />
-            You are here
-          </div>
-        )}
         <img
           src={level.image}
           alt={`${level.label} level floor plan`}
