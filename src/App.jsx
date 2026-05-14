@@ -24,6 +24,7 @@ export default function App() {
   const [profileChecked, setProfileChecked] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showEditProfile, setShowEditProfile] = useState(false)
+  const [showMyProfile, setShowMyProfile] = useState(false)
 
   // Restore the user from localStorage on first load.
   useEffect(() => {
@@ -124,6 +125,21 @@ export default function App() {
           />
         </div>
       )}
+
+      {showMyProfile && (
+        <MyProfileSheet
+          user={user}
+          profile={profile}
+          onClose={() => setShowMyProfile(false)}
+          onEdit={() => { setShowMyProfile(false); setShowEditProfile(true) }}
+          onSignOut={() => {
+            if (window.confirm('Sign out of SDF Connect?')) {
+              setShowMyProfile(false)
+              handleSignOut()
+            }
+          }}
+        />
+      )}
       {/* Header */}
       <header style={styles.header}>
         <div style={styles.headerInner}>
@@ -137,9 +153,9 @@ export default function App() {
           <button
             type="button"
             style={styles.avatar}
-            onClick={() => setTab('people')}
+            onClick={() => setShowMyProfile(true)}
             title={user.name}
-            aria-label="Open People"
+            aria-label="My profile"
           >
             {user.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
           </button>
@@ -170,6 +186,148 @@ export default function App() {
       </nav>
     </div>
   )
+}
+
+function MyProfileSheet({ user, profile, onClose, onEdit, onSignOut }) {
+  const initials = user.name.split(' ').map(n => n[0]).join('').slice(0, 2)
+  const chips = profile ? [
+    ...(profile.stellar_interests || []),
+    ...(profile.most_yourself || []),
+    ...(profile.thinking || []),
+    profile.vacation,
+  ].filter(Boolean) : []
+  const hasProfile = !!profile?.completed_at
+
+  return (
+    <div style={S.overlay} onClick={onClose}>
+      <div style={S.sheet} onClick={e => e.stopPropagation()}>
+        <div style={S.sheetHandle} />
+        <div style={{ textAlign: 'center', paddingTop: 8 }}>
+          <div style={mp.avatar}>{initials}</div>
+          <h3 style={{ ...S.h2, marginTop: 12 }}>{user.name}</h3>
+          {user.location && (
+            <p style={{ ...S.caption, marginTop: 4 }}>{user.location}</p>
+          )}
+        </div>
+
+        {profile?.ask_me_about && (
+          <div style={mp.askMe}>
+            <div style={mp.kicker}>Ask me about</div>
+            <div style={mp.askMeText}>{profile.ask_me_about}</div>
+          </div>
+        )}
+
+        {profile?.best_rec && (
+          <div style={mp.field}>
+            <div style={mp.kicker}>Recent rec</div>
+            <div style={mp.fieldText}>{profile.best_rec}</div>
+          </div>
+        )}
+
+        {chips.length > 0 && (
+          <div style={mp.field}>
+            <div style={mp.kicker}>My interests</div>
+            <div style={mp.chipRow}>
+              {chips.map((c, i) => <span key={i} style={mp.chip}>{c}</span>)}
+            </div>
+          </div>
+        )}
+
+        {!hasProfile && (
+          <p style={{ ...S.caption, textAlign: 'center', marginTop: 20, fontStyle: 'italic' }}>
+            You haven't filled in your profile yet.
+          </p>
+        )}
+
+        <button onClick={onEdit} style={{ ...S.btnPrimary, width: '100%', marginTop: 24 }}>
+          {hasProfile ? 'Edit my answers' : 'Fill out my profile'}
+        </button>
+        <button onClick={onSignOut} style={{ ...mp.signOut, marginTop: 10 }}>
+          Sign out
+        </button>
+        <button onClick={onClose} style={{ ...S.btnSecondary, width: '100%', marginTop: 10 }}>
+          Close
+        </button>
+      </div>
+    </div>
+  )
+}
+
+const mp = {
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    background: C.navy,
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: F.sans,
+    fontSize: 24,
+    fontWeight: 600,
+    margin: '0 auto',
+    letterSpacing: '0.02em',
+  },
+  askMe: {
+    background: `linear-gradient(135deg, ${C.navy}, ${C.teal})`,
+    color: '#fff',
+    borderRadius: 14,
+    padding: 16,
+    marginTop: 20,
+  },
+  field: {
+    marginTop: 16,
+  },
+  kicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    color: C.lavender,
+    textTransform: 'uppercase',
+    marginBottom: 6,
+  },
+  askMeText: {
+    fontFamily: F.serif,
+    fontSize: 17,
+    fontWeight: 500,
+    fontStyle: 'italic',
+    lineHeight: 1.4,
+  },
+  fieldText: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    color: C.text,
+    lineHeight: 1.5,
+  },
+  chipRow: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  chip: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 500,
+    color: C.text,
+    background: C.bg,
+    padding: '5px 10px',
+    borderRadius: 999,
+    border: `1px solid ${C.border}`,
+  },
+  signOut: {
+    width: '100%',
+    background: 'none',
+    border: `1px solid ${C.border}`,
+    color: C.textFade,
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    padding: '12px',
+    borderRadius: 12,
+    cursor: 'pointer',
+  },
 }
 
 const styles = {
