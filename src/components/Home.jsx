@@ -129,7 +129,7 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
               )}
               {!nowSession && nextSession && (
                 <div style={styles.nextBadge}>
-                  Up next at {briefTime(nextSession.time)} — {nextSession.title}
+                  Up next at {briefTime(nextSession.time)}: {nextSession.title}
                 </div>
               )}
               <div style={styles.yellowRule} />
@@ -212,7 +212,7 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
         <div style={{ padding: '20px 20px 0' }}>
           <div style={styles.sectionHeader}>
             <h3 style={S.h3}>
-              {state.phase === 'during' ? "Today's Schedule" : `Up Next — ${previewDay.label.split(',')[0]}`}
+              {state.phase === 'during' ? "Today's Schedule" : `Up Next: ${previewDay.label.split(',')[0]}`}
             </h3>
             <button onClick={() => onNavigate('schedule')} style={styles.linkBtn}>
               Full schedule ›

@@ -64,10 +64,10 @@ function IconPeople() {
 }
 
 const tabs = [
-  { id: 'schedule', label: 'Schedule', Icon: IconSchedule },
   { id: 'engage', label: 'Engage', Icon: IconEngage },
-  { id: 'home', label: 'Home', Icon: IconBridge },
   { id: 'venue', label: 'Get Around', Icon: IconCableCar },
+  { id: 'home', label: 'Home', Icon: IconBridge },
+  { id: 'schedule', label: 'Schedule', Icon: IconSchedule },
   { id: 'people', label: 'People', Icon: IconPeople },
 ]
 

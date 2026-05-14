@@ -95,7 +95,7 @@ export default function Engage({ user }) {
           <div>
             <h2 style={S.h2}>Anonymous Q&A</h2>
             <p style={{ ...S.body, color: C.textFade, margin: '8px 0 24px' }}>
-              Ask anything during sessions. Your identity is never recorded — no name, no IP, no device ID.
+              Ask anything during sessions. Your identity is never recorded. No name, no IP, no device ID.
             </p>
 
             <div style={S.card}>
@@ -204,7 +204,7 @@ export default function Engage({ user }) {
               onClick={shuffleIcebreaker}
               style={{ ...S.btnPrimary, width: '100%', marginTop: 20 }}
             >
-              Shuffle — Next Card
+              Shuffle to Next Card
             </button>
 
             <p style={{ ...S.caption, marginTop: 16, textAlign: 'center' }}>
