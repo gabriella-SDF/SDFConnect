@@ -156,24 +156,16 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
         {/* Explore SF banner */}
         <div style={{ padding: '20px 20px 0' }}>
           <button onClick={onGoExplore} style={styles.exploreBanner}>
-            <img src="/sf-hero.jpg" alt="San Francisco" style={styles.mapBannerImg} />
-            <div style={styles.exploreBannerOverlay} />
-            <div style={styles.mapBannerText}>
-              <div style={styles.mapBannerKicker}>While you're in town</div>
-              <div style={styles.mapBannerTitle}>Explore San Francisco →</div>
-            </div>
+            <div style={styles.bannerKicker}>While you're in town</div>
+            <div style={styles.bannerTitle}>Explore San Francisco →</div>
           </button>
         </div>
 
         {/* Floor plan banner */}
-        <div style={{ padding: '16px 20px 0' }}>
-          <button onClick={() => onNavigate('venue')} style={styles.mapBanner}>
-            <img src="/lobby-floorplan.jpg" alt="Lobby floor plan" style={styles.mapBannerImg} />
-            <div style={styles.mapBannerOverlay} />
-            <div style={styles.mapBannerText}>
-              <div style={styles.mapBannerKicker}>The Fairmont · Lobby Level</div>
-              <div style={styles.mapBannerTitle}>Find your way around →</div>
-            </div>
+        <div style={{ padding: '10px 20px 0' }}>
+          <button onClick={() => onNavigate('venue')} style={styles.floorBanner}>
+            <div style={styles.bannerKicker}>The Fairmont · Lobby Level</div>
+            <div style={styles.bannerTitle}>Find your way around →</div>
           </button>
         </div>
 
@@ -481,69 +473,40 @@ const styles = {
     marginLeft: 4,
     letterSpacing: '0.02em',
   },
-  mapBanner: {
-    position: 'relative',
-    display: 'block',
-    width: '100%',
-    height: 130,
-    padding: 0,
-    border: `1px solid ${C.border}`,
-    borderRadius: 16,
-    overflow: 'hidden',
-    cursor: 'pointer',
-    background: C.card,
-    textAlign: 'left',
-  },
-  mapBannerImg: {
-    position: 'absolute',
-    inset: 0,
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover',
-    objectPosition: 'center',
-  },
-  mapBannerOverlay: {
-    position: 'absolute',
-    inset: 0,
-    background: 'linear-gradient(90deg, rgba(0,46,93,0.85) 0%, rgba(0,46,93,0.55) 55%, rgba(0,46,93,0) 100%)',
-  },
   exploreBanner: {
-    position: 'relative',
     display: 'block',
     width: '100%',
-    height: 130,
-    padding: 0,
-    border: `1px solid ${C.border}`,
-    borderRadius: 16,
-    overflow: 'hidden',
+    padding: '14px 18px',
+    border: 'none',
+    borderRadius: 14,
     cursor: 'pointer',
-    background: C.card,
+    background: `linear-gradient(90deg, ${C.teal} 0%, #007885 100%)`,
     textAlign: 'left',
-  },
-  exploreBannerOverlay: {
-    position: 'absolute',
-    inset: 0,
-    background: 'linear-gradient(90deg, rgba(0,167,181,0.85) 0%, rgba(0,167,181,0.45) 55%, rgba(0,167,181,0) 100%)',
-  },
-  mapBannerText: {
-    position: 'absolute',
-    left: 18,
-    top: '50%',
-    transform: 'translateY(-50%)',
     color: '#fff',
   },
-  mapBannerKicker: {
+  floorBanner: {
+    display: 'block',
+    width: '100%',
+    padding: '14px 18px',
+    border: 'none',
+    borderRadius: 14,
+    cursor: 'pointer',
+    background: `linear-gradient(90deg, ${C.navy} 0%, #001a3a 100%)`,
+    textAlign: 'left',
+    color: '#fff',
+  },
+  bannerKicker: {
     fontFamily: F.sans,
     fontSize: 10,
     fontWeight: 700,
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    color: 'rgba(255,255,255,0.85)',
-    marginBottom: 6,
+    color: 'rgba(255,255,255,0.75)',
+    marginBottom: 4,
   },
-  mapBannerTitle: {
+  bannerTitle: {
     fontFamily: F.serif,
-    fontSize: 19,
+    fontSize: 17,
     fontWeight: 600,
     fontStyle: 'italic',
     color: '#fff',
