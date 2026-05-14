@@ -7,9 +7,9 @@ import { days, hubRoomForSession, mapsUrl } from '../data/schedule'
 // =============================================================================
 
 const levels = [
-  { id: 'upper', code: 'Floors 24 + 2', label: 'Upper Levels', sub: 'Crown + Mezzanine',  image: '/level-upper.jpg', accent: '#F4C842' },
-  { id: 'lobby', code: 'Floor 1',        label: 'Lobby',         sub: 'Main level',          image: '/level-lobby.jpg', accent: '#2C4F7C' },
   { id: 'lower', code: 'Floors A + T',  label: 'Lower Levels', sub: 'Arcade + Terrace',   image: '/level-lower.jpg', accent: '#B7ACE8' },
+  { id: 'lobby', code: 'Floor 1',        label: 'Lobby',         sub: 'Main level',          image: '/level-lobby.jpg', accent: '#2C4F7C' },
+  { id: 'upper', code: 'Floors 2 + 24', label: 'Upper Levels', sub: 'Mezzanine + Crown',  image: '/level-upper.jpg', accent: '#F4C842' },
 ]
 
 const hubRooms = [
