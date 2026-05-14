@@ -89,6 +89,7 @@ const sfPicks = {
         items: [
           { name: 'Nari', detail: 'Pim Techamuanvivit\'s modern Thai project. Japantown. Excellent cocktails.', tag: 'Thai · $$$' },
           { name: 'Farmhouse Kitchen Thai', detail: 'Photogenic, popular Thai with a strong menu. Mission.', tag: 'Thai · $$' },
+          { name: 'Marnee Thai', detail: 'Long-running neighborhood favorite. Inner Sunset.', tag: 'Thai · $$' },
         ],
       },
       {
@@ -105,7 +106,6 @@ const sfPicks = {
         title: 'Californian & Mediterranean',
         items: [
           { name: 'Foreign Cinema', detail: 'Californian-Mediterranean classic in the Mission.', tag: 'Californian · $$$' },
-          { name: 'Liholiho Yacht Club', detail: 'Inventive Hawaiian–Californian on Sutter St.', tag: 'New SF · $$' },
           { name: 'Beit Rima', detail: 'Fresh Mediterranean. Multiple locations around the city.', tag: 'Middle Eastern · $$' },
         ],
       },
