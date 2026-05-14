@@ -71,6 +71,15 @@ const tabs = [
   { id: 'people', label: 'People', Icon: IconPeople },
 ]
 
+// Desktop reorders the nav with Home on the left.
+const desktopTabs = [
+  { id: 'home', label: 'Home', Icon: IconBridge },
+  { id: 'venue', label: 'Get Around', Icon: IconCableCar },
+  { id: 'schedule', label: 'Schedule', Icon: IconSchedule },
+  { id: 'engage', label: 'Engage', Icon: IconEngage },
+  { id: 'people', label: 'People', Icon: IconPeople },
+]
+
 export default function App() {
   const [tab, setTab] = useState('home')
   const [user, setUser] = useState(null)
@@ -81,6 +90,16 @@ export default function App() {
   const [showMyProfile, setShowMyProfile] = useState(false)
   const [openPersonId, setOpenPersonId] = useState(null)
   const [venueInitialTab, setVenueInitialTab] = useState(null)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  // Track viewport so we can show top-nav on desktop / bottom-nav on mobile.
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 720px)')
+    const update = () => setIsDesktop(mq.matches)
+    update()
+    mq.addEventListener?.('change', update)
+    return () => mq.removeEventListener?.('change', update)
+  }, [])
 
   // Restore the user from localStorage on first load.
   // Clear stale data from older NamePicker versions (numeric ids, no first_name, etc.).
@@ -230,6 +249,29 @@ export default function App() {
           >
             <img src="/logo-white.png" alt="SDF Connect" style={{ height: 28, display: 'block' }} />
           </button>
+
+          {/* Desktop: inline nav in the header */}
+          {isDesktop && (
+            <nav style={styles.topNav}>
+              {desktopTabs.map(t => {
+                const active = tab === t.id
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setTab(t.id)}
+                    style={{
+                      ...styles.topNavBtn,
+                      color: active ? C.yellow : '#bbb',
+                      borderBottom: active ? `2px solid ${C.yellow}` : '2px solid transparent',
+                    }}
+                  >
+                    {t.label}
+                  </button>
+                )
+              })}
+            </nav>
+          )}
+
           <button
             type="button"
             style={styles.avatar}
@@ -247,25 +289,27 @@ export default function App() {
         {screen[tab]}
       </main>
 
-      {/* Bottom Nav */}
-      <nav style={styles.nav}>
-        {tabs.map(t => (
-          <button
-            key={t.id}
-            onClick={() => setTab(t.id)}
-            style={{
-              ...styles.navBtn,
-              color: tab === t.id ? C.yellow : '#666',
-              borderTop: tab === t.id ? `2px solid ${C.yellow}` : '2px solid transparent',
-            }}
-          >
-            <span style={{ lineHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 24 }}>
-              <t.Icon />
-            </span>
-            <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.04em' }}>{t.label}</span>
-          </button>
-        ))}
-      </nav>
+      {/* Bottom Nav — mobile only */}
+      {!isDesktop && (
+        <nav style={styles.nav}>
+          {tabs.map(t => (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              style={{
+                ...styles.navBtn,
+                color: tab === t.id ? C.yellow : '#666',
+                borderTop: tab === t.id ? `2px solid ${C.yellow}` : '2px solid transparent',
+              }}
+            >
+              <span style={{ lineHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 24 }}>
+                <t.Icon />
+              </span>
+              <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.04em' }}>{t.label}</span>
+            </button>
+          ))}
+        </nav>
+      )}
     </div>
   )
 }
@@ -491,6 +535,25 @@ const styles = {
     border: 'none',
     padding: 0,
     cursor: 'pointer',
+  },
+  topNav: {
+    flex: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    gap: 8,
+    margin: '0 24px',
+  },
+  topNavBtn: {
+    background: 'none',
+    border: 'none',
+    padding: '18px 14px',
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 600,
+    letterSpacing: '0.02em',
+    cursor: 'pointer',
+    transition: 'color 0.15s, border-color 0.15s',
+    borderTop: '2px solid transparent',
   },
   nav: {
     position: 'fixed',
