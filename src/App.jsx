@@ -11,9 +11,9 @@ import NamePicker from './components/NamePicker'
 import Onboarding from './components/Onboarding'
 
 const tabs = [
-  { id: 'home', label: 'Home', icon: '◆' },
   { id: 'schedule', label: 'Schedule', icon: '▦' },
   { id: 'engage', label: 'Engage', icon: '✦' },
+  { id: 'home', label: 'Home', icon: '◆' },
   { id: 'venue', label: 'Get Around', icon: '⌖' },
   { id: 'people', label: 'People', icon: '●●' },
 ]
