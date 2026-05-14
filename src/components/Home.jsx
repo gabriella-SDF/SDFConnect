@@ -220,13 +220,15 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
               const isNow = nowSession && s.title === nowSession.title
               const room = briefRoom(s)
               const hint = roomHint(room)
+              const tag = tagColors[s.tag] || tagColors.session
+              const stripeColor = isNow ? C.yellow : tag.bg
               return (
                 <div
                   key={i}
                   style={{
                     ...styles.briefRow,
                     background: isNow ? C.yellow + '14' : 'transparent',
-                    borderLeft: isNow ? `3px solid ${C.yellow}` : '3px solid transparent',
+                    borderLeft: `4px solid ${stripeColor}`,
                   }}
                 >
                   <span style={styles.briefTime}>{briefTime(s.time) || '—'}</span>

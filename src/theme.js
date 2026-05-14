@@ -172,12 +172,15 @@ export const S = {
 
 // Tag colors for schedule items
 export const tagColors = {
-  keynote: { bg: '#FDDA24', text: '#0F0F0F' },
-  breakout: { bg: '#00A7B5', text: '#FFFFFF' },
-  social: { bg: '#B7ACE8', text: '#0F0F0F' },
-  meal: { bg: '#D6D2C4', text: '#0F0F0F' },
-  break: { bg: '#E2E2E2', text: '#6B6E6B' },
-  activity: { bg: '#002E5D', text: '#FFFFFF' },
-  workshop: { bg: '#0F0F0F', text: '#FDDA24' },
-  team: { bg: '#00A7B5', text: '#FFFFFF' },
+  session:    { bg: '#FDDA24', text: '#0F0F0F' }, // talks / presentations / kickoffs
+  discussion: { bg: '#B7ACE8', text: '#0F0F0F' }, // fireside / roundtable / Q&A
+  breakout:   { bg: '#00A7B5', text: '#FFFFFF' },
+  workshop:   { bg: '#0F0F0F', text: '#FDDA24' },
+  team:       { bg: '#00A7B5', text: '#FFFFFF' },
+  activity:   { bg: '#002E5D', text: '#FFFFFF' },
+  social:     { bg: '#D6D2C4', text: '#0F0F0F' },
+  meal:       { bg: '#F0E6D2', text: '#6B6E6B' },
+  break:      { bg: '#E2E2E2', text: '#6B6E6B' },
+  // Backward-compat alias
+  keynote:    { bg: '#FDDA24', text: '#0F0F0F' },
 }
