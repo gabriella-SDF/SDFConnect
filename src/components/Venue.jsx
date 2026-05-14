@@ -15,19 +15,15 @@ const levels = [
 ]
 
 const hubRooms = [
-  { id: 'gold',     name: 'Gold Room',     where: 'Lobby Level · Left side',         purpose: 'General Sessions · Awards', team: 'Engineering' },
-  { id: 'green',    name: 'Green Room',    where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts', team: 'Product' },
-  { id: 'garden',   name: 'Garden Room',   where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts', team: 'Legal & Policy' },
-  { id: 'empire',   name: 'Empire Room',   where: 'Lobby Level · Far left',          purpose: 'Breakouts', team: 'Office of the CEO' },
-  { id: 'crystal',  name: 'Crystal Room',  where: 'Lobby Level · Back left',         purpose: 'AI Hackathon', team: 'Business Development' },
-  { id: 'fountain', name: 'Fountain Room', where: 'Lobby Level · Back, near Roof Garden', purpose: 'AI Hackathon', team: 'Growth' },
-]
-
-// Team rooms that aren't on the main hub level
-const otherTeamRooms = [
-  { team: 'Finance & Operations', room: 'Intersect I / II', where: 'Arcade Level · One floor down' },
-  { team: 'Marketing',            room: 'Diplomat Club',    where: 'Arcade Level · One floor down' },
-  { team: 'People',               room: 'Crown Room',       where: 'Floor 24 · Top floor' },
+  { id: 'gold',      name: 'Gold Room',         where: 'Lobby Level · Left side',                purpose: 'General Sessions · Awards', team: 'Engineering' },
+  { id: 'green',     name: 'Green Room',        where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',                 team: 'Product' },
+  { id: 'garden',    name: 'Garden Room',       where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',                 team: 'Legal & Policy' },
+  { id: 'empire',    name: 'Empire Room',       where: 'Lobby Level · Far left',                 purpose: 'Breakouts',                 team: 'Office of the CEO' },
+  { id: 'crystal',   name: 'Crystal Room',      where: 'Lobby Level · Back left',                purpose: 'AI Hackathon',              team: 'Business Development' },
+  { id: 'fountain',  name: 'Fountain Room',     where: 'Lobby Level · Back, near Roof Garden',   purpose: 'AI Hackathon',              team: 'Growth' },
+  { id: 'intersect', name: 'Intersect I / II',  where: 'Arcade Level · One floor down',          team: 'Finance & Operations' },
+  { id: 'diplomat',  name: 'Diplomat Club',     where: 'Arcade Level · One floor down',          team: 'Marketing' },
+  { id: 'crownrm',   name: 'Crown Room',        where: 'Floor 24 · Top floor',                   team: 'People' },
 ]
 
 const sfPicks = {
@@ -340,27 +336,13 @@ function VenueGuide() {
                 </div>
               ) : (
                 <>
-                  <div style={styles.roomCardPurpose}>{r.purpose}</div>
+                  {r.purpose && <div style={styles.roomCardPurpose}>{r.purpose}</div>}
                   {r.team && <div style={styles.roomCardTeam}>{r.team} team time</div>}
                 </>
               )}
             </div>
           )
         })}
-      </div>
-
-      {/* Team rooms not on the hub level */}
-      <h3 style={styles.sectionTitle}>Other team rooms</h3>
-      <div style={styles.otherTeamList}>
-        {otherTeamRooms.map(t => (
-          <div key={t.team} style={styles.teamRoomRow}>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={styles.teamRoomTeam}>{t.team}</div>
-              <div style={styles.teamRoomWhere}>{t.where}</div>
-            </div>
-            <div style={styles.teamRoomRoom}>{t.room}</div>
-          </div>
-        ))}
       </div>
     </div>
   )
