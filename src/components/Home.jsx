@@ -309,7 +309,7 @@ const styles = {
   },
   heroInner: {
     position: 'relative',
-    maxWidth: 640,
+    maxWidth: '100%',
     margin: '0 auto',
   },
   greeting: {
