@@ -6,14 +6,14 @@ import { sharedTags } from '../lib/matching'
 const teamRoomMap = {
   'Business Development': 'Crystal Room',
   'Engineering': 'Gold Room',
-  'Finance and Operations': 'Intersect I/II',
-  'Finance & Operations': 'Intersect I/II',
+  'Finance and Operations': 'Intersect I / II',
+  'Finance & Operations': 'Intersect I / II',
   'Growth': 'Fountain Room',
-  'Legal and Policy': 'Vanderbilt Room',
-  'Legal & Policy': 'Vanderbilt Room',
+  'Legal and Policy': 'Garden Room',
+  'Legal & Policy': 'Garden Room',
   'Marketing': 'Diplomat Club',
   'Office of the CEO': 'Empire Room',
-  'People': 'Garden Room',
+  'People': 'Crown Room',
   'Product': 'Green Room',
 }
 

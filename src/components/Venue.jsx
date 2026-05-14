@@ -15,12 +15,19 @@ const levels = [
 ]
 
 const hubRooms = [
-  { id: 'gold',     name: 'Gold Room',     where: 'Lobby Level · Left side',         purpose: 'General Sessions · Awards' },
-  { id: 'green',    name: 'Green Room',    where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts' },
-  { id: 'garden',   name: 'Garden Room',   where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts' },
-  { id: 'empire',   name: 'Empire Room',   where: 'Lobby Level · Far left',          purpose: 'Breakouts' },
-  { id: 'crystal',  name: 'Crystal Room',  where: 'Lobby Level · Back left',         purpose: 'AI Hackathon' },
-  { id: 'fountain', name: 'Fountain Room', where: 'Lobby Level · Back, near Roof Garden', purpose: 'AI Hackathon' },
+  { id: 'gold',     name: 'Gold Room',     where: 'Lobby Level · Left side',         purpose: 'General Sessions · Awards', team: 'Engineering' },
+  { id: 'green',    name: 'Green Room',    where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts', team: 'Product' },
+  { id: 'garden',   name: 'Garden Room',   where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts', team: 'Legal & Policy' },
+  { id: 'empire',   name: 'Empire Room',   where: 'Lobby Level · Far left',          purpose: 'Breakouts', team: 'Office of the CEO' },
+  { id: 'crystal',  name: 'Crystal Room',  where: 'Lobby Level · Back left',         purpose: 'AI Hackathon', team: 'Business Development' },
+  { id: 'fountain', name: 'Fountain Room', where: 'Lobby Level · Back, near Roof Garden', purpose: 'AI Hackathon', team: 'Growth' },
+]
+
+// Team rooms that aren't on the main hub level
+const otherTeamRooms = [
+  { team: 'Finance & Operations', room: 'Intersect I / II', where: 'Arcade Level · One floor down' },
+  { team: 'Marketing',            room: 'Diplomat Club',    where: 'Arcade Level · One floor down' },
+  { team: 'People',               room: 'Crown Room',       where: 'Floor 24 · Top floor' },
 ]
 
 const sfPicks = {
@@ -332,11 +339,28 @@ function VenueGuide() {
                   <span style={styles.liveText}>{live}</span>
                 </div>
               ) : (
-                <div style={styles.roomCardPurpose}>{r.purpose}</div>
+                <>
+                  <div style={styles.roomCardPurpose}>{r.purpose}</div>
+                  {r.team && <div style={styles.roomCardTeam}>{r.team} team time</div>}
+                </>
               )}
             </div>
           )
         })}
+      </div>
+
+      {/* Team rooms not on the hub level */}
+      <h3 style={styles.sectionTitle}>Other team rooms</h3>
+      <div style={styles.otherTeamList}>
+        {otherTeamRooms.map(t => (
+          <div key={t.team} style={styles.teamRoomRow}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={styles.teamRoomTeam}>{t.team}</div>
+              <div style={styles.teamRoomWhere}>{t.where}</div>
+            </div>
+            <div style={styles.teamRoomRoom}>{t.room}</div>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -841,6 +865,51 @@ const styles = {
     color: C.textFade,
     marginTop: 4,
     lineHeight: 1.4,
+  },
+  roomCardTeam: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    fontWeight: 600,
+    color: C.teal,
+    marginTop: 4,
+    letterSpacing: '0.01em',
+  },
+  otherTeamList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+  },
+  teamRoomRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderRadius: 12,
+    padding: '12px 14px',
+  },
+  teamRoomTeam: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 600,
+    color: C.text,
+  },
+  teamRoomWhere: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    color: C.textMuted,
+    marginTop: 2,
+  },
+  teamRoomRoom: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    color: C.navy,
+    background: C.lavender + '22',
+    padding: '5px 10px',
+    borderRadius: 8,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
   },
   roomCardLive: {
     display: 'flex',
