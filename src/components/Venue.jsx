@@ -69,7 +69,6 @@ const sfPicks = {
       {
         title: 'Mexican & Latin',
         items: [
-          { name: 'Californios', detail: 'Michelin-starred Mexican tasting menu in the Mission. Special-occasion.', tag: 'Tasting · $$$$' },
           { name: 'La Taqueria', detail: 'James Beard-winning Mission burrito spot. Classic SF.', tag: 'Mexican · $' },
           { name: 'Nopalito', detail: 'Regional Mexican done beautifully. Inner Sunset.', tag: 'Mexican · $$' },
           { name: 'Tacos Cala', detail: 'Casual sister to Cala. Bright, daytime tacos in Hayes Valley.', tag: 'Tacos · $' },
@@ -146,10 +145,15 @@ const sfPicks = {
     ],
   },
   coffee: {
-    label: 'Coffee',
-    intro: 'Where to caffeinate before the day starts.',
+    label: 'Coffee & Matcha',
+    intro: 'Local favorites — beans, pour-overs, and matcha.',
     items: [
       { name: 'Laurel Court Café', detail: 'Inside the Fairmont — grab-and-go.', tag: 'In hotel' },
+      { name: 'Saint Frank Coffee', detail: 'Russian Hill — serious coffee program, minutes from the hotel.', tag: '~5-min walk' },
+      { name: 'Andytown Coffee Roasters', detail: 'Outer Sunset roaster known for the Snowy Plover (espresso + tonic + cream).', tag: 'Local favorite' },
+      { name: 'Sightglass Coffee', detail: 'SoMa flagship — beautiful, light-filled space.', tag: 'Roaster' },
+      { name: 'Ritual Coffee Roasters', detail: 'OG SF third-wave roaster. Hayes Valley + Mission.', tag: 'Classic SF' },
+      { name: 'Stonemill Matcha', detail: 'Dedicated matcha café in the Mission — ceremonial-grade.', tag: 'Matcha' },
       { name: 'Réveille Coffee Co.', detail: 'Reliable espresso on Polk St.', tag: 'Espresso' },
       { name: 'Sextant Coffee', detail: 'Single-origin, calm atmosphere, good pour-overs.', tag: 'Pour-over' },
       { name: 'Caffe Trieste', detail: 'North Beach classic. Beat-era history.', tag: 'Historic' },
