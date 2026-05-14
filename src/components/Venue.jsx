@@ -67,6 +67,35 @@ const sfPicks = {
         ],
       },
       {
+        title: 'Mexican & Latin',
+        items: [
+          { name: 'Californios', detail: 'Michelin-starred Mexican tasting menu in the Mission. Special-occasion.', tag: 'Tasting · $$$$' },
+          { name: 'La Taqueria', detail: 'James Beard-winning Mission burrito spot. Classic SF.', tag: 'Mexican · $' },
+          { name: 'Nopalito', detail: 'Regional Mexican done beautifully. Inner Sunset.', tag: 'Mexican · $$' },
+          { name: 'Tacos Cala', detail: 'Casual sister to Cala. Bright, daytime tacos in Hayes Valley.', tag: 'Tacos · $' },
+          { name: 'Loló', detail: 'Creative Mexican on Valencia. Vibrant room, fun cocktails.', tag: 'Mexican · $$' },
+          { name: 'El Farolito', detail: 'Late-night Mission burrito institution.', tag: 'Mexican · $' },
+        ],
+      },
+      {
+        title: 'Indian',
+        items: [
+          { name: 'Besharam', detail: 'Heena Patel\'s Gujarati-inspired menu in the Dogpatch. Highly acclaimed.', tag: 'Indian · $$$' },
+          { name: 'Copra', detail: 'Coastal South Indian. Modern, refined. Pacific Heights.', tag: 'South Indian · $$$' },
+          { name: 'Babu Ji', detail: 'Modern Indian with a strong cocktail program. Mission.', tag: 'Indian · $$$' },
+          { name: 'August 1 Five', detail: 'Modern Indian in Hayes Valley. Vibey dinner spot.', tag: 'Indian · $$' },
+        ],
+      },
+      {
+        title: 'Thai',
+        items: [
+          { name: 'Kin Khao', detail: 'Pim Techamuanvivit\'s Michelin-acknowledged Thai. Inside Parc 55.', tag: 'Thai · $$$' },
+          { name: 'Nari', detail: 'Pim\'s modern Thai project. Japantown. Cocktails are excellent.', tag: 'Thai · $$$' },
+          { name: 'Farmhouse Kitchen Thai', detail: 'Photogenic, popular Thai with a strong menu. Mission.', tag: 'Thai · $$' },
+          { name: 'Lers Ros', detail: 'Beloved Northern Thai classic. Tenderloin.', tag: 'Thai · $$' },
+        ],
+      },
+      {
         title: 'American & Classic SF',
         items: [
           { name: 'Sons & Daughters', detail: 'Michelin-starred tasting menu, intimate room.', tag: 'Tasting · 3-min walk' },
