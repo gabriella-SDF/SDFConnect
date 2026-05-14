@@ -147,8 +147,16 @@ const sfPicks = {
 // Component
 // =============================================================================
 
-export default function Venue() {
-  const [mainTab, setMainTab] = useState('venue')
+export default function Venue({ initialTab, onConsumeInitialTab }) {
+  const [mainTab, setMainTab] = useState(initialTab || 'venue')
+
+  useEffect(() => {
+    if (initialTab) {
+      setMainTab(initialTab)
+      onConsumeInitialTab?.()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialTab])
 
   return (
     <div style={S.page}>

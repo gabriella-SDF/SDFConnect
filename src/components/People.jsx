@@ -28,7 +28,7 @@ function initials(name) {
   return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
 }
 
-export default function People({ currentUser, currentProfile, onSignOut, onEditProfile }) {
+export default function People({ currentUser, currentProfile, onSignOut, onEditProfile, initialPersonId, onConsumeInitialPerson }) {
   const [search, setSearch] = useState('')
   const [openTeams, setOpenTeams] = useState(new Set())
   const [selectedPerson, setSelectedPerson] = useState(null)
@@ -75,6 +75,18 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
     })()
     return () => { cancelled = true }
   }, [])
+
+  // When navigated here with a specific person, auto-open their profile
+  useEffect(() => {
+    if (initialPersonId && employees.length > 0) {
+      const found = employees.find(e => e.id === initialPersonId)
+      if (found) {
+        setSelectedPerson(found)
+        onConsumeInitialPerson?.()
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialPersonId, employees])
 
   const teams = useMemo(() => {
     const grouped = new Map()

@@ -58,7 +58,7 @@ function briefTime(t) {
   return t.replace(':00 ', '').replace(' AM', 'am').replace(' PM', 'pm').toLowerCase()
 }
 
-export default function Home({ user, profile, onNavigate }) {
+export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExplore }) {
   const [state, setState] = useState(getRetreatState)
   const [matches, setMatches] = useState([])
   const [icebreakerIdx, setIcebreakerIdx] = useState(() =>
@@ -80,7 +80,7 @@ export default function Home({ user, profile, onNavigate }) {
       ])
       if (cancelled || !profiles || !employees) return
       const byEmail = new Map(employees.map(e => [e.email, e]))
-      const top = topMatches(profile, profiles, null, byEmail, 3)
+      const top = topMatches(profile, profiles, null, byEmail, 5)
       setMatches(top)
     })()
     return () => { cancelled = true }
@@ -149,9 +149,33 @@ export default function Home({ user, profile, onNavigate }) {
 
       {/* Content — light */}
       <div style={styles.content}>
+        {/* Explore SF banner */}
+        <div style={{ padding: '20px 20px 0' }}>
+          <button onClick={onGoExplore} style={styles.exploreBanner}>
+            <img src="/sf-hero.jpg" alt="San Francisco" style={styles.mapBannerImg} />
+            <div style={styles.exploreBannerOverlay} />
+            <div style={styles.mapBannerText}>
+              <div style={styles.mapBannerKicker}>While you're in town</div>
+              <div style={styles.mapBannerTitle}>Explore San Francisco →</div>
+            </div>
+          </button>
+        </div>
+
+        {/* Floor plan banner */}
+        <div style={{ padding: '16px 20px 0' }}>
+          <button onClick={() => onNavigate('venue')} style={styles.mapBanner}>
+            <img src="/lobby-floorplan.jpg" alt="Lobby floor plan" style={styles.mapBannerImg} />
+            <div style={styles.mapBannerOverlay} />
+            <div style={styles.mapBannerText}>
+              <div style={styles.mapBannerKicker}>The Fairmont · Lobby Level</div>
+              <div style={styles.mapBannerTitle}>Find your way around →</div>
+            </div>
+          </button>
+        </div>
+
         {/* Matches card */}
         {matches.length > 0 && (
-          <div style={{ padding: '20px 20px 0' }}>
+          <div style={{ padding: '24px 20px 0' }}>
             <div style={styles.sectionHeader}>
               <h3 style={S.h3}>People to connect with</h3>
               <button onClick={() => onNavigate('people')} style={styles.linkBtn}>
@@ -162,7 +186,7 @@ export default function Home({ user, profile, onNavigate }) {
               {matches.map(m => (
                 <button
                   key={m.profile.user_id}
-                  onClick={() => onNavigate('people')}
+                  onClick={() => onOpenPerson?.(m.employee.id)}
                   style={styles.matchCard}
                 >
                   <div style={styles.matchAvatar}>
@@ -173,7 +197,7 @@ export default function Home({ user, profile, onNavigate }) {
                       {m.employee.first_name} {m.employee.last_name}
                     </div>
                     <div style={styles.matchSub}>
-                      {m.employee.department} · {m.shared.slice(0, 2).join(', ')}
+                      {m.shared.slice(0, 2).join(', ')}
                       {m.shared.length > 2 && ` +${m.shared.length - 2}`}
                     </div>
                   </div>
@@ -183,18 +207,6 @@ export default function Home({ user, profile, onNavigate }) {
             </div>
           </div>
         )}
-
-        {/* Floor plan banner */}
-        <div style={{ padding: '20px 20px 0' }}>
-          <button onClick={() => onNavigate('venue')} style={styles.mapBanner}>
-            <img src="/lobby-floorplan.jpg" alt="Lobby floor plan" style={styles.mapBannerImg} />
-            <div style={styles.mapBannerOverlay} />
-            <div style={styles.mapBannerText}>
-              <div style={styles.mapBannerKicker}>The Fairmont · Lobby Level</div>
-              <div style={styles.mapBannerTitle}>Find your way around →</div>
-            </div>
-          </button>
-        </div>
 
         {/* Today's / Next Schedule — condensed */}
         <div style={{ padding: '20px 20px 0' }}>
@@ -490,6 +502,24 @@ const styles = {
     position: 'absolute',
     inset: 0,
     background: 'linear-gradient(90deg, rgba(0,46,93,0.85) 0%, rgba(0,46,93,0.55) 55%, rgba(0,46,93,0) 100%)',
+  },
+  exploreBanner: {
+    position: 'relative',
+    display: 'block',
+    width: '100%',
+    height: 130,
+    padding: 0,
+    border: `1px solid ${C.border}`,
+    borderRadius: 16,
+    overflow: 'hidden',
+    cursor: 'pointer',
+    background: C.card,
+    textAlign: 'left',
+  },
+  exploreBannerOverlay: {
+    position: 'absolute',
+    inset: 0,
+    background: 'linear-gradient(90deg, rgba(0,167,181,0.85) 0%, rgba(0,167,181,0.45) 55%, rgba(0,167,181,0) 100%)',
   },
   mapBannerText: {
     position: 'absolute',

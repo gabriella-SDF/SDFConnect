@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { C, F, S } from './theme'
 import { supabase } from './lib/supabase'
+import { contacts } from './data/schedule'
 import Home from './components/Home'
 import Schedule from './components/Schedule'
 import People from './components/People'
@@ -25,6 +26,8 @@ export default function App() {
   const [loading, setLoading] = useState(true)
   const [showEditProfile, setShowEditProfile] = useState(false)
   const [showMyProfile, setShowMyProfile] = useState(false)
+  const [openPersonId, setOpenPersonId] = useState(null)
+  const [venueInitialTab, setVenueInitialTab] = useState(null)
 
   // Restore the user from localStorage on first load.
   useEffect(() => {
@@ -103,12 +106,21 @@ export default function App() {
     )
   }
 
+  const goToPerson = (personId) => {
+    setOpenPersonId(personId)
+    setTab('people')
+  }
+  const goToExploreSF = () => {
+    setVenueInitialTab('explore')
+    setTab('venue')
+  }
+
   const screen = {
-    home: <Home user={user} profile={profile} onNavigate={setTab} />,
+    home: <Home user={user} profile={profile} onNavigate={setTab} onOpenPerson={goToPerson} onGoExplore={goToExploreSF} />,
     schedule: <Schedule onNavigate={setTab} />,
-    people: <People currentUser={user} currentProfile={profile} onSignOut={handleSignOut} onEditProfile={() => setShowEditProfile(true)} />,
+    people: <People currentUser={user} currentProfile={profile} onSignOut={handleSignOut} onEditProfile={() => setShowEditProfile(true)} initialPersonId={openPersonId} onConsumeInitialPerson={() => setOpenPersonId(null)} />,
     engage: <Engage user={user} />,
-    venue: <Venue />,
+    venue: <Venue initialTab={venueInitialTab} onConsumeInitialTab={() => setVenueInitialTab(null)} />,
   }
 
   return (
@@ -239,6 +251,23 @@ function MyProfileSheet({ user, profile, onClose, onEdit, onSignOut }) {
           </p>
         )}
 
+        {/* Need help — quick-call contacts */}
+        <div style={mp.field}>
+          <div style={mp.kicker}>Need help? Tap to call</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {contacts.map((c, i) => (
+              <a
+                key={i}
+                href={`tel:${c.phone.replace(/[^+\d]/g, '')}`}
+                style={mp.contactRow}
+              >
+                <span style={{ fontFamily: F.sans, fontSize: 13, fontWeight: 500, color: C.text }}>{c.name}</span>
+                <span style={{ fontFamily: F.sans, fontSize: 12, color: C.teal, fontWeight: 600 }}>{c.phone}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
         <button onClick={onEdit} style={{ ...S.btnPrimary, width: '100%', marginTop: 24 }}>
           {hasProfile ? 'Edit my answers' : 'Fill out my profile'}
         </button>
@@ -327,6 +356,15 @@ const mp = {
     padding: '12px',
     borderRadius: 12,
     cursor: 'pointer',
+  },
+  contactRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px 12px',
+    background: C.bg,
+    borderRadius: 10,
+    textDecoration: 'none',
   },
 }
 
