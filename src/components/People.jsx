@@ -224,6 +224,19 @@ function formatObjective(o) {
   return o
 }
 
+// Maps each Objective + Topic to its breakout room (Tue 2-3 PM)
+function objectiveRoom(o) {
+  if (!o) return null
+  if (/Objective\s*1/i.test(o)) {
+    if (/Topic\s*1/i.test(o)) return 'Gold Room'
+    if (/Topic\s*2/i.test(o)) return 'Green Room'
+    if (/Topic\s*3/i.test(o)) return 'Empire Room'
+  }
+  if (/Objective\s*2/i.test(o)) return 'Garden Room'
+  if (/Objective\s*3/i.test(o)) return 'Crystal Room'
+  return null
+}
+
 function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, onClose }) {
   const teamRoom = teamRoomMap[person.team]
   const shared = currentProfile && profile ? sharedTags(currentProfile, profile) : []
@@ -271,16 +284,19 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
           <div style={styles.assignmentsGrid}>
             {person.objective && (
               <div style={styles.assignmentCard}>
-                <div style={styles.assignmentKicker}>Objective</div>
+                <div style={styles.assignmentKicker}>Objective Breakout</div>
                 <div style={styles.assignmentValue}>{formatObjective(person.objective)}</div>
-                <div style={styles.assignmentWhen}>Tue 2–3 PM</div>
+                <div style={styles.assignmentWhen}>
+                  Tue 2–3 PM
+                  {objectiveRoom(person.objective) && ` · ${objectiveRoom(person.objective)}`}
+                </div>
               </div>
             )}
             {person.ai_group && (
               <div style={styles.assignmentCard}>
                 <div style={styles.assignmentKicker}>AI Hackathon</div>
                 <div style={styles.assignmentValue}>{person.ai_group}</div>
-                <div style={styles.assignmentWhen}>Wed 10:30 AM</div>
+                <div style={styles.assignmentWhen}>Wed 10:30 AM · Crystal + Fountain</div>
               </div>
             )}
           </div>
