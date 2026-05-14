@@ -7,11 +7,11 @@ import { days, hubRoomForSession, mapsUrl } from '../data/schedule'
 // =============================================================================
 
 const levels = [
-  { id: 'crown',    code: '24', label: 'Crown',     sub: '24th floor · Top',     image: '/level-crown.jpg',     accent: '#F4C842' },
-  { id: 'mezz',     code: '2',  label: 'Mezzanine', sub: '2nd floor · Pavilion', image: '/level-mezzanine.jpg', accent: '#7EAF6E' },
-  { id: 'lobby',    code: '1',  label: 'Lobby',     sub: 'Main level · You are here', image: '/level-lobby.jpg', accent: '#2C4F7C' },
-  { id: 'arcade',   code: 'A',  label: 'Arcade',    sub: 'One below lobby',      image: '/level-arcade.jpg',    accent: '#B7ACE8' },
-  { id: 'terrace',  code: 'T',  label: 'Terrace',   sub: 'Lower level · Tonga',  image: '/level-terrace.jpg',   accent: '#00A7B5' },
+  { id: 'crown',    code: 'Floor 24', label: 'Crown',     sub: '24th floor',          image: '/level-crown.jpg',     accent: '#F4C842' },
+  { id: 'mezz',     code: 'Floor 2',  label: 'Mezzanine', sub: '2nd floor · Pavilion', image: '/level-mezzanine.jpg', accent: '#7EAF6E' },
+  { id: 'lobby',    code: 'Floor 1',  label: 'Lobby',     sub: 'Main level',          image: '/level-lobby.jpg',     accent: '#2C4F7C' },
+  { id: 'arcade',   code: 'Floor A',  label: 'Arcade',    sub: 'One below lobby',     image: '/level-arcade.jpg',    accent: '#B7ACE8' },
+  { id: 'terrace',  code: 'Floor T',  label: 'Terrace',   sub: 'Lower level',         image: '/level-terrace.jpg',   accent: '#00A7B5' },
 ]
 
 const hubRooms = [
@@ -279,12 +279,25 @@ function VenueGuide() {
               style={{
                 ...styles.levelTab,
                 background: isActive ? l.accent : C.card,
-                color: isActive ? '#fff' : C.text,
                 borderColor: isActive ? l.accent : C.border,
               }}
             >
-              <span style={styles.levelTabCode}>{l.code}</span>
-              <span style={styles.levelTabLabel}>{l.label}</span>
+              <span
+                style={{
+                  ...styles.levelTabCode,
+                  color: isActive ? 'rgba(255,255,255,0.75)' : C.textMuted,
+                }}
+              >
+                {l.code}
+              </span>
+              <span
+                style={{
+                  ...styles.levelTabLabel,
+                  color: isActive ? '#fff' : C.text,
+                }}
+              >
+                {l.label}
+              </span>
             </button>
           )
         })}
@@ -618,7 +631,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     gap: 2,
-    minWidth: 64,
+    minWidth: 72,
     padding: '8px 10px',
     border: '1px solid',
     borderRadius: 12,
@@ -628,17 +641,18 @@ const styles = {
     transition: 'all 0.15s',
   },
   levelTabCode: {
-    fontSize: 18,
+    fontSize: 9,
     fontWeight: 700,
+    letterSpacing: '0.08em',
+    textTransform: 'uppercase',
     lineHeight: 1,
-    letterSpacing: '-0.01em',
   },
   levelTabLabel: {
-    fontSize: 10,
-    fontWeight: 600,
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
+    fontSize: 14,
+    fontWeight: 700,
+    letterSpacing: '-0.01em',
     marginTop: 4,
+    lineHeight: 1,
   },
   levelBadge: {
     display: 'inline-block',
