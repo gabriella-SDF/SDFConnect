@@ -17,8 +17,27 @@ export default function Engage({ user }) {
     Math.floor(Math.random() * icebreakers.length)
   )
 
+  // Simple per-browser rate limit: one submission per 30 sec per kind.
+  const checkRateLimit = (kind) => {
+    try {
+      const key = `sdf-last-${kind}`
+      const last = parseInt(localStorage.getItem(key) || '0', 10)
+      const now = Date.now()
+      if (now - last < 30000) {
+        const wait = Math.ceil((30000 - (now - last)) / 1000)
+        setError(`Please wait ${wait}s before submitting again.`)
+        return false
+      }
+      localStorage.setItem(key, String(now))
+      return true
+    } catch {
+      return true
+    }
+  }
+
   const handleSubmitQuestion = async () => {
     if (!question.trim() || submitting) return
+    if (!checkRateLimit('question')) return
     setSubmitting(true)
     setError('')
     const { error: dbError } = await supabase
@@ -36,6 +55,7 @@ export default function Engage({ user }) {
 
   const handleSubmitTestimonial = async () => {
     if (!testimonialText.trim() || testimonialSubmitting) return
+    if (!checkRateLimit('testimonial')) return
     setTestimonialSubmitting(true)
     setError('')
     const { error: dbError } = await supabase

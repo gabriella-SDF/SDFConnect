@@ -11,28 +11,42 @@ export default function NamePicker({ onSelect }) {
   useEffect(() => {
     let cancelled = false
     ;(async () => {
-      const { data, error: dbError } = await supabase
-        .from('employees')
-        .select('id, first_name, last_name, department, email, location')
-        .order('first_name', { ascending: true })
-      if (cancelled) return
-      if (dbError) {
-        setError('Could not load directory. Try again in a moment.')
-        setLoading(false)
-        return
+      try {
+        const [{ data, error: dbError }, { data: profiles }] = await Promise.all([
+          supabase
+            .from('employees')
+            .select('id, first_name, last_name, department, email, location')
+            .order('first_name', { ascending: true }),
+          supabase.from('profiles').select('user_id, completed_at'),
+        ])
+        if (cancelled) return
+        if (dbError) {
+          setError('Could not load directory. Try again in a moment.')
+          setLoading(false)
+          return
+        }
+        const claimed = new Set(
+          (profiles || [])
+            .filter(p => p.completed_at)
+            .map(p => p.user_id)
+        )
+        setEmployees(
+          (data || []).map(e => ({
+            id: e.id,
+            name: `${e.first_name} ${e.last_name}`,
+            first_name: e.first_name,
+            last_name: e.last_name,
+            team: e.department || 'Other',
+            email: e.email,
+            location: e.location || '',
+            claimed: claimed.has(e.id),
+          }))
+        )
+      } catch (e) {
+        if (!cancelled) setError('Could not load directory. Try again in a moment.')
+      } finally {
+        if (!cancelled) setLoading(false)
       }
-      setEmployees(
-        (data || []).map(e => ({
-          id: e.id,
-          name: `${e.first_name} ${e.last_name}`,
-          first_name: e.first_name,
-          last_name: e.last_name,
-          team: e.department || 'Other',
-          email: e.email,
-          location: e.location || '',
-        }))
-      )
-      setLoading(false)
     })()
     return () => { cancelled = true }
   }, [])
@@ -81,8 +95,11 @@ export default function NamePicker({ onSelect }) {
                 <div style={styles.personAvatar}>
                   {person.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
                 </div>
-                <div>
-                  <div style={styles.personName}>{person.name}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={styles.personName}>
+                    {person.name}
+                    {person.claimed && <span style={styles.claimedBadge}>signed in</span>}
+                  </div>
                   <div style={styles.personTitle}>{person.location || person.team}</div>
                 </div>
               </button>
@@ -203,5 +220,17 @@ const styles = {
     fontSize: 12,
     color: '#888',
     marginTop: 2,
+  },
+  claimedBadge: {
+    fontFamily: F.sans,
+    fontSize: 9,
+    fontWeight: 700,
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
+    color: '#0F0F0F',
+    background: C.yellow,
+    padding: '2px 7px',
+    borderRadius: 4,
+    marginLeft: 8,
   },
 }
