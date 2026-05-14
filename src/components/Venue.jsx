@@ -71,7 +71,6 @@ const sfPicks = {
         items: [
           { name: 'La Taqueria', detail: 'James Beard-winning Mission burrito spot. Classic SF.', tag: 'Mexican · $' },
           { name: 'Nopalito', detail: 'Regional Mexican done beautifully. Inner Sunset.', tag: 'Mexican · $$' },
-          { name: 'Tacos Cala', detail: 'Casual sister to Cala. Bright, daytime tacos in Hayes Valley.', tag: 'Tacos · $' },
           { name: 'Loló', detail: 'Creative Mexican on Valencia. Vibrant room, fun cocktails.', tag: 'Mexican · $$' },
           { name: 'El Farolito', detail: 'Late-night Mission burrito institution.', tag: 'Mexican · $' },
         ],
@@ -88,10 +87,8 @@ const sfPicks = {
       {
         title: 'Thai',
         items: [
-          { name: 'Kin Khao', detail: 'Pim Techamuanvivit\'s Michelin-acknowledged Thai. Inside Parc 55.', tag: 'Thai · $$$' },
-          { name: 'Nari', detail: 'Pim\'s modern Thai project. Japantown. Cocktails are excellent.', tag: 'Thai · $$$' },
+          { name: 'Nari', detail: 'Pim Techamuanvivit\'s modern Thai project. Japantown. Excellent cocktails.', tag: 'Thai · $$$' },
           { name: 'Farmhouse Kitchen Thai', detail: 'Photogenic, popular Thai with a strong menu. Mission.', tag: 'Thai · $$' },
-          { name: 'Lers Ros', detail: 'Beloved Northern Thai classic. Tenderloin.', tag: 'Thai · $$' },
         ],
       },
       {
