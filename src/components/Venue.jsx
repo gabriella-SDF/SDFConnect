@@ -7,11 +7,9 @@ import { days, hubRoomForSession, mapsUrl } from '../data/schedule'
 // =============================================================================
 
 const levels = [
-  { id: 'crown',    code: 'Floor 24', label: 'Crown',     sub: '24th floor',          image: '/level-crown.jpg',     accent: '#F4C842' },
-  { id: 'mezz',     code: 'Floor 2',  label: 'Mezzanine', sub: '2nd floor · Pavilion', image: '/level-mezzanine.jpg', accent: '#7EAF6E' },
-  { id: 'lobby',    code: 'Floor 1',  label: 'Lobby',     sub: 'Main level',          image: '/level-lobby.jpg',     accent: '#2C4F7C' },
-  { id: 'arcade',   code: 'Floor A',  label: 'Arcade',    sub: 'One below lobby',     image: '/level-arcade.jpg',    accent: '#B7ACE8' },
-  { id: 'terrace',  code: 'Floor T',  label: 'Terrace',   sub: 'Lower level',         image: '/level-terrace.jpg',   accent: '#00A7B5' },
+  { id: 'upper', code: 'Floors 24 + 2', label: 'Upper Levels', sub: 'Crown + Mezzanine',  image: '/level-upper.jpg', accent: '#F4C842' },
+  { id: 'lobby', code: 'Floor 1',        label: 'Lobby',         sub: 'Main level',          image: '/level-lobby.jpg', accent: '#2C4F7C' },
+  { id: 'lower', code: 'Floors A + T',  label: 'Lower Levels', sub: 'Arcade + Terrace',   image: '/level-lower.jpg', accent: '#B7ACE8' },
 ]
 
 const hubRooms = [
