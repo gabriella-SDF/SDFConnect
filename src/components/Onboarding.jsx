@@ -59,7 +59,27 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
     }
   }
 
+  // Never block the user. Try to save; if it fails, log the error,
+  // cache locally so we can retry sync later, set the skip flag so the
+  // quiz doesn't reappear, then ALWAYS proceed.
+  const tryUpsert = async (payload) => {
+    try { localStorage.setItem('sdf-quiz-answers', JSON.stringify(payload)) } catch {}
+    try {
+      const { error: dbError } = await supabase
+        .from('profiles')
+        .upsert(payload, { onConflict: 'user_id' })
+      if (dbError) {
+        console.warn('Profile save failed (continuing anyway):', dbError.message)
+        try { localStorage.setItem('sdf-skip-quiz', '1') } catch {}
+      }
+    } catch (e) {
+      console.warn('Profile save threw (continuing anyway):', e?.message)
+      try { localStorage.setItem('sdf-skip-quiz', '1') } catch {}
+    }
+  }
+
   const submitProfile = async () => {
+    if (submitting) return
     setSubmitting(true)
     setError('')
     const payload = {
@@ -74,18 +94,13 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
       completed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
-    const { error: dbError } = await supabase
-      .from('profiles')
-      .upsert(payload, { onConflict: 'user_id' })
+    await tryUpsert(payload)
     setSubmitting(false)
-    if (dbError) {
-      setError(dbError.message || 'Could not save. Please try again.')
-      return
-    }
     onComplete?.()
   }
 
   const handleSkipAll = async () => {
+    if (submitting) return
     setSubmitting(true)
     setError('')
     const payload = {
@@ -94,14 +109,8 @@ export default function Onboarding({ user, session, onComplete, onSkipAll, initi
       completed_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
-    const { error: dbError } = await supabase
-      .from('profiles')
-      .upsert(payload, { onConflict: 'user_id' })
+    await tryUpsert(payload)
     setSubmitting(false)
-    if (dbError) {
-      setError(dbError.message || 'Could not skip. Please try again.')
-      return
-    }
     onSkipAll?.()
   }
 
