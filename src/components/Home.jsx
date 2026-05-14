@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { C, F, S, tagColors } from '../theme'
-import { days, icebreakers, RETREAT_START, RETREAT_END, briefRoom, roomHint } from '../data/schedule'
+import { days, icebreakers, contacts, RETREAT_START, RETREAT_END, briefRoom, roomHint } from '../data/schedule'
 import { supabase } from '../lib/supabase'
 import { topMatches } from '../lib/matching'
 
@@ -231,6 +231,29 @@ export default function Home({ user, profile, onNavigate }) {
                 </div>
               )
             })}
+          </div>
+        </div>
+
+        {/* Points of contact — call/text any onsite lead */}
+        <div style={{ padding: '24px 20px 0' }}>
+          <div style={styles.sectionHeader}>
+            <h3 style={S.h3}>Need help?</h3>
+            <span style={styles.linkBtn}>Tap to call</span>
+          </div>
+          <div style={styles.contactList}>
+            {contacts.map((c, i) => (
+              <a
+                key={i}
+                href={`tel:${c.phone.replace(/[^+\d]/g, '')}`}
+                style={styles.contactCard}
+              >
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={styles.contactName}>{c.name}</div>
+                  <div style={styles.contactRole}>{c.role}</div>
+                </div>
+                <div style={styles.contactPhone}>{c.phone}</div>
+              </a>
+            ))}
           </div>
         </div>
 
@@ -544,6 +567,42 @@ const styles = {
     fontSize: 20,
     fontWeight: 300,
     color: C.textMuted,
+    flexShrink: 0,
+  },
+  contactList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6,
+  },
+  contactCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    padding: '12px 14px',
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderRadius: 14,
+    textDecoration: 'none',
+    color: 'inherit',
+    cursor: 'pointer',
+  },
+  contactName: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    fontWeight: 600,
+    color: C.text,
+  },
+  contactRole: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    color: C.textFade,
+    marginTop: 2,
+  },
+  contactPhone: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    color: C.teal,
     flexShrink: 0,
   },
   icebreakerCard: {
