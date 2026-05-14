@@ -15,12 +15,12 @@ const levels = [
 ]
 
 const hubRooms = [
-  { id: 'gold', name: 'Gold Room', purpose: 'General Sessions · Awards' },
-  { id: 'green', name: 'Green Room', purpose: 'Breakouts' },
-  { id: 'garden', name: 'Garden Room', purpose: 'Breakouts' },
-  { id: 'empire', name: 'Empire Room', purpose: 'Breakouts' },
-  { id: 'crystal', name: 'Crystal Room', purpose: 'AI Hackathon' },
-  { id: 'fountain', name: 'Fountain Room', purpose: 'AI Hackathon' },
+  { id: 'gold',     name: 'Gold Room',     where: 'Lobby Level · Left side',         purpose: 'General Sessions · Awards' },
+  { id: 'green',    name: 'Green Room',    where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts' },
+  { id: 'garden',   name: 'Garden Room',   where: 'Lobby Level · Left of entrance',  purpose: 'Breakouts' },
+  { id: 'empire',   name: 'Empire Room',   where: 'Lobby Level · Far left',          purpose: 'Breakouts' },
+  { id: 'crystal',  name: 'Crystal Room',  where: 'Lobby Level · Back left',         purpose: 'AI Hackathon' },
+  { id: 'fountain', name: 'Fountain Room', where: 'Lobby Level · Back, near Roof Garden', purpose: 'AI Hackathon' },
 ]
 
 const upRooms = [
@@ -328,6 +328,7 @@ function VenueGuide() {
               }}
             >
               <div style={styles.roomCardName}>{r.name}</div>
+              <div style={styles.roomCardWhere}>{r.where}</div>
               {live ? (
                 <div style={styles.roomCardLive}>
                   <span style={styles.liveDot} />
@@ -855,11 +856,19 @@ const styles = {
     fontWeight: 700,
     color: C.text,
   },
+  roomCardWhere: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 600,
+    color: C.lavender,
+    marginTop: 3,
+    letterSpacing: '0.02em',
+  },
   roomCardPurpose: {
     fontFamily: F.sans,
     fontSize: 11,
     color: C.textFade,
-    marginTop: 3,
+    marginTop: 4,
     lineHeight: 1.4,
   },
   roomCardLive: {
