@@ -10,12 +10,65 @@ import Venue from './components/Venue'
 import NamePicker from './components/NamePicker'
 import Onboarding from './components/Onboarding'
 
+function IconSchedule() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+      <line x1="8" y1="3" x2="8" y2="7" />
+      <line x1="16" y1="3" x2="16" y2="7" />
+    </svg>
+  )
+}
+function IconEngage() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 11.5a8.4 8.4 0 0 1-8.5 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.7A8.5 8.5 0 0 1 12.5 3a8.4 8.4 0 0 1 8.5 8.4z" />
+    </svg>
+  )
+}
+function IconBridge() {
+  // Golden Gate Bridge silhouette — two towers, cables, deck
+  return (
+    <svg width="24" height="22" viewBox="0 0 26 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="2" y1="18" x2="24" y2="18" />
+      <line x1="6" y1="18" x2="6" y2="3" />
+      <line x1="20" y1="18" x2="20" y2="3" />
+      <path d="M2 14 Q13 7 24 14" />
+      <line x1="13" y1="10" x2="13" y2="18" strokeWidth="1.2" />
+    </svg>
+  )
+}
+function IconCableCar() {
+  // Cable car body with wheels
+  return (
+    <svg width="24" height="22" viewBox="0 0 26 22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4" y="5" width="18" height="11" rx="1.5" />
+      <line x1="4" y1="10" x2="22" y2="10" />
+      <line x1="10" y1="5" x2="10" y2="10" />
+      <line x1="16" y1="5" x2="16" y2="10" />
+      <circle cx="8" cy="18" r="1.5" />
+      <circle cx="18" cy="18" r="1.5" />
+    </svg>
+  )
+}
+function IconPeople() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 20c0-3 2.7-5 6-5s6 2 6 5" />
+      <circle cx="17" cy="9.5" r="2.3" />
+      <path d="M14.5 20c.5-2 2-3.5 4.5-3.5s3.5 1.5 4 3.5" strokeOpacity="0.85" />
+    </svg>
+  )
+}
+
 const tabs = [
-  { id: 'schedule', label: 'Schedule', icon: '▦' },
-  { id: 'engage', label: 'Engage', icon: '✦' },
-  { id: 'home', label: 'Home', icon: '◆' },
-  { id: 'venue', label: 'Get Around', icon: '⌖' },
-  { id: 'people', label: 'People', icon: '●●' },
+  { id: 'schedule', label: 'Schedule', Icon: IconSchedule },
+  { id: 'engage', label: 'Engage', Icon: IconEngage },
+  { id: 'home', label: 'Home', Icon: IconBridge },
+  { id: 'venue', label: 'Get Around', Icon: IconCableCar },
+  { id: 'people', label: 'People', Icon: IconPeople },
 ]
 
 export default function App() {
@@ -191,7 +244,9 @@ export default function App() {
               borderTop: tab === t.id ? `2px solid ${C.yellow}` : '2px solid transparent',
             }}
           >
-            <span style={{ fontSize: 18, lineHeight: 1 }}>{t.icon}</span>
+            <span style={{ lineHeight: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 24 }}>
+              <t.Icon />
+            </span>
             <span style={{ fontSize: 10, fontWeight: 500, letterSpacing: '0.04em' }}>{t.label}</span>
           </button>
         ))}
