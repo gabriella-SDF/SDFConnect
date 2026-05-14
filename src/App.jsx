@@ -249,6 +249,12 @@ export default function App() {
           >
             <img src="/logo-white.png" alt="SDF Connect" style={{ height: 28, display: 'block' }} />
           </button>
+          {isDesktop && (
+            <div style={styles.logoTagline}>
+              <span style={styles.logoTaglineLine}>Accelerate</span>
+              <span style={styles.logoTaglineSub}>May 18–22, 2026</span>
+            </div>
+          )}
 
           {/* Desktop: inline nav in the header */}
           {isDesktop && (
@@ -261,8 +267,8 @@ export default function App() {
                     onClick={() => setTab(t.id)}
                     style={{
                       ...styles.topNavBtn,
-                      color: active ? C.yellow : '#bbb',
-                      borderBottom: active ? `2px solid ${C.yellow}` : '2px solid transparent',
+                      background: active ? C.yellow : 'transparent',
+                      color: active ? C.dark : 'rgba(255,255,255,0.78)',
                     }}
                   >
                     {t.label}
@@ -536,24 +542,45 @@ const styles = {
     padding: 0,
     cursor: 'pointer',
   },
+  logoTagline: {
+    display: 'flex',
+    flexDirection: 'column',
+    marginLeft: 14,
+    paddingLeft: 14,
+    borderLeft: '1px solid rgba(255,255,255,0.18)',
+  },
+  logoTaglineLine: {
+    fontFamily: F.serif,
+    fontSize: 14,
+    fontStyle: 'italic',
+    fontWeight: 600,
+    color: '#fff',
+    lineHeight: 1,
+  },
+  logoTaglineSub: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    color: 'rgba(255,255,255,0.55)',
+    marginTop: 3,
+    letterSpacing: '0.04em',
+  },
   topNav: {
     flex: 1,
     display: 'flex',
     justifyContent: 'center',
-    gap: 8,
+    gap: 4,
     margin: '0 24px',
   },
   topNavBtn: {
-    background: 'none',
     border: 'none',
-    padding: '18px 14px',
+    padding: '8px 16px',
     fontFamily: F.sans,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 600,
-    letterSpacing: '0.02em',
+    letterSpacing: '0.01em',
     cursor: 'pointer',
-    transition: 'color 0.15s, border-color 0.15s',
-    borderTop: '2px solid transparent',
+    transition: 'all 0.15s',
+    borderRadius: 999,
   },
   nav: {
     position: 'fixed',
