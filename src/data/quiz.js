@@ -6,7 +6,7 @@ export const quizQuestions = [
     id: 'stellar_interests',
     title: 'Most fired up about (Stellar):',
     type: 'multi',
-    options: ['Soroban', 'Payments', 'Anchors', 'Tooling', 'Wallets', 'Liquidity', 'Policy & GR', 'Ecosystem', 'Other'],
+    options: ['Stellar smart contracts', 'Payments', 'Anchors', 'Tooling', 'Wallets', 'Liquidity', 'Policy', 'Ecosystem', 'Other'],
   },
   {
     id: 'most_yourself',
