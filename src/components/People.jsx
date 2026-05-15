@@ -299,7 +299,7 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
               <div style={styles.assignmentCard}>
                 <div style={styles.assignmentKicker}>AI Hackathon</div>
                 <div style={styles.assignmentValue}>{person.ai_group}</div>
-                <div style={styles.assignmentWhen}>Wed 10:30 AM · Crystal + Fountain</div>
+                <div style={styles.assignmentWhen}>Wed 9:45 AM · Crystal + Fountain</div>
               </div>
             )}
           </div>
