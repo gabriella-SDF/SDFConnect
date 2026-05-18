@@ -295,19 +295,27 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
             <span style={styles.linkBtn}>Tap to call</span>
           </div>
           <div style={styles.contactList}>
-            {contacts.map((c, i) => (
-              <a
-                key={i}
-                href={`tel:${c.phone.replace(/[^+\d]/g, '')}`}
-                style={styles.contactCard}
-              >
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={styles.contactName}>{c.name}</div>
-                  <div style={styles.contactRole}>{c.role}</div>
-                </div>
-                <div style={styles.contactPhone}>{c.phone}</div>
-              </a>
-            ))}
+            {contacts.map((c, i) => {
+              const initials = c.name.split(' ').map(n => n[0]).join('').slice(0, 2)
+              return (
+                <a
+                  key={i}
+                  href={`tel:${c.phone.replace(/[^+\d]/g, '')}`}
+                  style={styles.contactCard}
+                >
+                  {c.photo ? (
+                    <img src={c.photo} alt="" style={styles.contactAvatar} />
+                  ) : (
+                    <div style={styles.contactAvatarFallback}>{initials}</div>
+                  )}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={styles.contactName}>{c.name}</div>
+                    <div style={styles.contactRole}>{c.role}</div>
+                  </div>
+                  <div style={styles.contactPhone}>{c.phone}</div>
+                </a>
+              )
+            })}
           </div>
         </div>
 
@@ -725,6 +733,28 @@ const styles = {
     textDecoration: 'none',
     color: 'inherit',
     cursor: 'pointer',
+  },
+  contactAvatar: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    objectFit: 'cover',
+    flexShrink: 0,
+  },
+  contactAvatarFallback: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    background: C.lavender,
+    color: '#fff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    flexShrink: 0,
+    letterSpacing: '0.02em',
   },
   contactName: {
     fontFamily: F.sans,

@@ -176,7 +176,7 @@ export const icebreakers = [
 export const contacts = [
   { name: 'Vivian Bui',     role: 'Primary Onsite Lead', phone: '(916) 600-4181' },
   { name: 'Destinee Agard', role: 'Primary Onsite Lead', phone: '(917) 544-5572' },
-  { name: 'Lisa Macnew',    role: 'Onsite Lead',         phone: '(415) 509-7328' },
+  { name: 'Lisa Macnew',    role: 'Onsite Lead',         phone: '(415) 509-7328', photo: '/contacts/lisa.jpg' },
   { name: 'Lauren Roche',   role: 'Fairmont Contact',    phone: '(203) 506-9560' },
 ]
 
