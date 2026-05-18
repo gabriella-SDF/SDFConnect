@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { C, F, S } from '../theme'
-import { days, hubRoomForSession, mapsUrl } from '../data/schedule'
+import { mapsUrl } from '../data/schedule'
 
 // =============================================================================
 // Data — easy to edit
@@ -12,25 +12,83 @@ const levels = [
   { id: 'upper', code: 'Floors 2 + 24', label: 'Upper Levels', sub: 'Mezzanine + Crown',  image: '/level-upper.jpg', accent: '#F4C842' },
 ]
 
-const hubRooms = [
-  { id: 'gold',      name: 'Gold Room',         where: 'Lobby Level · Left side',                purpose: 'General Sessions',  team: 'Engineering' },
-  { id: 'green',     name: 'Green Room',        where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',         team: 'Product' },
-  { id: 'garden',    name: 'Garden Room',       where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',         team: 'Legal & Policy' },
-  { id: 'empire',    name: 'Empire Room',       where: 'Lobby Level · Far left',                 purpose: 'Refreshments',      team: 'Office of the CEO' },
-  { id: 'crystal',   name: 'Crystal Room',      where: 'Lobby Level · Back left',                purpose: 'AI Hackathon',      team: 'Business Development' },
-  { id: 'fountain',  name: 'Fountain Room',     where: 'Lobby Level · Back, near Roof Garden',   purpose: 'AI Hackathon',      team: 'Growth' },
-  { id: 'intersect', name: 'Intersect I / II',  where: 'Arcade Level · One floor down',          purpose: 'Breakouts',         team: 'Finance & Operations' },
-  { id: 'diplomat',  name: 'Diplomat Club',     where: 'Arcade Level · One floor down',          team: 'Marketing' },
-  { id: 'crownrm',   name: 'Crown Room',        where: 'Floor 24 · Top floor',                   team: 'People' },
-]
+// Where each room is at the Fairmont. Used to show a small location hint
+// next to each room badge in the categorized "Where things happen" sections.
+const roomLocations = {
+  'Gold Room':        'Lobby · Left side',
+  'Green Room':       'Lobby · Left of entrance',
+  'Garden Room':      'Lobby · Left of entrance',
+  'Empire Room':      'Lobby · Far left',
+  'Crystal Room':     'Lobby · Back left',
+  'Fountain Room':    'Lobby · Back, near Roof Garden',
+  'Intersect I':      'Arcade · One floor down',
+  'Intersect II':     'Arcade · One floor down',
+  'Intersect I/II':   'Arcade · One floor down',
+  'Diplomat Club':    'Arcade · One floor down',
+  'Crown Room':       'Floor 24 · Top floor',
+  'Pavilion':         'Lobby Level',
+  'Fairmont Penthouse': 'Penthouse Level',
+  'Tonga Room':       'Terrace Level · 2 floors down',
+}
 
-const tuesdayBreakouts = [
-  { topic: 'Ramp Recruitment',            room: 'Garden Room' },
-  { topic: 'RWA & DeFi',                  room: 'Gold Room' },
-  { topic: 'Application Velocity',        room: 'Green Room' },
-  { topic: 'What does success look like?', room: 'Crystal Room' },
-  { topic: 'Performance',                 room: 'Intersect II' },
-  { topic: 'Faster and Safe',             room: 'Intersect I' },
+const venueSections = [
+  {
+    id: 'general',
+    title: 'General Sessions',
+    subtitle: 'All-team gatherings',
+    items: [
+      { label: 'Kickoff, Roundtable, Awards', room: 'Gold Room' },
+    ],
+  },
+  {
+    id: 'teams',
+    title: 'Team Time',
+    subtitle: 'Thursday morning',
+    items: [
+      { label: 'Engineering',          room: 'Gold Room' },
+      { label: 'Product',              room: 'Green Room' },
+      { label: 'Legal & Policy',       room: 'Garden Room' },
+      { label: 'Office of the CEO',    room: 'Empire Room' },
+      { label: 'Business Development', room: 'Crystal Room' },
+      { label: 'Growth',               room: 'Fountain Room' },
+      { label: 'Marketing',            room: 'Diplomat Club' },
+      { label: 'Finance & Operations', room: 'Intersect I/II' },
+      { label: 'People',               room: 'Crown Room' },
+    ],
+  },
+  {
+    id: 'objectives',
+    title: 'Objectives',
+    subtitle: 'Tuesday 2 PM breakouts',
+    items: [
+      { label: 'Ramp Recruitment',             room: 'Garden Room' },
+      { label: 'RWA & DeFi',                   room: 'Gold Room' },
+      { label: 'Application Velocity',         room: 'Green Room' },
+      { label: 'What does success look like?', room: 'Crystal Room' },
+      { label: 'Performance',                  room: 'Intersect II' },
+      { label: 'Faster and Safe',              room: 'Intersect I' },
+    ],
+  },
+  {
+    id: 'food',
+    title: 'Food & Beverages',
+    items: [
+      { label: 'Breakfast & Lunch',         room: 'Pavilion' },
+      { label: 'Refreshments',              room: 'Empire Room' },
+      { label: 'Welcome Happy Hour (Mon)',  room: 'Fairmont Penthouse' },
+      { label: 'Closing Celebration (Thu)', room: 'Tonga Room' },
+    ],
+  },
+  {
+    id: 'other',
+    title: 'Other Activities',
+    items: [
+      { label: 'AI Hackathon (Wed)',        room: 'Crystal + Fountain' },
+      { label: 'Quarterly Ascension (Tue)', room: 'Gold Room' },
+      { label: 'GIVE Volunteering (Wed)',   room: 'Gold + Green + Garden' },
+      { label: 'Barcade (Tue evening)',     room: '449 Powell St' },
+    ],
+  },
 ]
 
 const sfPicks = {
@@ -222,47 +280,10 @@ function TabButton({ active, onClick, label }) {
 // Venue Guide
 // =============================================================================
 
-function parseTime(str) {
-  if (!str) return null
-  const [time, period] = str.split(' ')
-  let [h, m] = time.split(':').map(Number)
-  if (period === 'PM' && h !== 12) h += 12
-  if (period === 'AM' && h === 12) h = 0
-  return h * 60 + m
-}
-
-function findLiveHubRooms() {
-  const now = new Date()
-  const today = days.find(d => d.date === now.toISOString().slice(0, 10))
-  if (!today) return {}
-  const nowMin = now.getHours() * 60 + now.getMinutes()
-  const live = {}
-  for (const s of today.sessions) {
-    const start = parseTime(s.time)
-    const end = parseTime(s.end)
-    if (start == null || end == null) continue
-    if (nowMin >= start && nowMin < end) {
-      const text = (s.location || '').toLowerCase()
-      const roomNames = ['gold', 'green', 'garden', 'empire', 'crystal', 'fountain']
-      for (const r of roomNames) {
-        if (new RegExp(`\\b${r}\\b`).test(text)) {
-          live[r] = s.title
-        }
-      }
-    }
-  }
-  return live
-}
-
 function VenueGuide() {
-  const [liveRooms, setLiveRooms] = useState(findLiveHubRooms)
   const [activeLevel, setActiveLevel] = useState('lobby')
   const [zoomOpen, setZoomOpen] = useState(false)
-
-  useEffect(() => {
-    const id = setInterval(() => setLiveRooms(findLiveHubRooms()), 60000)
-    return () => clearInterval(id)
-  }, [])
+  const [openSection, setOpenSection] = useState(null)
 
   const level = levels.find(l => l.id === activeLevel) || levels[2]
 
@@ -320,52 +341,44 @@ function VenueGuide() {
 
       {zoomOpen && <MapZoomViewer image={level.image} title={`${level.code} · ${level.label}`} onClose={() => setZoomOpen(false)} />}
 
-      {/* Tuesday Objective Breakouts — top-of-page reference for the high-demand moment */}
-      <div style={styles.breakoutsCard}>
-        <div style={styles.breakoutsKicker}>Tue 2 PM · Objective Breakouts</div>
-        <div style={styles.breakoutsList}>
-          {tuesdayBreakouts.map((b, i) => (
-            <div
-              key={b.topic}
-              style={{
-                ...styles.breakoutRow,
-                borderBottom: i === tuesdayBreakouts.length - 1 ? 'none' : `1px solid ${C.border}`,
-                paddingBottom: i === tuesdayBreakouts.length - 1 ? 0 : 8,
-              }}
-            >
-              <span style={styles.breakoutTopic}>{b.topic}</span>
-              <span style={styles.breakoutRoom}>{b.room}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Hub room reference */}
+      {/* Where things happen — categorized accordion */}
       <h3 style={styles.sectionTitle}>Where things happen</h3>
-      <div style={styles.roomGrid}>
-        {hubRooms.map(r => {
-          const live = liveRooms[r.id]
+      <div style={styles.sectionList}>
+        {venueSections.map(s => {
+          const isOpen = openSection === s.id
           return (
-            <div
-              key={r.id}
-              style={{
-                ...styles.roomCard,
-                borderColor: live ? C.yellow : C.border,
-                background: live ? '#FFFCEC' : C.card,
-              }}
-            >
-              <div style={styles.roomCardName}>{r.name}</div>
-              <div style={styles.roomCardWhere}>{r.where}</div>
-              {live ? (
-                <div style={styles.roomCardLive}>
-                  <span style={styles.liveDot} />
-                  <span style={styles.liveText}>{live}</span>
+            <div key={s.id} style={styles.section}>
+              <button
+                onClick={() => setOpenSection(isOpen ? null : s.id)}
+                style={styles.sectionHeader}
+                aria-expanded={isOpen}
+              >
+                <div style={styles.sectionHeaderLeft}>
+                  <span style={styles.sectionHeaderTitle}>{s.title}</span>
+                  {s.subtitle && <span style={styles.sectionHeaderSubtitle}>{s.subtitle}</span>}
                 </div>
-              ) : (
-                <>
-                  {r.purpose && <div style={styles.roomCardPurpose}>{r.purpose}</div>}
-                  {r.team && <div style={styles.roomCardTeam}>{r.team} team time</div>}
-                </>
+                <span style={styles.sectionChevron}>{isOpen ? '–' : '+'}</span>
+              </button>
+              {isOpen && (
+                <div style={styles.sectionItems}>
+                  {s.items.map((item, i) => (
+                    <div
+                      key={item.label}
+                      style={{
+                        ...styles.sectionRow,
+                        borderTop: i === 0 ? `1px solid ${C.border}` : 'none',
+                      }}
+                    >
+                      <div style={styles.sectionRowLabel}>{item.label}</div>
+                      <div style={styles.sectionRowRight}>
+                        <span style={styles.sectionRoomBadge}>{item.room}</span>
+                        {roomLocations[item.room] && (
+                          <span style={styles.sectionRoomLocation}>{roomLocations[item.room]}</span>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
           )
@@ -848,6 +861,106 @@ const styles = {
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: 8,
   },
+  sectionList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  section: {
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  sectionHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    background: 'none',
+    border: 'none',
+    padding: '14px 16px',
+    cursor: 'pointer',
+    textAlign: 'left',
+    color: 'inherit',
+  },
+  sectionHeaderLeft: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 2,
+    flex: 1,
+    minWidth: 0,
+  },
+  sectionHeaderTitle: {
+    fontFamily: F.sans,
+    fontSize: 15,
+    fontWeight: 600,
+    color: C.text,
+    letterSpacing: '-0.005em',
+  },
+  sectionHeaderSubtitle: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    color: C.textFade,
+    letterSpacing: '0.01em',
+  },
+  sectionChevron: {
+    fontFamily: F.sans,
+    fontSize: 22,
+    fontWeight: 300,
+    color: C.textFade,
+    lineHeight: 1,
+    flexShrink: 0,
+    marginLeft: 12,
+  },
+  sectionItems: {
+    padding: '0 16px 14px',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  sectionRow: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderTop: `1px solid ${C.border}`,
+  },
+  sectionRowLabel: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    color: C.text,
+    flex: 1,
+    minWidth: 0,
+    lineHeight: 1.35,
+    paddingTop: 3,
+  },
+  sectionRowRight: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: 3,
+    flexShrink: 0,
+  },
+  sectionRoomBadge: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    color: C.navy,
+    background: C.lavender + '22',
+    padding: '5px 10px',
+    borderRadius: 8,
+    whiteSpace: 'nowrap',
+  },
+  sectionRoomLocation: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    color: C.textMuted,
+    textAlign: 'right',
+    letterSpacing: '0.01em',
+  },
   breakoutsCard: {
     background: C.card,
     border: `1px solid ${C.border}`,
@@ -866,9 +979,10 @@ const styles = {
     marginBottom: 12,
   },
   breakoutsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+    columnGap: 18,
+    rowGap: 8,
   },
   breakoutRow: {
     display: 'flex',
