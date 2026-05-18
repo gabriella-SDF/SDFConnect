@@ -287,7 +287,6 @@ function TabButton({ active, onClick, label }) {
 
 function VenueGuide() {
   const [activeLevel, setActiveLevel] = useState('lobby')
-  const [zoomOpen, setZoomOpen] = useState(false)
   const [openSection, setOpenSection] = useState(null)
 
   const level = levels.find(l => l.id === activeLevel) || levels[2]
@@ -329,22 +328,15 @@ function VenueGuide() {
         })}
       </div>
 
-      {/* Selected level image */}
-      <button
-        onClick={() => setZoomOpen(true)}
-        style={styles.venueMapCard}
-        aria-label="Tap to enlarge"
-      >
+      {/* Selected level image — static, no zoom (mobile zoom overlay was unreliable). */}
+      <div style={styles.venueMapCard}>
         <img
           src={level.image}
           alt={`${level.label} level floor plan`}
           style={styles.venueMapImage}
           loading="lazy"
         />
-        <p style={styles.floorCaption}>Tap to enlarge · Pinch to zoom</p>
-      </button>
-
-      {zoomOpen && <MapZoomViewer image={level.image} title={`${level.code} · ${level.label}`} onClose={() => setZoomOpen(false)} />}
+      </div>
 
       {/* Where things happen — categorized accordion */}
       <h3 style={styles.sectionTitle}>Where things happen</h3>
@@ -402,29 +394,6 @@ function VenueGuide() {
 // =============================================================================
 // Explore SF
 // =============================================================================
-
-function MapZoomViewer({ image, title, onClose }) {
-  return (
-    <div style={styles.zoomOverlay} onClick={onClose}>
-      <button
-        onClick={onClose}
-        style={styles.zoomClose}
-        aria-label="Close map"
-      >
-        ×
-      </button>
-      {title && <div style={styles.zoomTitle}>{title}</div>}
-      <div style={styles.zoomScroll} onClick={(e) => e.stopPropagation()}>
-        <img
-          src={image || '/level-lobby.jpg'}
-          alt="Floor plan (zoomable)"
-          style={styles.zoomImage}
-        />
-      </div>
-      <div style={styles.zoomHint}>Pinch to zoom · Tap outside to close</div>
-    </div>
-  )
-}
 
 function GroupSheet({ group, onClose }) {
   return (
