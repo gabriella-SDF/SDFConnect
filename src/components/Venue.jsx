@@ -258,7 +258,7 @@ export default function Venue({ initialTab, onConsumeInitialTab }) {
         <TabButton active={mainTab === 'explore'} onClick={() => setMainTab('explore')} label="Explore SF" />
       </div>
 
-      <div style={{ padding: '4px 20px 32px' }}>
+      <div style={{ padding: '20px 20px 40px' }}>
         {mainTab === 'venue' && <VenueGuide />}
         {mainTab === 'explore' && <ExploreSF />}
       </div>
@@ -272,8 +272,9 @@ function TabButton({ active, onClick, label }) {
       onClick={onClick}
       style={{
         ...styles.tabButton,
-        color: active ? '#fff' : C.textFade,
-        background: active ? C.navy : 'transparent',
+        color: active ? C.navy : C.textFade,
+        borderBottom: active ? `2px solid ${C.navy}` : '2px solid transparent',
+        fontWeight: active ? 600 : 500,
       }}
     >
       {label}
@@ -303,26 +304,12 @@ function VenueGuide() {
               onClick={() => setActiveLevel(l.id)}
               style={{
                 ...styles.levelTab,
-                background: isActive ? l.accent : C.card,
-                borderColor: isActive ? l.accent : C.border,
+                color: isActive ? C.navy : C.textFade,
+                borderBottom: isActive ? `2px solid ${C.navy}` : '2px solid transparent',
+                fontWeight: isActive ? 600 : 500,
               }}
             >
-              <span
-                style={{
-                  ...styles.levelTabCode,
-                  color: isActive ? 'rgba(255,255,255,0.75)' : C.textMuted,
-                }}
-              >
-                {l.code}
-              </span>
-              <span
-                style={{
-                  ...styles.levelTabLabel,
-                  color: isActive ? '#fff' : C.text,
-                }}
-              >
-                {l.label}
-              </span>
+              {l.label}
             </button>
           )
         })}
@@ -543,22 +530,21 @@ const styles = {
   },
   tabs: {
     display: 'flex',
-    gap: 8,
-    padding: '12px 20px 12px',
+    gap: 32,
+    padding: '24px 20px 8px',
     background: C.bg,
-    maxWidth: 480,
+    borderBottom: `1px solid ${C.border}`,
   },
   tabButton: {
-    flex: 1,
-    padding: '10px 14px',
+    padding: '6px 0',
     border: 'none',
-    borderRadius: 999,
+    background: 'transparent',
     fontFamily: F.sans,
-    fontSize: 13,
-    fontWeight: 600,
+    fontSize: 14,
     cursor: 'pointer',
-    letterSpacing: '0.02em',
-    transition: 'all 0.15s',
+    letterSpacing: '0.01em',
+    transition: 'color 0.15s, border-color 0.15s',
+    marginBottom: -1,
   },
   // Floor marker rows (UP / DOWN)
   floorRow: {
@@ -608,42 +594,24 @@ const styles = {
     fontSize: 12,
     color: C.textFade,
   },
-  // Level tabs
+  // Level tabs — minimal text tabs with navy underline on active
   levelTabs: {
     display: 'flex',
-    gap: 4,
-    paddingBottom: 12,
+    gap: 28,
+    padding: '8px 0 24px',
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
-    maxWidth: 600,
   },
   levelTab: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: 2,
-    minWidth: 0,
-    padding: '6px 6px',
-    border: '1px solid',
-    borderRadius: 10,
+    padding: '6px 0',
+    background: 'none',
+    border: 'none',
     cursor: 'pointer',
     fontFamily: F.sans,
-    transition: 'all 0.15s',
-  },
-  levelTabCode: {
-    fontSize: 8,
-    fontWeight: 700,
-    letterSpacing: '0.08em',
-    textTransform: 'uppercase',
-    lineHeight: 1,
-  },
-  levelTabLabel: {
-    fontSize: 12,
-    fontWeight: 700,
-    letterSpacing: '-0.01em',
-    marginTop: 3,
-    lineHeight: 1,
+    fontSize: 14,
+    letterSpacing: '0.01em',
+    whiteSpace: 'nowrap',
+    transition: 'color 0.15s, border-color 0.15s',
   },
   levelBadge: {
     display: 'inline-block',
@@ -681,11 +649,11 @@ const styles = {
     width: '100%',
     background: C.card,
     border: `1px solid ${C.border}`,
-    borderRadius: 18,
-    padding: 14,
-    cursor: 'pointer',
+    borderRadius: 12,
+    padding: 16,
     textAlign: 'center',
     position: 'relative',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
   },
   youHerePill: {
     position: 'absolute',
