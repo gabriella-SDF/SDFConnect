@@ -90,6 +90,7 @@ export default function App() {
   const [showMyProfile, setShowMyProfile] = useState(false)
   const [openPersonId, setOpenPersonId] = useState(null)
   const [venueInitialTab, setVenueInitialTab] = useState(null)
+  const [engageInitialSubTab, setEngageInitialSubTab] = useState(null)
   const [isDesktop, setIsDesktop] = useState(false)
 
   // Track viewport so we can show top-nav on desktop / bottom-nav on mobile.
@@ -210,12 +211,16 @@ export default function App() {
     setVenueInitialTab('explore')
     setTab('venue')
   }
+  const goToEngageQA = () => {
+    setEngageInitialSubTab('qa')
+    setTab('engage')
+  }
 
   const screen = {
-    home: <Home user={user} profile={profile} onNavigate={setTab} onOpenPerson={goToPerson} onGoExplore={goToExploreSF} />,
+    home: <Home user={user} profile={profile} onNavigate={setTab} onOpenPerson={goToPerson} onGoExplore={goToExploreSF} onGoToQA={goToEngageQA} />,
     schedule: <Schedule onNavigate={setTab} />,
     people: <People currentUser={user} currentProfile={profile} onSignOut={handleSignOut} onEditProfile={() => setShowEditProfile(true)} initialPersonId={openPersonId} onConsumeInitialPerson={() => setOpenPersonId(null)} />,
-    engage: <Engage user={user} />,
+    engage: <Engage user={user} initialSubTab={engageInitialSubTab} onConsumeInitialSubTab={() => setEngageInitialSubTab(null)} />,
     venue: <Venue initialTab={venueInitialTab} onConsumeInitialTab={() => setVenueInitialTab(null)} />,
   }
 

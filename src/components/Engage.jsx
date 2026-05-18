@@ -1,10 +1,15 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { C, F, S } from '../theme'
 import { icebreakers, testimonialPrompts } from '../data/schedule'
 import { supabase } from '../lib/supabase'
 
-export default function Engage({ user }) {
-  const [subTab, setSubTab] = useState('icebreaker')
+export default function Engage({ user, initialSubTab, onConsumeInitialSubTab }) {
+  const [subTab, setSubTab] = useState(initialSubTab || 'icebreaker')
+
+  useEffect(() => {
+    if (initialSubTab) onConsumeInitialSubTab?.()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const [question, setQuestion] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)

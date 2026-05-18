@@ -58,7 +58,7 @@ function briefTime(t) {
   return t.replace(':00 ', '').replace(' AM', 'am').replace(' PM', 'pm').toLowerCase()
 }
 
-export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExplore }) {
+export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExplore, onGoToQA }) {
   const [state, setState] = useState(getRetreatState)
   const [matches, setMatches] = useState([])
   const [icebreakerIdx, setIcebreakerIdx] = useState(() =>
@@ -166,6 +166,14 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
           <button onClick={() => onNavigate('venue')} style={styles.floorBanner}>
             <div style={styles.bannerKicker}>The Fairmont · Lobby Level</div>
             <div style={styles.bannerTitle}>Find your way around →</div>
+          </button>
+        </div>
+
+        {/* Anonymous Q&A banner */}
+        <div style={{ padding: '10px 20px 0' }}>
+          <button onClick={onGoToQA} style={styles.qaBanner}>
+            <div style={styles.qaBannerKicker}>Got a question?</div>
+            <div style={styles.qaBannerTitle}>Ask anonymously →</div>
           </button>
         </div>
 
@@ -496,6 +504,34 @@ const styles = {
     background: `linear-gradient(90deg, ${C.navy} 0%, #001a3a 100%)`,
     textAlign: 'left',
     color: '#fff',
+  },
+  qaBanner: {
+    display: 'block',
+    width: '100%',
+    padding: '14px 18px',
+    border: 'none',
+    borderRadius: 14,
+    cursor: 'pointer',
+    background: `linear-gradient(90deg, ${C.yellow} 0%, #f4c800 100%)`,
+    textAlign: 'left',
+    color: C.dark,
+  },
+  qaBannerKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    color: 'rgba(0,0,0,0.6)',
+    marginBottom: 4,
+  },
+  qaBannerTitle: {
+    fontFamily: F.serif,
+    fontSize: 17,
+    fontWeight: 600,
+    fontStyle: 'italic',
+    color: C.dark,
+    letterSpacing: '-0.01em',
   },
   bannerKicker: {
     fontFamily: F.sans,
