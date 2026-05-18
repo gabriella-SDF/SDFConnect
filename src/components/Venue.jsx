@@ -253,6 +253,13 @@ export default function Venue({ initialTab, onConsumeInitialTab }) {
 
   return (
     <div style={S.page}>
+      <div style={styles.pageHeader}>
+        <h1 style={styles.pageTitle}>Get Around</h1>
+        <p style={styles.pageIntro}>
+          Find your way around the Fairmont — switch floors below to see each level's rooms.
+        </p>
+      </div>
+
       <div style={styles.tabs}>
         <TabButton active={mainTab === 'venue'} onClick={() => setMainTab('venue')} label="Venue Guide" />
         <TabButton active={mainTab === 'explore'} onClick={() => setMainTab('explore')} label="Explore SF" />
@@ -273,7 +280,7 @@ function TabButton({ active, onClick, label }) {
       style={{
         ...styles.tabButton,
         color: active ? C.navy : C.textFade,
-        borderBottom: active ? `2px solid ${C.navy}` : '2px solid transparent',
+        borderBottom: active ? `3px solid ${C.navy}` : '3px solid transparent',
         fontWeight: active ? 600 : 500,
       }}
     >
@@ -305,7 +312,7 @@ function VenueGuide() {
               style={{
                 ...styles.levelTab,
                 color: isActive ? C.navy : C.textFade,
-                borderBottom: isActive ? `2px solid ${C.navy}` : '2px solid transparent',
+                borderBottom: isActive ? `3px solid ${C.navy}` : '3px solid transparent',
                 fontWeight: isActive ? 600 : 500,
               }}
             >
@@ -528,22 +535,42 @@ const styles = {
     margin: '3px 0 0',
     letterSpacing: '0.02em',
   },
+  pageHeader: {
+    padding: '32px 20px 4px',
+    maxWidth: 720,
+  },
+  pageTitle: {
+    fontFamily: F.serif,
+    fontSize: 32,
+    fontWeight: 600,
+    color: C.text,
+    margin: 0,
+    letterSpacing: '-0.01em',
+    lineHeight: 1.1,
+  },
+  pageIntro: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    color: C.textFade,
+    margin: '8px 0 0',
+    lineHeight: 1.5,
+    maxWidth: 540,
+  },
   tabs: {
     display: 'flex',
-    justifyContent: 'center',
-    gap: 32,
-    padding: '24px 20px 8px',
+    gap: 28,
+    padding: '20px 20px 0',
     background: C.bg,
     borderBottom: `1px solid ${C.border}`,
   },
   tabButton: {
-    padding: '6px 0',
+    padding: '8px 0',
     border: 'none',
     background: 'transparent',
     fontFamily: F.sans,
-    fontSize: 14,
+    fontSize: 16,
     cursor: 'pointer',
-    letterSpacing: '0.01em',
+    letterSpacing: '0.005em',
     transition: 'color 0.15s, border-color 0.15s',
     marginBottom: -1,
   },
@@ -598,9 +625,8 @@ const styles = {
   // Level tabs — minimal text tabs with navy underline on active
   levelTabs: {
     display: 'flex',
-    justifyContent: 'center',
-    gap: 28,
-    padding: '8px 0 24px',
+    gap: 24,
+    padding: '4px 0 20px',
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
   },
@@ -610,8 +636,8 @@ const styles = {
     border: 'none',
     cursor: 'pointer',
     fontFamily: F.sans,
-    fontSize: 14,
-    letterSpacing: '0.01em',
+    fontSize: 15,
+    letterSpacing: '0.005em',
     whiteSpace: 'nowrap',
     transition: 'color 0.15s, border-color 0.15s',
   },
