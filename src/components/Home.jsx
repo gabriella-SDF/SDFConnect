@@ -64,6 +64,17 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
   const [icebreakerIdx, setIcebreakerIdx] = useState(() =>
     Math.floor(Math.random() * icebreakers.length)
   )
+  const [wifiCopied, setWifiCopied] = useState(false)
+
+  const copyWifiPassword = async () => {
+    try {
+      await navigator.clipboard.writeText('ultimate-supreme-connect')
+      setWifiCopied(true)
+      setTimeout(() => setWifiCopied(false), 1800)
+    } catch {
+      // Clipboard unavailable (older browsers / insecure context) — silently no-op.
+    }
+  }
 
   useEffect(() => {
     const interval = setInterval(() => setState(getRetreatState()), 60000)
@@ -153,6 +164,31 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
 
       {/* Content — light */}
       <div style={styles.content}>
+        {/* Wi-Fi card */}
+        <div style={{ padding: '20px 20px 0' }}>
+          <button onClick={copyWifiPassword} style={styles.wifiCard}>
+            <div style={styles.wifiIcon} aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12.55a11 11 0 0 1 14 0" />
+                <path d="M1.42 9a16 16 0 0 1 21.16 0" />
+                <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                <line x1="12" y1="20" x2="12.01" y2="20" />
+              </svg>
+            </div>
+            <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+              <div style={styles.wifiKicker}>Wi-Fi at Fairmont</div>
+              <div style={styles.wifiNetwork}>SDF Connect 2026</div>
+              <div style={styles.wifiPwRow}>
+                <span style={styles.wifiPwLabel}>Password:</span>
+                <span style={styles.wifiPw}>ultimate-supreme-connect</span>
+              </div>
+            </div>
+            <span style={styles.wifiCopy}>
+              {wifiCopied ? '✓ Copied' : 'Tap to copy'}
+            </span>
+          </button>
+        </div>
+
         {/* Explore SF banner */}
         <div style={{ padding: '20px 20px 0' }}>
           <button onClick={onGoExplore} style={styles.exploreBanner}>
@@ -482,6 +518,76 @@ const styles = {
     color: C.navy,
     marginLeft: 4,
     letterSpacing: '0.02em',
+  },
+  wifiCard: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 14,
+    width: '100%',
+    padding: '14px 16px',
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderRadius: 14,
+    cursor: 'pointer',
+    textAlign: 'left',
+    color: C.text,
+  },
+  wifiIcon: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    background: C.yellow,
+    color: C.dark,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  wifiKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    color: C.textFade,
+    marginBottom: 2,
+  },
+  wifiNetwork: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    fontWeight: 600,
+    color: C.text,
+    lineHeight: 1.3,
+  },
+  wifiPwRow: {
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: 6,
+    marginTop: 2,
+    fontFamily: F.sans,
+    fontSize: 12,
+    color: C.textFade,
+    overflow: 'hidden',
+  },
+  wifiPwLabel: {
+    fontWeight: 600,
+    flexShrink: 0,
+  },
+  wifiPw: {
+    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+    color: C.text,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  wifiCopy: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    fontWeight: 600,
+    color: C.teal,
+    letterSpacing: '0.02em',
+    flexShrink: 0,
+    marginLeft: 4,
   },
   exploreBanner: {
     display: 'block',
