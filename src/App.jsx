@@ -293,8 +293,8 @@ export default function App() {
                     onClick={() => setTab(t.id)}
                     style={{
                       ...styles.topNavBtn,
-                      background: active ? C.yellow : 'transparent',
-                      color: active ? C.dark : 'rgba(255,255,255,0.78)',
+                      background: 'transparent',
+                      color: active ? C.yellow : 'rgba(255,255,255,0.78)',
                     }}
                   >
                     {t.label}
