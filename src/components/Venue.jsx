@@ -106,9 +106,11 @@ const sfPicks = {
         items: [
           { name: 'Seven Hills', detail: 'Classic Russian Hill Italian.', tag: 'Italian · $$$$' },
           { name: 'Che Fico', detail: 'Trendy Italian on Divisadero. Reservations essential.', tag: 'Italian · $$$' },
+          { name: 'Pizzeria Delfina', detail: 'Beloved SF pizza — multiple locations across the city.', tag: 'Pizza · $$' },
           { name: "Tony's Pizza Napoletana", detail: 'North Beach pizza institution. Try the Margherita or Classica.', tag: 'Pizza · 15-min walk' },
           { name: 'Flour + Water Pizzeria', detail: 'Well-regarded Italian pizza in the Mission.', tag: 'Pizza · $$' },
           { name: 'Golden Boy Pizza', detail: 'Chicago-style slices in North Beach. Late-night staple.', tag: 'Pizza · $' },
+          { name: 'Pie Punks', detail: 'Vibe-y newer pizza spot.', tag: 'Pizza · $$' },
         ],
       },
       {
@@ -124,9 +126,18 @@ const sfPicks = {
         title: 'Japanese & Chinese',
         items: [
           { name: "Mister Jiu's", detail: 'Modern Chinese in Chinatown. Book ahead.', tag: 'Chinese · $$$$' },
+          { name: 'Yank Sing', detail: 'Iconic SF dim sum. A first-timer must.', tag: 'Dim Sum · $$$' },
           { name: 'Robin', detail: 'High-end omakase in Hayes Valley.', tag: 'Omakase · $$$$' },
           { name: 'Z & Y Restaurant', detail: 'Acclaimed Sichuan in Chinatown.', tag: 'Sichuan · 7-min walk' },
           { name: 'Ace Wasabi', detail: 'Popular sushi spot in the Marina.', tag: 'Sushi · $$' },
+          { name: 'Bon, Nene', detail: 'Japanese pasta. The mentaiko spaghetti is incredible.', tag: 'Japanese · $$' },
+        ],
+      },
+      {
+        title: 'Korean & Taiwanese',
+        items: [
+          { name: 'Han Il Kwan', detail: 'Solid traditional Korean.', tag: 'Korean · $$' },
+          { name: 'Piglet & Co', detail: 'Good Taiwanese.', tag: 'Taiwanese · $$' },
         ],
       },
       {
@@ -145,6 +156,8 @@ const sfPicks = {
           { name: 'Copra', detail: 'Coastal South Indian. Modern, refined. Pacific Heights.', tag: 'South Indian · $$$' },
           { name: 'Babu Ji', detail: 'Modern Indian with a strong cocktail program. Mission.', tag: 'Indian · $$$' },
           { name: 'August 1 Five', detail: 'Modern Indian in Hayes Valley. Vibey dinner spot.', tag: 'Indian · $$' },
+          { name: 'Aaha Indian Cuisine', detail: 'The dosa is impressive.', tag: 'South Indian · $$' },
+          { name: 'Kolapasi South Indian Cuisine', detail: "You know it's good when you're the only non-Indian there.", tag: 'South Indian · $$' },
         ],
       },
       {
@@ -153,16 +166,35 @@ const sfPicks = {
           { name: 'Nari', detail: 'Pim Techamuanvivit\'s modern Thai project. Japantown. Excellent cocktails.', tag: 'Thai · $$$' },
           { name: 'Farmhouse Kitchen Thai', detail: 'Photogenic, popular Thai with a strong menu. Mission.', tag: 'Thai · $$' },
           { name: 'Marnee Thai', detail: 'Long-running neighborhood favorite. Inner Sunset.', tag: 'Thai · $$' },
+          { name: 'Sawaan Thai Kitchen', detail: 'Authentic Thai, newer Mission spot.', tag: 'Thai · $$' },
         ],
       },
       {
         title: 'American & Classic SF',
         items: [
+          { name: 'Spruce', detail: 'Refined American in Pacific Heights. A first-timer favorite.', tag: 'American · $$$$' },
           { name: 'Sons & Daughters', detail: 'Michelin-starred tasting menu, intimate room.', tag: 'Tasting · 3-min walk' },
           { name: 'State Bird Provisions', detail: 'James Beard winner with dim-sum-style service.', tag: 'New American · $$$$' },
           { name: 'Pearl 6101', detail: 'Acclaimed neighborhood spot in the Outer Richmond.', tag: 'New American · $$$$' },
           { name: 'House of Prime Rib', detail: 'A San Francisco institution. Book well ahead.', tag: 'Classic SF · $$$' },
-          { name: "Leo's Oyster Bar", detail: 'Iconic oyster bar in FiDi.', tag: 'Seafood · $$$' },
+        ],
+      },
+      {
+        title: 'Seafood',
+        items: [
+          { name: "Scoma's", detail: "Fisherman's Wharf classic. A first-timer must.", tag: 'Seafood · $$$' },
+          { name: 'Mission Rock Resort', detail: 'Waterfront, casual seafood with a view.', tag: 'Seafood · $$' },
+          { name: "Leo's Oyster Bar", detail: 'Iconic oyster bar in FiDi.', tag: 'Oysters · $$$' },
+          { name: 'Hook Fish', detail: 'Near Ocean Beach. Surf-vibe neighborhood spot.', tag: 'Seafood · $$' },
+        ],
+      },
+      {
+        title: 'Bakery & Breakfast',
+        items: [
+          { name: 'Arsicault Bakery', detail: 'Worth the line. Legendary croissants.', tag: 'Bakery' },
+          { name: 'Tartine Bakery', detail: 'Iconic Mission bakery.', tag: 'Bakery · $$' },
+          { name: 'Lokma', detail: 'Excellent Turkish breakfast.', tag: 'Breakfast · $$' },
+          { name: 'Early to Rise', detail: 'Long line, but the breakfast is really good.', tag: 'Breakfast · $$' },
         ],
       },
       {
@@ -192,6 +224,7 @@ const sfPicks = {
       {
         title: 'Wine Bars',
         items: [
+          { name: 'Cultivar', detail: 'A first-timer favorite for wine in SF.', tag: 'Wine · $$' },
           { name: 'Bar Sprezzatura', detail: 'Italian wine bar with refined small plates.', tag: 'Italian · $$$' },
           { name: 'Amelie', detail: 'French-leaning wine bar with over 100 wines by the glass.', tag: 'French' },
           { name: 'Bon Délire', detail: 'French-inspired wine bar.', tag: 'French' },
@@ -209,9 +242,12 @@ const sfPicks = {
     intro: 'Local favorites: beans, pour-overs, and matcha.',
     items: [
       { name: 'Laurel Court Café', detail: 'Inside the Fairmont. Grab-and-go.', tag: 'In hotel' },
+      { name: 'Wrecking Ball Coffee', detail: 'Pac Heights. A first-timer favorite.', tag: 'Local roaster' },
       { name: 'Saint Frank Coffee', detail: 'Russian Hill, minutes from the hotel. Serious coffee program.', tag: '~5-min walk' },
+      { name: 'Four Barrel Coffee', detail: 'No wifi by design — great for journaling. Love the vibe.', tag: 'No wifi' },
+      { name: 'Sightglass Coffee', detail: 'SoMa flagship. Beautiful, light-filled. Expect tech talk.', tag: 'Roaster' },
+      { name: 'The Social Study', detail: 'Café by day, wine bar by night.', tag: 'Café · Wine' },
       { name: 'Andytown Coffee Roasters', detail: 'Outer Sunset roaster known for the Snowy Plover (espresso + tonic + cream).', tag: 'Local favorite' },
-      { name: 'Sightglass Coffee', detail: 'SoMa flagship. Beautiful, light-filled space.', tag: 'Roaster' },
       { name: 'Ritual Coffee Roasters', detail: 'OG SF third-wave roaster. Hayes Valley + Mission.', tag: 'Classic SF' },
       { name: 'Stonemill Matcha', detail: 'Dedicated matcha café in the Mission. Ceremonial-grade.', tag: 'Matcha' },
       { name: 'Réveille Coffee Co.', detail: 'Reliable espresso on Polk St.', tag: 'Espresso' },
