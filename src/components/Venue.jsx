@@ -310,8 +310,9 @@ function VenueGuide() {
               onClick={() => setActiveLevel(l.id)}
               style={{
                 ...styles.levelTab,
-                background: isActive ? C.yellow + '33' : 'transparent',
                 color: isActive ? C.dark : C.textFade,
+                borderBottom: isActive ? `2px solid ${C.dark}` : '2px solid transparent',
+                fontWeight: isActive ? 600 : 500,
               }}
             >
               {l.label}
@@ -621,26 +622,24 @@ const styles = {
     fontSize: 12,
     color: C.textFade,
   },
-  // Level tabs — pill style matching Engage sub-tabs
+  // Level tabs — minimal text tabs with dark underline on active
   levelTabs: {
     display: 'flex',
-    gap: 6,
+    gap: 24,
     padding: '4px 0 20px',
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
   },
   levelTab: {
-    flex: 1,
-    padding: '10px 8px',
-    borderRadius: 10,
+    padding: '6px 0',
+    background: 'none',
     border: 'none',
     cursor: 'pointer',
     fontFamily: F.sans,
-    fontSize: 13,
-    fontWeight: 600,
-    letterSpacing: '0.01em',
+    fontSize: 14,
+    letterSpacing: '0.005em',
     whiteSpace: 'nowrap',
-    transition: 'all 0.15s',
+    transition: 'color 0.15s, border-color 0.15s',
   },
   levelBadge: {
     display: 'inline-block',
