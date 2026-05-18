@@ -279,9 +279,8 @@ function TabButton({ active, onClick, label }) {
       onClick={onClick}
       style={{
         ...styles.tabButton,
-        color: active ? C.navy : C.textFade,
-        borderBottom: active ? `3px solid ${C.navy}` : '3px solid transparent',
-        fontWeight: active ? 600 : 500,
+        background: active ? C.dark : 'transparent',
+        color: active ? C.yellow : C.textFade,
       }}
     >
       {label}
@@ -311,9 +310,8 @@ function VenueGuide() {
               onClick={() => setActiveLevel(l.id)}
               style={{
                 ...styles.levelTab,
-                color: isActive ? C.navy : C.textFade,
-                borderBottom: isActive ? `3px solid ${C.navy}` : '3px solid transparent',
-                fontWeight: isActive ? 600 : 500,
+                background: isActive ? C.dark : 'transparent',
+                color: isActive ? C.yellow : C.textFade,
               }}
             >
               {l.label}
@@ -558,21 +556,22 @@ const styles = {
   },
   tabs: {
     display: 'flex',
-    gap: 28,
-    padding: '20px 20px 0',
+    gap: 6,
+    padding: '12px 20px',
     background: C.bg,
     borderBottom: `1px solid ${C.border}`,
   },
   tabButton: {
-    padding: '8px 0',
+    flex: 1,
+    padding: '10px 8px',
+    borderRadius: 10,
     border: 'none',
-    background: 'transparent',
-    fontFamily: F.sans,
-    fontSize: 16,
     cursor: 'pointer',
-    letterSpacing: '0.005em',
-    transition: 'color 0.15s, border-color 0.15s',
-    marginBottom: -1,
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 600,
+    letterSpacing: '0.01em',
+    transition: 'all 0.15s',
   },
   // Floor marker rows (UP / DOWN)
   floorRow: {
@@ -622,24 +621,26 @@ const styles = {
     fontSize: 12,
     color: C.textFade,
   },
-  // Level tabs — minimal text tabs with navy underline on active
+  // Level tabs — pill style matching Engage sub-tabs
   levelTabs: {
     display: 'flex',
-    gap: 24,
+    gap: 6,
     padding: '4px 0 20px',
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
   },
   levelTab: {
-    padding: '6px 0',
-    background: 'none',
+    flex: 1,
+    padding: '10px 8px',
+    borderRadius: 10,
     border: 'none',
     cursor: 'pointer',
     fontFamily: F.sans,
-    fontSize: 15,
-    letterSpacing: '0.005em',
+    fontSize: 13,
+    fontWeight: 600,
+    letterSpacing: '0.01em',
     whiteSpace: 'nowrap',
-    transition: 'color 0.15s, border-color 0.15s',
+    transition: 'all 0.15s',
   },
   levelBadge: {
     display: 'inline-block',
