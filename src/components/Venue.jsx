@@ -13,15 +13,24 @@ const levels = [
 ]
 
 const hubRooms = [
-  { id: 'gold',      name: 'Gold Room',         where: 'Lobby Level · Left side',                purpose: 'General Sessions · Tue 2 PM: RWA & DeFi',                team: 'Engineering' },
-  { id: 'green',     name: 'Green Room',        where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts · Tue 2 PM: Application Velocity',             team: 'Product' },
-  { id: 'garden',    name: 'Garden Room',       where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts · Tue 2 PM: Ramp Recruitment',                 team: 'Legal & Policy' },
-  { id: 'empire',    name: 'Empire Room',       where: 'Lobby Level · Far left',                 purpose: 'Refreshments',                                            team: 'Office of the CEO' },
-  { id: 'crystal',   name: 'Crystal Room',      where: 'Lobby Level · Back left',                purpose: 'AI Hackathon · Tue 2 PM: What does success look like?',  team: 'Business Development' },
-  { id: 'fountain',  name: 'Fountain Room',     where: 'Lobby Level · Back, near Roof Garden',   purpose: 'AI Hackathon',                                            team: 'Growth' },
-  { id: 'intersect', name: 'Intersect I / II',  where: 'Arcade Level · One floor down',          purpose: 'Tue 2 PM: Performance (II) · Faster and Safe (I)',       team: 'Finance & Operations' },
+  { id: 'gold',      name: 'Gold Room',         where: 'Lobby Level · Left side',                purpose: 'General Sessions',  team: 'Engineering' },
+  { id: 'green',     name: 'Green Room',        where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',         team: 'Product' },
+  { id: 'garden',    name: 'Garden Room',       where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',         team: 'Legal & Policy' },
+  { id: 'empire',    name: 'Empire Room',       where: 'Lobby Level · Far left',                 purpose: 'Refreshments',      team: 'Office of the CEO' },
+  { id: 'crystal',   name: 'Crystal Room',      where: 'Lobby Level · Back left',                purpose: 'AI Hackathon',      team: 'Business Development' },
+  { id: 'fountain',  name: 'Fountain Room',     where: 'Lobby Level · Back, near Roof Garden',   purpose: 'AI Hackathon',      team: 'Growth' },
+  { id: 'intersect', name: 'Intersect I / II',  where: 'Arcade Level · One floor down',          purpose: 'Breakouts',         team: 'Finance & Operations' },
   { id: 'diplomat',  name: 'Diplomat Club',     where: 'Arcade Level · One floor down',          team: 'Marketing' },
   { id: 'crownrm',   name: 'Crown Room',        where: 'Floor 24 · Top floor',                   team: 'People' },
+]
+
+const tuesdayBreakouts = [
+  { topic: 'Ramp Recruitment',            room: 'Garden Room' },
+  { topic: 'RWA & DeFi',                  room: 'Gold Room' },
+  { topic: 'Application Velocity',        room: 'Green Room' },
+  { topic: 'What does success look like?', room: 'Crystal Room' },
+  { topic: 'Performance',                 room: 'Intersect II' },
+  { topic: 'Faster and Safe',             room: 'Intersect I' },
 ]
 
 const sfPicks = {
@@ -310,6 +319,26 @@ function VenueGuide() {
       </button>
 
       {zoomOpen && <MapZoomViewer image={level.image} title={`${level.code} · ${level.label}`} onClose={() => setZoomOpen(false)} />}
+
+      {/* Tuesday Objective Breakouts — top-of-page reference for the high-demand moment */}
+      <div style={styles.breakoutsCard}>
+        <div style={styles.breakoutsKicker}>Tue 2 PM · Objective Breakouts</div>
+        <div style={styles.breakoutsList}>
+          {tuesdayBreakouts.map((b, i) => (
+            <div
+              key={b.topic}
+              style={{
+                ...styles.breakoutRow,
+                borderBottom: i === tuesdayBreakouts.length - 1 ? 'none' : `1px solid ${C.border}`,
+                paddingBottom: i === tuesdayBreakouts.length - 1 ? 0 : 8,
+              }}
+            >
+              <span style={styles.breakoutTopic}>{b.topic}</span>
+              <span style={styles.breakoutRoom}>{b.room}</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Hub room reference */}
       <h3 style={styles.sectionTitle}>Where things happen</h3>
@@ -818,6 +847,54 @@ const styles = {
     display: 'grid',
     gridTemplateColumns: 'repeat(2, 1fr)',
     gap: 8,
+  },
+  breakoutsCard: {
+    background: C.card,
+    border: `1px solid ${C.border}`,
+    borderLeft: `4px solid ${C.yellow}`,
+    borderRadius: 12,
+    padding: '14px 16px',
+    marginBottom: 20,
+  },
+  breakoutsKicker: {
+    fontFamily: F.sans,
+    fontSize: 10,
+    fontWeight: 700,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    color: C.dark,
+    marginBottom: 12,
+  },
+  breakoutsList: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  },
+  breakoutRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  breakoutTopic: {
+    fontFamily: F.sans,
+    fontSize: 13,
+    fontWeight: 500,
+    color: C.text,
+    lineHeight: 1.35,
+    flex: 1,
+    minWidth: 0,
+  },
+  breakoutRoom: {
+    fontFamily: F.sans,
+    fontSize: 12,
+    fontWeight: 700,
+    color: C.navy,
+    background: C.lavender + '22',
+    padding: '5px 10px',
+    borderRadius: 8,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
   },
   roomCard: {
     background: C.card,
