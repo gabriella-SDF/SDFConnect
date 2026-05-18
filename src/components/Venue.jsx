@@ -310,8 +310,8 @@ function VenueGuide() {
               onClick={() => setActiveLevel(l.id)}
               style={{
                 ...styles.levelTab,
-                background: isActive ? C.dark : 'transparent',
-                color: isActive ? C.yellow : C.textFade,
+                background: isActive ? C.yellow + '33' : 'transparent',
+                color: isActive ? C.dark : C.textFade,
               }}
             >
               {l.label}
