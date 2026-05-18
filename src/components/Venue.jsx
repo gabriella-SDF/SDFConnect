@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { C, F, S } from '../theme'
 import { mapsUrl } from '../data/schedule'
 
