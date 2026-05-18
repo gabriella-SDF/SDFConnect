@@ -88,7 +88,7 @@ export const days = [
       { time: '11:00 AM', end: '11:45 AM', title: 'Fireside Chat', tag: 'discussion', location: 'Gold Room', description: 'Denelle Dixon + Guest Speaker.', speakers: ['Denelle Dixon'] },
       { time: '11:45 AM', end: '1:00 PM', title: 'Lunch', tag: 'meal', location: 'Pavilion' },
       { time: '1:00 PM', end: '2:00 PM', title: 'Objectives Opening', tag: 'session', location: 'Gold Room', description: "The three objective owners walk through each objective covering current metrics, what's been learned, and what's next." },
-      { time: '2:00 PM', end: '3:00 PM', title: 'Objective Breakouts', tag: 'breakout', location: 'Check your calendar for room assignments', description: "Three concurrent breakout sessions, one per objective. You'll head to the group you signed up for." },
+      { time: '2:00 PM', end: '3:00 PM', title: 'Objective Breakouts', tag: 'breakout', location: 'Multiple rooms — see breakouts below', description: "Head to the breakout you signed up for:\n\n• Obj 1, Topic 1 — Ramp Recruitment (Tom & Magdiela) · Garden Room\n• Obj 1, Topic 2 — RWA & DeFi (Ada & Punia) · Gold Room\n• Obj 1, Topic 3 — Application Velocity (Anke & Justin) · Green Room\n• Obj 2 — What does success look like? (Jamie) · Crystal Room\n• Obj 3, Topic 1 — Performance (Marta) · Intersect II\n• Obj 3, Topic 2 — Faster and Safe (Siddarth) · Intersect I" },
       { time: '3:00 PM', end: '3:30 PM', title: 'Break + Mingle', tag: 'break', location: '' },
       { time: '3:30 PM', end: '4:30 PM', title: 'Quarterly Ascension', tag: 'activity', location: 'Gold Room', description: 'Our ecosystem team walks us through MPP in a fun and interactive game.' },
       { time: '4:30 PM', end: '6:00 PM', title: 'Work Time', tag: 'break', location: '' },

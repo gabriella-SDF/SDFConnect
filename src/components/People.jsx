@@ -227,16 +227,20 @@ function formatObjective(o) {
   return o
 }
 
-// Maps each Objective + Topic to its breakout room (Tue 2-3 PM)
+// Maps each Objective + Topic to its breakout room (Tue 2-3 PM).
+// `Topics?` so we match both "Topic 1" and "Topics 2" (source data has both spellings).
 function objectiveRoom(o) {
   if (!o) return null
   if (/Objective\s*1/i.test(o)) {
-    if (/Topic\s*1/i.test(o)) return 'Gold Room'
-    if (/Topic\s*2/i.test(o)) return 'Green Room'
-    if (/Topic\s*3/i.test(o)) return 'Empire Room'
+    if (/Topics?\s*1/i.test(o)) return 'Garden Room'
+    if (/Topics?\s*2/i.test(o)) return 'Gold Room'
+    if (/Topics?\s*3/i.test(o)) return 'Green Room'
   }
-  if (/Objective\s*2/i.test(o)) return 'Garden Room'
-  if (/Objective\s*3/i.test(o)) return 'Crystal Room'
+  if (/Objective\s*2/i.test(o)) return 'Crystal Room'
+  if (/Objective\s*3/i.test(o)) {
+    if (/Topics?\s*1/i.test(o)) return 'Intersect II'
+    if (/Topics?\s*2/i.test(o)) return 'Intersect I'
+  }
   return null
 }
 

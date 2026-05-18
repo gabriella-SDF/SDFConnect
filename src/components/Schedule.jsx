@@ -379,6 +379,7 @@ const styles = {
     color: C.text,
     lineHeight: 1.55,
     marginBottom: 20,
+    whiteSpace: 'pre-line',
   },
   speakersWrap: {
     display: 'flex',
