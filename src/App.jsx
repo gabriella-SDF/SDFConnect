@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { C, F, S } from './theme'
 import { supabase } from './lib/supabase'
 import { contacts } from './data/schedule'
+import { teamRoomMap, formatObjective, objectiveRoom } from './lib/assignments'
 import Home from './components/Home'
 import Schedule from './components/Schedule'
 import People from './components/People'
@@ -84,6 +85,7 @@ export default function App() {
   const [tab, setTab] = useState('home')
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
+  const [currentEmployee, setCurrentEmployee] = useState(null)
   const [profileChecked, setProfileChecked] = useState(false)
   const [loading, setLoading] = useState(true)
   const [showEditProfile, setShowEditProfile] = useState(false)
@@ -126,25 +128,34 @@ export default function App() {
     setLoading(false)
   }, [])
 
-  // Whenever user changes, look up their profile.
+  // Whenever user changes, look up their profile + their employee row (for retreat assignments).
   useEffect(() => {
     if (!user?.id) {
       setProfile(null)
+      setCurrentEmployee(null)
       setProfileChecked(false)
       return
     }
     let cancelled = false
     ;(async () => {
       try {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle()
+        const [{ data: profileData }, { data: employeeData }] = await Promise.all([
+          supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', user.id)
+            .maybeSingle(),
+          supabase
+            .from('employees')
+            .select('id, first_name, last_name, department, email, title, location, objective, ai_group')
+            .eq('id', user.id)
+            .maybeSingle(),
+        ])
         if (cancelled) return
-        setProfile(data || null)
+        setProfile(profileData || null)
+        setCurrentEmployee(employeeData || null)
       } catch (e) {
-        console.warn('Profile fetch failed:', e?.message)
+        console.warn('Profile/employee fetch failed:', e?.message)
       } finally {
         if (!cancelled) setProfileChecked(true)
       }
@@ -243,6 +254,7 @@ export default function App() {
         <MyProfileSheet
           user={user}
           profile={profile}
+          employee={currentEmployee}
           onClose={() => setShowMyProfile(false)}
           onEdit={() => { setShowMyProfile(false); setShowEditProfile(true) }}
           onSignOut={() => {
@@ -334,7 +346,7 @@ export default function App() {
   )
 }
 
-function MyProfileSheet({ user, profile, onClose, onEdit, onSignOut }) {
+function MyProfileSheet({ user, profile, employee, onClose, onEdit, onSignOut }) {
   const initials = user.name.split(' ').map(n => n[0]).join('').slice(0, 2)
   const chips = profile ? [
     ...(profile.stellar_interests || []),
@@ -343,6 +355,13 @@ function MyProfileSheet({ user, profile, onClose, onEdit, onSignOut }) {
     profile.vacation,
   ].filter(Boolean) : []
   const hasProfile = !!profile?.completed_at
+
+  const myObjective = employee?.objective || ''
+  const myObjectiveLabel = formatObjective(myObjective)
+  const myObjectiveRoom = objectiveRoom(myObjective)
+  const myAiGroup = employee?.ai_group || ''
+  const myTeam = employee?.department || ''
+  const myTeamRoom = teamRoomMap[myTeam] || null
 
   return (
     <div style={S.overlay} onClick={onClose}>
@@ -355,6 +374,36 @@ function MyProfileSheet({ user, profile, onClose, onEdit, onSignOut }) {
             <p style={{ ...S.caption, marginTop: 4 }}>{user.location}</p>
           )}
         </div>
+
+        {/* My retreat assignments */}
+        {(myObjectiveLabel || myAiGroup || myTeamRoom) && (
+          <div style={mp.assignmentsGrid}>
+            {myObjectiveLabel && (
+              <div style={{ ...mp.assignmentCard, borderLeft: `3px solid ${C.yellow}` }}>
+                <div style={mp.kicker}>Objective Breakout</div>
+                <div style={mp.assignmentValue}>{myObjectiveLabel}</div>
+                <div style={mp.assignmentWhen}>
+                  Tue 2–3 PM
+                  {myObjectiveRoom && ` · ${myObjectiveRoom}`}
+                </div>
+              </div>
+            )}
+            {myAiGroup && (
+              <div style={{ ...mp.assignmentCard, borderLeft: `3px solid ${C.teal}` }}>
+                <div style={mp.kicker}>AI Hackathon</div>
+                <div style={mp.assignmentValue}>{myAiGroup}</div>
+                <div style={mp.assignmentWhen}>Wed · Crystal + Fountain</div>
+              </div>
+            )}
+            {myTeamRoom && (
+              <div style={{ ...mp.assignmentCard, borderLeft: `3px solid ${C.lavender}` }}>
+                <div style={mp.kicker}>Team Time</div>
+                <div style={mp.assignmentValue}>{myTeamRoom}</div>
+                <div style={mp.assignmentWhen}>Thu 9am–12pm · {myTeam}</div>
+              </div>
+            )}
+          </div>
+        )}
 
         {profile?.ask_me_about && (
           <div style={mp.askMe}>
@@ -438,6 +487,32 @@ const mp = {
     borderRadius: 14,
     padding: 16,
     marginTop: 20,
+  },
+  assignmentsGrid: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+    marginTop: 18,
+  },
+  assignmentCard: {
+    background: C.bg,
+    border: `1px solid ${C.border}`,
+    borderRadius: 10,
+    padding: '10px 12px',
+  },
+  assignmentValue: {
+    fontFamily: F.sans,
+    fontSize: 14,
+    fontWeight: 600,
+    color: C.text,
+    marginTop: 4,
+    lineHeight: 1.3,
+  },
+  assignmentWhen: {
+    fontFamily: F.sans,
+    fontSize: 11,
+    color: C.textFade,
+    marginTop: 2,
   },
   field: {
     marginTop: 16,

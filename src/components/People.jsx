@@ -2,20 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { C, F, S } from '../theme'
 import { supabase } from '../lib/supabase'
 import { sharedTags } from '../lib/matching'
-
-const teamRoomMap = {
-  'Business Development': 'Crystal Room',
-  'Engineering': 'Gold Room',
-  'Finance and Operations': 'Intersect I / II',
-  'Finance & Operations': 'Intersect I / II',
-  'Growth': 'Fountain Room',
-  'Legal and Policy': 'Garden Room',
-  'Legal & Policy': 'Garden Room',
-  'Marketing': 'Diplomat Club',
-  'Office of the CEO': 'Empire Room',
-  'People': 'Crown Room',
-  'Product': 'Green Room',
-}
+import { teamRoomMap, formatObjective, objectiveRoom } from '../lib/assignments'
 
 const avatarColors = [C.navy, C.teal, C.lavender, '#E8A87C', '#85CDCA', '#C38D9E', C.yellow]
 function hashStr(s) {
@@ -216,32 +203,6 @@ export default function People({ currentUser, currentProfile, onSignOut, onEditP
       )}
     </div>
   )
-}
-
-function formatObjective(o) {
-  if (!o) return ''
-  // "Objective 1 - Topic 2: RWA & DeFi" → "RWA & DeFi"
-  // "Objective 2 - Topic: What does success look like?" → "What does success look like?"
-  const m = o.match(/Objective\s+\d+\s*-\s*Topics?[^:]*:\s*(.+)/i)
-  if (m) return m[1].trim()
-  return o
-}
-
-// Maps each Objective + Topic to its breakout room (Tue 2-3 PM).
-// `Topics?` so we match both "Topic 1" and "Topics 2" (source data has both spellings).
-function objectiveRoom(o) {
-  if (!o) return null
-  if (/Objective\s*1/i.test(o)) {
-    if (/Topics?\s*1/i.test(o)) return 'Garden Room'
-    if (/Topics?\s*2/i.test(o)) return 'Gold Room'
-    if (/Topics?\s*3/i.test(o)) return 'Green Room'
-  }
-  if (/Objective\s*2/i.test(o)) return 'Crystal Room'
-  if (/Objective\s*3/i.test(o)) {
-    if (/Topics?\s*1/i.test(o)) return 'Intersect II'
-    if (/Topics?\s*2/i.test(o)) return 'Intersect I'
-  }
-  return null
 }
 
 function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, onClose }) {
