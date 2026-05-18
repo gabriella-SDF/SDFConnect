@@ -254,7 +254,6 @@ export default function Venue({ initialTab, onConsumeInitialTab }) {
   return (
     <div style={S.page}>
       <div style={styles.pageHeader}>
-        <h1 style={styles.pageTitle}>Get Around</h1>
         <p style={styles.pageIntro}>
           Find your way around the Fairmont and explore San Francisco.
         </p>
