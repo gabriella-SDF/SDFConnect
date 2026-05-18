@@ -530,6 +530,7 @@ const styles = {
   },
   tabs: {
     display: 'flex',
+    justifyContent: 'center',
     gap: 32,
     padding: '24px 20px 8px',
     background: C.bg,
@@ -597,6 +598,7 @@ const styles = {
   // Level tabs — minimal text tabs with navy underline on active
   levelTabs: {
     display: 'flex',
+    justifyContent: 'center',
     gap: 28,
     padding: '8px 0 24px',
     overflowX: 'auto',
