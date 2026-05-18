@@ -36,7 +36,7 @@ export const quizQuestions = [
     id: 'ask_me_about',
     title: 'Ask me about...',
     type: 'text',
-    placeholder: 'e.g., "Soroban dev tools, surfing, sourdough"',
+    placeholder: 'e.g., "Stellar smart contract dev tools, surfing, sourdough"',
     hint: 'Shows as your hook in the People tab.',
   },
 ]

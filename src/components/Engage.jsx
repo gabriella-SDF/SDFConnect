@@ -114,8 +114,11 @@ export default function Engage({ user }) {
         {subTab === 'qa' && (
           <div>
             <h2 style={S.h2}>Anonymous Q&A</h2>
-            <p style={{ ...S.body, color: C.textFade, margin: '8px 0 24px' }}>
+            <p style={{ ...S.body, color: C.textFade, margin: '8px 0 16px' }}>
               Ask anything during sessions. Your identity is never recorded. No name, no IP, no device ID.
+            </p>
+            <p style={{ ...S.body, color: C.textFade, margin: '0 0 24px', fontStyle: 'italic' }}>
+              Questions are pulled daily at 2:00 PM PT — submit before then to have yours included that day.
             </p>
 
             <div style={S.card}>
@@ -124,6 +127,7 @@ export default function Engage({ user }) {
                 value={question}
                 onChange={e => setQuestion(e.target.value)}
                 rows={4}
+                maxLength={500}
                 style={styles.textarea}
               />
               <button
@@ -173,6 +177,7 @@ export default function Engage({ user }) {
                 value={testimonialText}
                 onChange={e => setTestimonialText(e.target.value)}
                 rows={4}
+                maxLength={800}
                 style={styles.textarea}
               />
               <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
