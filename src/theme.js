@@ -136,9 +136,6 @@ export const S = {
     background: C.bg,
     minHeight: '100vh',
     paddingBottom: 100,
-    maxWidth: 760,
-    margin: '0 auto',
-    width: '100%',
   },
 
   // Bottom sheet

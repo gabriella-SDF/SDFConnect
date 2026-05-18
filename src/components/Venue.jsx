@@ -546,6 +546,7 @@ const styles = {
     gap: 8,
     padding: '12px 20px 12px',
     background: C.bg,
+    maxWidth: 480,
   },
   tabButton: {
     flex: 1,
@@ -614,6 +615,7 @@ const styles = {
     paddingBottom: 12,
     overflowX: 'auto',
     WebkitOverflowScrolling: 'touch',
+    maxWidth: 600,
   },
   levelTab: {
     flex: 1,
