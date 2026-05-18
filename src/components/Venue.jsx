@@ -36,6 +36,7 @@ const venueSections = [
     id: 'general',
     title: 'General Sessions',
     subtitle: 'All-team gatherings',
+    accent: '#002E5D', // navy
     items: [
       { label: 'Kickoff, Roundtable, Awards', room: 'Gold Room' },
     ],
@@ -44,6 +45,7 @@ const venueSections = [
     id: 'teams',
     title: 'Team Time',
     subtitle: 'Thursday morning',
+    accent: '#00A7B5', // teal
     items: [
       { label: 'Engineering',          room: 'Gold Room' },
       { label: 'Product',              room: 'Green Room' },
@@ -60,6 +62,7 @@ const venueSections = [
     id: 'objectives',
     title: 'Objectives',
     subtitle: 'Tuesday 2 PM breakouts',
+    accent: '#FDDA24', // yellow
     items: [
       { label: 'Ramp Recruitment',             room: 'Garden Room' },
       { label: 'RWA & DeFi',                   room: 'Gold Room' },
@@ -72,6 +75,7 @@ const venueSections = [
   {
     id: 'food',
     title: 'Food & Beverages',
+    accent: '#B7ACE8', // lavender
     items: [
       { label: 'Breakfast & Lunch',         room: 'Pavilion' },
       { label: 'Refreshments',              room: 'Empire Room' },
@@ -82,6 +86,7 @@ const venueSections = [
   {
     id: 'other',
     title: 'Other Activities',
+    accent: '#D6D2C4', // tan
     items: [
       { label: 'AI Hackathon (Wed)',        room: 'Crystal + Fountain' },
       { label: 'Quarterly Ascension (Tue)', room: 'Gold Room' },
@@ -347,7 +352,13 @@ function VenueGuide() {
         {venueSections.map(s => {
           const isOpen = openSection === s.id
           return (
-            <div key={s.id} style={styles.section}>
+            <div
+              key={s.id}
+              style={{
+                ...styles.section,
+                borderLeft: s.accent ? `4px solid ${s.accent}` : styles.section.borderLeft,
+              }}
+            >
               <button
                 onClick={() => setOpenSection(isOpen ? null : s.id)}
                 style={styles.sectionHeader}
