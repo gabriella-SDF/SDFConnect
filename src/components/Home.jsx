@@ -618,9 +618,9 @@ const styles = {
     border: 'none',
     borderRadius: 14,
     cursor: 'pointer',
-    background: `linear-gradient(90deg, ${C.yellow} 0%, #f4c800 100%)`,
+    background: `linear-gradient(90deg, ${C.lavender} 0%, #9A8FD4 100%)`,
     textAlign: 'left',
-    color: C.dark,
+    color: '#fff',
   },
   qaBannerKicker: {
     fontFamily: F.sans,
@@ -628,7 +628,7 @@ const styles = {
     fontWeight: 700,
     letterSpacing: '0.14em',
     textTransform: 'uppercase',
-    color: 'rgba(0,0,0,0.6)',
+    color: 'rgba(255,255,255,0.78)',
     marginBottom: 4,
   },
   qaBannerTitle: {
@@ -636,7 +636,7 @@ const styles = {
     fontSize: 17,
     fontWeight: 600,
     fontStyle: 'italic',
-    color: C.dark,
+    color: '#fff',
     letterSpacing: '-0.01em',
   },
   bannerKicker: {
