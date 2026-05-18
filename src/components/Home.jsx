@@ -522,9 +522,9 @@ const styles = {
   wifiCard: {
     display: 'flex',
     alignItems: 'center',
-    gap: 14,
+    gap: 12,
     width: '100%',
-    padding: '14px 16px',
+    padding: '10px 14px',
     background: C.card,
     border: `1px solid ${C.border}`,
     borderRadius: 14,
@@ -533,9 +533,9 @@ const styles = {
     color: C.text,
   },
   wifiIcon: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     background: C.yellow,
     color: C.dark,
     display: 'flex',
@@ -591,7 +591,7 @@ const styles = {
   exploreBanner: {
     display: 'block',
     width: '100%',
-    padding: '14px 18px',
+    padding: '10px 16px',
     border: 'none',
     borderRadius: 14,
     cursor: 'pointer',
@@ -602,7 +602,7 @@ const styles = {
   floorBanner: {
     display: 'block',
     width: '100%',
-    padding: '14px 18px',
+    padding: '10px 16px',
     border: 'none',
     borderRadius: 14,
     cursor: 'pointer',
@@ -613,7 +613,7 @@ const styles = {
   qaBanner: {
     display: 'block',
     width: '100%',
-    padding: '14px 18px',
+    padding: '10px 16px',
     border: 'none',
     borderRadius: 14,
     cursor: 'pointer',
@@ -632,7 +632,7 @@ const styles = {
   },
   qaBannerTitle: {
     fontFamily: F.serif,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: 600,
     fontStyle: 'italic',
     color: '#fff',
@@ -649,7 +649,7 @@ const styles = {
   },
   bannerTitle: {
     fontFamily: F.serif,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: 600,
     fontStyle: 'italic',
     color: '#fff',
