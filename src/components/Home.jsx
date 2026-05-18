@@ -562,12 +562,12 @@ const styles = {
   wifiPwRow: {
     display: 'flex',
     alignItems: 'baseline',
-    gap: 6,
+    flexWrap: 'wrap',
+    gap: '2px 6px',
     marginTop: 2,
     fontFamily: F.sans,
-    fontSize: 12,
+    fontSize: 11,
     color: C.textFade,
-    overflow: 'hidden',
   },
   wifiPwLabel: {
     fontWeight: 600,
@@ -575,10 +575,9 @@ const styles = {
   },
   wifiPw: {
     fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
+    fontSize: 11,
     color: C.text,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+    wordBreak: 'break-all',
   },
   wifiCopy: {
     fontFamily: F.sans,
