@@ -13,13 +13,13 @@ const levels = [
 ]
 
 const hubRooms = [
-  { id: 'gold',      name: 'Gold Room',         where: 'Lobby Level · Left side',                purpose: 'General Sessions · Awards', team: 'Engineering' },
-  { id: 'green',     name: 'Green Room',        where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',                 team: 'Product' },
-  { id: 'garden',    name: 'Garden Room',       where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts',                 team: 'Legal & Policy' },
-  { id: 'empire',    name: 'Empire Room',       where: 'Lobby Level · Far left',                 purpose: 'Breakouts · Refreshments',  team: 'Office of the CEO' },
-  { id: 'crystal',   name: 'Crystal Room',      where: 'Lobby Level · Back left',                purpose: 'AI Hackathon',              team: 'Business Development' },
-  { id: 'fountain',  name: 'Fountain Room',     where: 'Lobby Level · Back, near Roof Garden',   purpose: 'AI Hackathon',              team: 'Growth' },
-  { id: 'intersect', name: 'Intersect I / II',  where: 'Arcade Level · One floor down',          team: 'Finance & Operations' },
+  { id: 'gold',      name: 'Gold Room',         where: 'Lobby Level · Left side',                purpose: 'General Sessions · Tue 2 PM: RWA & DeFi',                team: 'Engineering' },
+  { id: 'green',     name: 'Green Room',        where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts · Tue 2 PM: Application Velocity',             team: 'Product' },
+  { id: 'garden',    name: 'Garden Room',       where: 'Lobby Level · Left of entrance',         purpose: 'Breakouts · Tue 2 PM: Ramp Recruitment',                 team: 'Legal & Policy' },
+  { id: 'empire',    name: 'Empire Room',       where: 'Lobby Level · Far left',                 purpose: 'Refreshments',                                            team: 'Office of the CEO' },
+  { id: 'crystal',   name: 'Crystal Room',      where: 'Lobby Level · Back left',                purpose: 'AI Hackathon · Tue 2 PM: What does success look like?',  team: 'Business Development' },
+  { id: 'fountain',  name: 'Fountain Room',     where: 'Lobby Level · Back, near Roof Garden',   purpose: 'AI Hackathon',                                            team: 'Growth' },
+  { id: 'intersect', name: 'Intersect I / II',  where: 'Arcade Level · One floor down',          purpose: 'Tue 2 PM: Performance (II) · Faster and Safe (I)',       team: 'Finance & Operations' },
   { id: 'diplomat',  name: 'Diplomat Club',     where: 'Arcade Level · One floor down',          team: 'Marketing' },
   { id: 'crownrm',   name: 'Crown Room',        where: 'Floor 24 · Top floor',                   team: 'People' },
 ]
