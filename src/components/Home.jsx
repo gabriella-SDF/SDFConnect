@@ -617,7 +617,7 @@ const styles = {
     border: 'none',
     borderRadius: 14,
     cursor: 'pointer',
-    background: `linear-gradient(90deg, ${C.lavender} 0%, #9A8FD4 100%)`,
+    background: `linear-gradient(90deg, ${C.dark} 0%, #1F1F1F 100%)`,
     textAlign: 'left',
     color: '#fff',
   },
