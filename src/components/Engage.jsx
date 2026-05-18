@@ -118,12 +118,12 @@ export default function Engage({ user, initialSubTab, onConsumeInitialSubTab }) 
         {/* Anonymous Q&A */}
         {subTab === 'qa' && (
           <div>
-            <h2 style={S.h2}>Anonymous Q&A</h2>
+            <h2 style={S.h2}>Ask the Exec Team</h2>
             <p style={{ ...S.body, color: C.textFade, margin: '8px 0 16px' }}>
-              Ask anything during sessions. Your identity is never recorded. No name, no IP, no device ID.
+              Anything goes — the exec team will address questions live during sessions.
             </p>
             <p style={{ ...S.body, color: C.textFade, margin: '0 0 24px', fontStyle: 'italic' }}>
-              Questions are pulled daily at 2:00 PM PT — submit before then to have yours included that day.
+              Submit by 2 PM PT each day to be included. Fully anonymous — no name, no IP, no device ID.
             </p>
 
             <div style={S.card}>
