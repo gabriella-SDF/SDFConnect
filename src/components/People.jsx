@@ -264,16 +264,16 @@ function ProfileSheet({ person, profile, currentProfile, isYou, onEditProfile, o
               <div style={styles.assignmentCard}>
                 <div style={styles.assignmentKicker}>AI Hackathon</div>
                 <div style={styles.assignmentValue}>{person.ai_group}</div>
-                <div style={styles.assignmentWhen}>Wed 9:45 AM · Crystal + Fountain</div>
+                <div style={styles.assignmentWhen}>Wed 10 AM · Gold → Crystal + Fountain</div>
               </div>
             )}
           </div>
         )}
 
-        {teamRoom && (
+        {person.team && (
           <div style={styles.miniField}>
-            <div style={styles.miniFieldLabel}>Team time room</div>
-            <div style={styles.miniFieldText}>{teamRoom} (Thursday 9am–12pm)</div>
+            <div style={styles.miniFieldLabel}>Team time</div>
+            <div style={styles.miniFieldText}>Thursday 9am–12pm · Check your Google Calendar</div>
           </div>
         )}
 

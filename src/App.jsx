@@ -401,14 +401,14 @@ function MyProfileSheet({ user, profile, employee, onClose, onEdit, onSignOut })
               <div style={{ ...mp.assignmentCard, borderLeft: `3px solid ${C.teal}` }}>
                 <div style={mp.kicker}>AI Hackathon</div>
                 <div style={mp.assignmentValue}>{myAiGroup}</div>
-                <div style={mp.assignmentWhen}>Wed · Crystal + Fountain</div>
+                <div style={mp.assignmentWhen}>Wed 10 AM · Gold → Crystal + Fountain</div>
               </div>
             )}
-            {myTeamRoom && (
+            {myTeam && (
               <div style={{ ...mp.assignmentCard, borderLeft: `3px solid ${C.lavender}` }}>
                 <div style={mp.kicker}>Team Time</div>
-                <div style={mp.assignmentValue}>{myTeamRoom}</div>
-                <div style={mp.assignmentWhen}>Thu 9am–12pm · {myTeam}</div>
+                <div style={mp.assignmentValue}>{myTeam}</div>
+                <div style={mp.assignmentWhen}>Thu 9am–12pm · Check your Google Calendar</div>
               </div>
             )}
           </div>

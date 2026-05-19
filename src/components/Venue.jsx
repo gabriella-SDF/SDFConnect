@@ -88,7 +88,8 @@ const venueSections = [
     title: 'Other Activities',
     accent: '#D6D2C4', // tan
     items: [
-      { label: 'AI Hackathon (Wed)',        room: 'Crystal + Fountain' },
+      { label: 'AI Panel (Wed 9:15 AM)',     room: 'Gold Room' },
+      { label: 'AI Hackathon (Wed 10 AM)',   room: 'Gold → Crystal + Fountain' },
       { label: 'Quarterly Ascension (Tue)', room: 'Gold Room' },
       { label: 'GIVE Volunteering (Wed)',   room: 'Gold + Green + Garden' },
       { label: 'Barcade (Tue evening)',     room: '449 Powell St' },
