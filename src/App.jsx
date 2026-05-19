@@ -10,6 +10,7 @@ import Engage from './components/Engage'
 import Venue from './components/Venue'
 import NamePicker from './components/NamePicker'
 import Onboarding from './components/Onboarding'
+import PasswordGate from './components/PasswordGate'
 
 function IconSchedule() {
   return (
@@ -83,6 +84,7 @@ const desktopTabs = [
 
 export default function App() {
   const [tab, setTab] = useState('home')
+  const [authed, setAuthed] = useState(false)
   const [user, setUser] = useState(null)
   const [profile, setProfile] = useState(null)
   const [currentEmployee, setCurrentEmployee] = useState(null)
@@ -104,10 +106,13 @@ export default function App() {
     return () => mq.removeEventListener?.('change', update)
   }, [])
 
-  // Restore the user from localStorage on first load.
+  // Restore the user + password-gate state from localStorage on first load.
   // Clear stale data from older NamePicker versions (numeric ids, no first_name, etc.).
   useEffect(() => {
     try {
+      if (localStorage.getItem('sdf-connect-authed') === '1') {
+        setAuthed(true)
+      }
       const saved = localStorage.getItem('sdf-connect-user')
       if (saved) {
         const parsed = JSON.parse(saved)
@@ -192,6 +197,10 @@ export default function App() {
 
   if (loading) {
     return <div style={{ ...S.container, background: C.dark }} />
+  }
+
+  if (!authed) {
+    return <PasswordGate onUnlock={() => setAuthed(true)} />
   }
 
   if (!user) {
