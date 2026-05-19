@@ -11,7 +11,9 @@ export default function PasswordGate({ onUnlock }) {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const normalized = pw.trim().toLowerCase()
+    // Normalize: trim, lowercase, and replace smart dashes (em/en) with regular hyphens.
+    // Mobile keyboards sometimes auto-substitute the dash character.
+    const normalized = pw.trim().toLowerCase().replace(/[—–−]/g, '-')
     if (normalized === APP_PASSWORD) {
       try { localStorage.setItem('sdf-connect-authed', '1') } catch {}
       onUnlock?.()
