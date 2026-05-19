@@ -97,7 +97,7 @@ export default function NamePicker({ onSelect }) {
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={styles.personName}>
-                    {person.name}
+                    {person.first_name} {person.last_name ? `${person.last_name[0]}.` : ''}
                     {person.claimed && <span style={styles.claimedBadge}>signed in</span>}
                   </div>
                   <div style={styles.personTitle}>{person.location || person.team}</div>
