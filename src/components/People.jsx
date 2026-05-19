@@ -333,7 +333,7 @@ function PersonRow({ member, subtitle, currentUser, onSelect }) {
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={styles.personName}>
-          {member.name}
+          {member.first_name} {member.last_name ? `${member.last_name[0]}.` : ''}
           {isYou && <span style={styles.youBadge}>You</span>}
         </div>
         {sub && <div style={styles.personTitle}>{sub}</div>}

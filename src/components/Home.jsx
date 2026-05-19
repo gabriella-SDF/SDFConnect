@@ -234,7 +234,7 @@ export default function Home({ user, profile, onNavigate, onOpenPerson, onGoExpl
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={styles.matchName}>
-                      {m.employee.first_name} {m.employee.last_name}
+                      {m.employee.first_name} {m.employee.last_name ? `${m.employee.last_name[0]}.` : ''}
                     </div>
                     <div style={styles.matchSub}>
                       {m.shared.slice(0, 2).join(', ')}
