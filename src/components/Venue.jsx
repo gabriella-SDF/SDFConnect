@@ -215,6 +215,7 @@ const sfPicks = {
         title: 'Cocktail Bars & Lounges',
         items: [
           { name: 'Top of the Mark', detail: 'Iconic SF cocktails & 360° views. Right across the street.', tag: 'View · Cocktails' },
+          { name: 'Pacific Cocktail Haven', detail: 'Acclaimed craft cocktail bar in Union Square. Inventive menu.', tag: 'Cocktail bar · $$$' },
           { name: 'Golden Sardine', detail: 'Highly-rated cocktail bar. 4.9 stars on Google.', tag: 'Cocktail bar' },
           { name: 'Friends Only', detail: 'Bar and lounge with a chic atmosphere.', tag: 'Bar / lounge · $$$' },
           { name: 'Peacekeeper', detail: 'New American bar with a neighborhood feel.', tag: 'Bar · $$' },
